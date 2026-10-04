@@ -1,0 +1,112 @@
+/* Progress Bar — shared styles for the screen artboards. Values mirror design/system/project/tokens.json. */
+.pb[data-theme="dusk"], .pb {
+  --ground: #1b1114; --glow-1: #ff6a45; --glow-2: #c43d68; --glow-3: #ffb23e; --glow-o: 0.6;
+  --glass: rgba(38,22,26,0.6); --glass-strong: rgba(34,20,24,0.74); --glass-line: rgba(255,226,206,0.18);
+  --sunken: rgba(255,244,236,0.1); --ink: #fff4ec; --ink-muted: #d9c4ba;
+  --line: rgba(255,244,236,0.12); --line-strong: rgba(255,244,236,0.42);
+  --accent: #ffab52; --on-accent: #2b1503; --accent-text: #ffab52;
+  --success: #8fe3ad; --warning: #ffc566; --danger: #ffa093;
+  --shadow-float: 0 8px 24px rgba(0,0,0,0.4);
+}
+.pb[data-theme="dawn"] {
+  --ground: #fbeee8; --glow-1: #ff9f80; --glow-2: #f7a8c4; --glow-3: #ffd27a; --glow-o: 0.85;
+  --glass: rgba(255,255,255,0.5); --glass-strong: rgba(255,255,255,0.72); --glass-line: rgba(255,255,255,0.85);
+  --sunken: rgba(42,20,24,0.07); --ink: #2a1418; --ink-muted: #553739;
+  --line: rgba(42,20,24,0.12); --line-strong: rgba(42,20,24,0.4);
+  --accent: #ff9838; --on-accent: #2b1503; --accent-text: #a33a08;
+  --success: #1a6b3c; --warning: #8a4700; --danger: #b3261e;
+  --shadow-float: 0 8px 24px rgba(120,52,30,0.14);
+}
+
+.pb { position: relative; overflow: hidden; isolation: isolate; box-sizing: border-box; background: var(--ground); color: var(--ink); font: 400 17px/24px "Golos Text", system-ui, sans-serif; }
+.pb *, .pb *::before { box-sizing: border-box; }
+.pb .glow { position: absolute; z-index: -1; border-radius: 50%; filter: blur(48px); opacity: var(--glow-o); aspect-ratio: 1; }
+.pb .g1 { width: 68%; left: -22%; top: -6%; background: var(--glow-1); }
+.pb .g2 { width: 62%; right: -24%; top: 30%; background: var(--glow-2); }
+.pb .g3 { width: 74%; left: 6%; bottom: -12%; background: var(--glow-3); }
+
+.pb .scr { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 12px; padding: 56px 16px 16px; }
+.pb .scr.tabs { padding-bottom: 96px; }
+.pb .grow { flex: 1; }
+.pb .stack { display: grid; gap: 8px; }
+.pb .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.pb .left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+
+.pb .title { margin: 0; font: 700 26px/30px "Golos Text", system-ui, sans-serif; }
+.pb .h { margin: 0; font: 700 20px/26px "Golos Text", system-ui, sans-serif; }
+.pb .b { font-weight: 600; }
+.pb .label { font-size: 14px; line-height: 18px; font-weight: 600; letter-spacing: 0.02em; color: var(--ink-muted); }
+.pb .cap { font-size: 14px; line-height: 20px; font-weight: 500; color: var(--ink-muted); }
+.pb .muted { color: var(--ink-muted); }
+.pb .num { font-family: "Fira Sans Extra Condensed", "Arial Narrow", sans-serif; font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; }
+.pb .unit { color: var(--ink-muted); margin-left: 4px; }
+.pb .n-hero { font-size: 64px; line-height: 60px; font-weight: 800; }
+.pb .n-lg { font-size: 44px; line-height: 44px; }
+.pb .n-md { font-size: 28px; line-height: 30px; }
+.pb .n-sm { font-size: 20px; line-height: 22px; font-weight: 600; }
+.pb .plan { color: var(--ink-muted); }
+
+.pb .glass { background: var(--glass); -webkit-backdrop-filter: blur(26px) saturate(1.5); backdrop-filter: blur(26px) saturate(1.5); border: 1px solid var(--glass-line); border-radius: 20px; }
+.pb .strong { background: var(--glass-strong); }
+.pb .panel { background: var(--glass-strong); border-radius: 28px; box-shadow: var(--shadow-float); }
+.pb .card { padding: 14px 16px; }
+.pb .current { background: var(--glass-strong); border-color: transparent; box-shadow: inset 0 0 0 2px var(--accent-text); }
+
+.pb .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 56px; padding: 8px 16px; border: 0; border-radius: 16px; background: var(--accent); color: var(--on-accent); font: 700 17px/24px "Golos Text", system-ui, sans-serif; text-decoration: none; cursor: pointer; }
+.pb .btn.ghost { background: var(--sunken); color: var(--ink); }
+.pb .btn.text { background: none; color: var(--accent-text); min-height: 48px; }
+.pb .btn.danger { background: none; color: var(--danger); min-height: 48px; }
+.pb .btn.small { width: auto; min-height: 48px; padding: 0 12px; font-size: 15px; }
+.pb .icon { width: 48px; height: 48px; flex: 0 0 auto; display: grid; place-items: center; border: 0; border-radius: 16px; background: var(--sunken); color: var(--ink); cursor: pointer; }
+.pb .icon.step { width: 56px; height: 56px; }
+.pb svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.pb .chip { display: inline-flex; align-items: center; min-height: 28px; padding: 0 8px; border-radius: 8px; background: var(--sunken); font-size: 13px; line-height: 18px; font-weight: 600; white-space: nowrap; color: var(--ink-muted); }
+.pb .chip.ok { color: var(--success); }
+.pb .chip.under { color: var(--warning); }
+.pb .chip.on { color: var(--accent-text); }
+.pb .pill { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 14px; border: 0; border-radius: 16px; background: var(--sunken); color: var(--ink); font: 600 15px/20px "Golos Text", system-ui, sans-serif; white-space: nowrap; cursor: pointer; }
+.pb .pill.on { background: var(--accent); color: var(--on-accent); }
+.pb .hscroll { display: flex; gap: 8px; overflow: hidden; margin: 0 -16px; padding: 0 16px; }
+
+.pb .barbell { display: flex; align-items: center; gap: 12px; }
+.pb .bar { position: relative; flex: 1; display: flex; align-items: center; gap: 8px; height: 44px; padding-left: 14px; }
+.pb .bar::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 6px; margin-top: -3px; border-radius: 3px; background: var(--line-strong); }
+.pb .plate { position: relative; width: 15px; height: 44px; border-radius: 8px; background: var(--sunken); box-shadow: inset 0 0 0 2px var(--line-strong); }
+.pb .plate.done { background: var(--accent); box-shadow: none; }
+.pb .plate.now { background: transparent; box-shadow: inset 0 0 0 2px var(--accent-text); }
+.pb .collar { position: relative; width: 10px; height: 20px; border-radius: 4px; background: var(--ink); }
+
+.pb .entry { margin-top: auto; padding: 16px; display: grid; gap: 8px; }
+.pb .erow { display: grid; grid-template-columns: 1fr 56px 56px; align-items: end; gap: 8px; }
+.pb .pf { display: grid; grid-template-columns: 28px 1fr 1fr auto; align-items: center; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); }
+.pb .pf.first { border-top: 0; }
+
+.pb .field { display: flex; align-items: center; width: 100%; min-height: 56px; padding: 0 16px; border: 1px solid var(--line-strong); border-radius: 16px; background: var(--glass-strong); color: var(--ink); font: 600 20px/26px "Golos Text", system-ui, sans-serif; }
+.pb .avatar { width: 44px; height: 44px; flex: 0 0 auto; border-radius: 50%; display: grid; place-items: center; background: var(--sunken); font-weight: 700; }
+.pb .seg { display: grid; grid-template-columns: 1fr 1fr; padding: 4px; gap: 4px; border-radius: 20px; }
+.pb .seg .pill { background: none; }
+.pb .seg .pill.on { background: var(--sunken); color: var(--accent-text); }
+
+.pb .tabbar { position: absolute; left: 8px; right: 8px; bottom: 8px; display: grid; grid-template-columns: repeat(5, 1fr); padding: 8px; }
+.pb .tab { display: grid; justify-items: center; gap: 2px; min-height: 48px; padding: 4px 0; border-radius: 20px; color: var(--ink-muted); font: 600 12px/16px "Golos Text", system-ui, sans-serif; text-decoration: none; }
+.pb .tab svg { width: 24px; height: 24px; }
+.pb .tab.on { color: var(--accent-text); background: var(--sunken); }
+
+/* States: banners, sheets, empty screens, code entry, pickers */
+.pb .btn.destructive { background: var(--danger); color: var(--ground); }
+.pb .banner { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 16px; background: var(--glass-strong); box-shadow: inset 0 0 0 1.5px var(--warning); font-size: 14px; line-height: 20px; font-weight: 500; }
+.pb .banner svg { flex: 0 0 auto; color: var(--warning); }
+.pb .scrim { position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
+.pb[data-theme="dawn"] .scrim { background: rgba(42,20,24,0.36); }
+.pb .sheet { position: absolute; left: 8px; right: 8px; bottom: 8px; padding: 20px 16px 16px; display: grid; gap: 12px; }
+.pb .sheet p, .pb .text { margin: 0; color: var(--ink-muted); font-size: 16px; line-height: 22px; }
+.pb .empty { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 0 8px; }
+.pb .otp { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.pb .otp .cell { height: 64px; display: grid; place-items: center; border-radius: 16px; background: var(--glass-strong); border: 1px solid var(--line-strong); font: 700 32px/1 "Fira Sans Extra Condensed", "Arial Narrow", sans-serif; color: var(--ink); text-align: center; width: 100%; padding: 0; }
+.pb .otp .cell.now { border-color: transparent; box-shadow: inset 0 0 0 2px var(--accent-text); }
+.pb .choice { display: grid; gap: 4px; padding: 16px; text-align: left; width: 100%; color: inherit; font: inherit; cursor: pointer; }
+.pb .qr { width: 176px; height: 176px; margin: 0 auto; padding: 12px; border-radius: 16px; background: #fff7f3; }
+.pb .keys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.pb .keys .key { min-height: 52px; font: 700 26px/1 "Fira Sans Extra Condensed", "Arial Narrow", sans-serif; }
+.pb .qr svg { width: 100%; height: 100%; stroke: none; fill: #2a1418; }

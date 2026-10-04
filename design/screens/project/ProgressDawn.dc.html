@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Прогресс по упражнению, тема Рассвет</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="pb.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Fira+Sans+Extra+Condensed:wght@600;700;800&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="pb" data-theme="{{theme}}" style="width: 390px; height: 844px">
+<div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+<div class="scr tabs">
+<h1 class="title">Прогресс</h1>
+<button class="field" style="justify-content: space-between">Жим лёжа<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg></button>
+<section class="glass panel" style="padding: 16px; display: grid; gap: 8px" aria-label="Максимальный вес по тренировкам">
+<div class="label">Максимальный вес</div>
+<div class="row" style="align-items: baseline; justify-content: flex-start">
+<span class="num n-hero">60<span class="unit" style="font-size: 28px">кг</span></span>
+<span class="chip ok">+7,5 кг за 6 тренировок</span>
+</div>
+<svg viewBox="0 0 326 190" style="width: 100%; height: auto; stroke: none" role="img" aria-label="График: с 52,5 кг 12 сентября до 60 кг 2 октября">
+<line x1="34" y1="30" x2="322" y2="30" style="stroke: var(--line); stroke-width: 1"></line>
+<line x1="34" y1="90" x2="322" y2="90" style="stroke: var(--line); stroke-width: 1"></line>
+<line x1="34" y1="150" x2="322" y2="150" style="stroke: var(--line); stroke-width: 1"></line>
+<text x="0" y="34" style="fill: var(--ink-muted); font: 600 13px 'Fira Sans Extra Condensed', sans-serif">60</text>
+<text x="0" y="94" style="fill: var(--ink-muted); font: 600 13px 'Fira Sans Extra Condensed', sans-serif">55</text>
+<text x="0" y="154" style="fill: var(--ink-muted); font: 600 13px 'Fira Sans Extra Condensed', sans-serif">50</text>
+<polyline points="46,120 100,120 154,90 208,60 262,60 316,30" style="stroke: var(--accent-text); stroke-width: 3; fill: none"></polyline>
+<circle cx="46" cy="120" r="5" style="fill: var(--accent-text)"></circle>
+<circle cx="100" cy="120" r="5" style="fill: var(--accent-text)"></circle>
+<circle cx="154" cy="90" r="5" style="fill: var(--accent-text)"></circle>
+<circle cx="208" cy="60" r="5" style="fill: var(--accent-text)"></circle>
+<circle cx="262" cy="60" r="5" style="fill: var(--accent-text)"></circle>
+<circle cx="316" cy="30" r="7" style="fill: var(--accent); stroke: var(--ink); stroke-width: 2"></circle>
+<text x="34" y="182" style="fill: var(--ink-muted); font: 400 12px 'Golos Text', sans-serif">12 сен</text>
+<text x="282" y="182" style="fill: var(--ink-muted); font: 400 12px 'Golos Text', sans-serif">2 окт</text>
+</svg>
+</section>
+<div class="stack">
+<div class="glass card row"><span>2 октября</span><span class="num n-sm">60<span class="unit">кг</span></span></div>
+<div class="glass card row"><span>28 сентября</span><span class="num n-sm">57,5<span class="unit">кг</span></span></div>
+<div class="glass card row"><span>24 сентября</span><span class="num n-sm">57,5<span class="unit">кг</span></span></div>
+</div>
+</div>
+<nav class="glass panel tabbar" aria-label="Разделы">
+<a class="tab" href="HomeDawn.dc.html"><svg viewBox="0 0 24 24"><path d="M3 12h18M6 8v8M18 8v8M3.5 10v4M20.5 10v4"></path></svg>Главная</a>
+<a class="tab" href="HistoryDawn.dc.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg>История</a>
+<a class="tab on" href="ProgressDawn.dc.html"><svg viewBox="0 0 24 24"><path d="M4 18l5-6 4 3 7-9"></path><path d="M4 21h16"></path></svg>Прогресс</a>
+<a class="tab" href="PeopleDawn.dc.html"><svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="3.5"></circle><path d="M2.5 19c.6-3.2 3.2-5 6.5-5s5.9 1.8 6.5 5"></path><path d="M16 5.8a3.5 3.5 0 010 6.4M18.5 14.6c1.6.8 2.7 2.3 3 4.4"></path></svg>Люди</a>
+<a class="tab" href="ProfileDawn.dc.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4"></circle><path d="M4.5 20c.8-3.6 3.8-5.5 7.5-5.5s6.7 1.9 7.5 5.5"></path></svg>Профиль</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dusk","dawn"],"default":"dawn"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { theme: this.props.theme ?? 'dawn' };
+}
+}
+</script>
+</body>
+</html>

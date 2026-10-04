@@ -1,0 +1,24 @@
+{
+ "v": 3,
+ "layout": "files",
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-10-04T14:13:34Z"
+ },
+ "title": "Progress Bar",
+ "namespace": "ProgressBar",
+ "libraries": [],
+ "sections": {},
+ "groups": [],
+ "assetGroups": {},
+ "blobs": {},
+ "docs": {
+  "sections": []
+ },
+ "lastChange": {
+  "by": "Claude",
+  "via": "Claude Code",
+  "at": "2026-10-04T14:52:26Z",
+  "note": "Правила для платформ и доступности; подписи 14/20."
+ }
+}

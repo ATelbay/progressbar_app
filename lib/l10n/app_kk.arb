@@ -1,0 +1,19 @@
+{
+  "@@locale": "kk",
+  "appTitle": "Progress Bar",
+  "tabHome": "Басты бет",
+  "tabHistory": "Тарих",
+  "tabProgress": "Прогресс",
+  "tabPeople": "Адамдар",
+  "tabProfile": "Профиль",
+  "signInTitle": "Кіру",
+  "signInPhoneLabel": "Телефон нөмірі",
+  "signInContinue": "Жалғастыру",
+  "homeStartFreeWorkout": "Бағдарламасыз жаттығу",
+  "homeNewProgram": "Жаңа бағдарлама",
+  "programBuilderTitle": "Бағдарлама",
+  "workoutTitle": "Жаттығу",
+  "traineeTitle": "Шәкірт",
+  "profileSignOut": "Шығу",
+  "comingSoon": "Әзірге бос"
+}

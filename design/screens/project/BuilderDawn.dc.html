@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Конструктор программы, тема Рассвет</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="pb.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Fira+Sans+Extra+Condensed:wght@600;700;800&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="pb" data-theme="{{theme}}" style="width: 390px; height: 844px">
+<div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+<div class="scr">
+<div class="left">
+<a class="icon" href="HomeDawn.dc.html" aria-label="Назад"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"></path></svg></a>
+<h1 class="title">Сила, 3 дня</h1>
+</div>
+<div class="hscroll" role="tablist" aria-label="Дни программы">
+<button class="pill on">Грудь и трицепс</button>
+<button class="pill">Спина и бицепс</button>
+<button class="pill">Ноги</button>
+<button class="pill" aria-label="Добавить день"><svg viewBox="0 0 24 24"><path d="M6 12h12M12 6v12"></path></svg></button>
+</div>
+<div class="stack">
+<div class="glass card" style="display: grid; gap: 6px">
+<div class="row"><div class="b">Жим лёжа</div><span class="num n-sm">3 × 8 × 60<span class="unit">кг</span></span></div>
+<div class="cap">Заметка: локти под 45°, пауза внизу</div>
+</div>
+<div class="glass card row">
+<div class="b">Жим на наклонной</div><span class="num n-sm">3 × 10 × 22<span class="unit">кг</span></span>
+</div>
+<div class="glass card row">
+<div class="b">Разводка в кроссовере</div><span class="num n-sm">3 × 12 × 15<span class="unit">кг</span></span>
+</div>
+<div class="glass card row">
+<div><div class="b">Подтягивания</div><div class="cap">Собственный вес</div></div><span class="num n-sm">3 × 8</span>
+</div>
+<div class="glass card row">
+<div><div class="b">Планка</div><div class="cap">На время</div></div><span class="num n-sm">3 × 60<span class="unit">с</span></span>
+</div>
+</div>
+<button class="btn ghost"><svg viewBox="0 0 24 24"><path d="M6 12h12M12 6v12"></path></svg>Упражнение</button>
+<div class="grow"></div>
+<a class="btn" href="PeopleDawn.dc.html">Назначить подопечному</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dusk","dawn"],"default":"dawn"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { theme: this.props.theme ?? 'dawn' };
+}
+}
+</script>
+</body>
+</html>

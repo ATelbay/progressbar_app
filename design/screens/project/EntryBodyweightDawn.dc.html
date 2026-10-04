@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Ввод результата для упражнения с собственным весом, тема Рассвет</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="pb.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Fira+Sans+Extra+Condensed:wght@600;700;800&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="pb" data-theme="{{theme}}" style="width: 390px; height: 844px">
+<div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+<div class="scr" style="gap: 8px">
+<div class="row"><h1 class="title">Спина и бицепс</h1><button class="btn text small">Завершить</button></div>
+<div class="barbell" role="img" aria-label="Выполнено 0 из 5 упражнений"><div class="bar"><div class="plate now"></div><div class="plate"></div><div class="plate"></div><div class="plate"></div><div class="plate"></div><div class="collar"></div></div><span class="num n-md">0<span class="unit">из 5</span></span></div>
+<section class="glass panel entry" aria-label="Запись результата">
+<h2 class="h">Подтягивания</h2>
+<div class="row"><span class="label">План</span><span class="num n-sm plan">3 × 8</span></div>
+<div class="erow"><div><div class="label">Подходы</div><span class="num n-lg">3</span></div><button class="icon step" aria-label="Меньше подходов"><svg viewBox="0 0 24 24"><path d="M6 12h12"></path></svg></button><button class="icon step" aria-label="Больше подходов"><svg viewBox="0 0 24 24"><path d="M6 12h12M12 6v12"></path></svg></button></div>
+<div class="erow"><div><div class="label">Повторения</div><span class="num n-hero">8</span></div><button class="icon step" aria-label="Меньше повторений"><svg viewBox="0 0 24 24"><path d="M6 12h12"></path></svg></button><button class="icon step" aria-label="Больше повторений"><svg viewBox="0 0 24 24"><path d="M6 12h12M12 6v12"></path></svg></button></div>
+<div class="erow"><div><div class="label">Доп. вес</div><span class="num n-lg">0<span class="unit">кг</span></span></div><button class="icon step" aria-label="Меньше доп. вес"><svg viewBox="0 0 24 24"><path d="M6 12h12"></path></svg></button><button class="icon step" aria-label="Больше доп. вес"><svg viewBox="0 0 24 24"><path d="M6 12h12M12 6v12"></path></svg></button></div>
+<div class="cap">Вес тела 78 кг берётся из профиля. Прошлый раз: 3 × 7</div>
+<button class="btn">Записать</button>
+<button class="btn text">Добавить каждый подход</button>
+</section>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dusk","dawn"],"default":"dawn"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { theme: this.props.theme ?? 'dawn' };
+}
+}
+</script>
+</body>
+</html>

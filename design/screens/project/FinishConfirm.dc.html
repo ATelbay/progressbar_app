@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Подтверждение завершения тренировки</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="pb.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Fira+Sans+Extra+Condensed:wght@600;700;800&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="pb" data-theme="{{theme}}" style="width: 390px; height: 844px">
+<div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+<div class="scr" style="gap: 8px">
+<div class="row"><h1 class="title">Грудь и трицепс</h1><button class="btn text small">Завершить</button></div>
+<div class="barbell" role="img" aria-label="Выполнено 2 из 5 упражнений"><div class="bar"><div class="plate done"></div><div class="plate done"></div><div class="plate now"></div><div class="plate"></div><div class="plate"></div><div class="collar"></div></div><span class="num n-md">2<span class="unit">из 5</span></span></div>
+<div class="glass card row"><div><div class="b">Жим лёжа</div><span class="chip ok">по плану</span></div><span class="num n-sm">3 × 8 × 60<span class="unit">кг</span></span></div>
+<div class="glass card row"><div><div class="b">Жим на наклонной</div><span class="chip under">−2 кг от плана</span></div><span class="num n-sm">3 × 10 × 20<span class="unit">кг</span></span></div>
+<div class="glass card row"><div class="b">Разводка в кроссовере</div><span class="cap">3 × 12 × 15 кг</span></div>
+<div class="glass card row"><div class="b">Французский жим</div><span class="cap">3 × 10 × 25 кг</span></div>
+</div>
+<div class="scrim"></div>
+<section class="glass panel sheet" role="dialog" aria-label="Завершить тренировку">
+<h2 class="h">Завершить тренировку?</h2>
+<p>Записано 2 упражнения из 5. Три останутся без результата — тренер увидит их как пропущенные.</p>
+<button class="btn">Завершить</button>
+<a class="btn ghost" href="Main.dc.html">Вернуться к тренировке</a>
+<button class="btn danger">Отменить тренировку и удалить записи</button>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dusk","dawn"],"default":"dusk"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { theme: this.props.theme ?? 'dusk' };
+}
+}
+</script>
+</body>
+</html>

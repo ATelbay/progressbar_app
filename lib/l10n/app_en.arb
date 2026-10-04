@@ -1,0 +1,19 @@
+{
+  "@@locale": "en",
+  "appTitle": "Progress Bar",
+  "tabHome": "Home",
+  "tabHistory": "History",
+  "tabProgress": "Progress",
+  "tabPeople": "People",
+  "tabProfile": "Profile",
+  "signInTitle": "Sign in",
+  "signInPhoneLabel": "Phone number",
+  "signInContinue": "Continue",
+  "homeStartFreeWorkout": "Workout without a program",
+  "homeNewProgram": "New program",
+  "programBuilderTitle": "Program",
+  "workoutTitle": "Workout",
+  "traineeTitle": "Trainee",
+  "profileSignOut": "Sign out",
+  "comingSoon": "Nothing here yet"
+}

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Люди: тренеры и подопечные, тема Рассвет</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="pb.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Fira+Sans+Extra+Condensed:wght@600;700;800&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="pb" data-theme="{{theme}}" style="width: 390px; height: 844px">
+<div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+<div class="scr tabs">
+<h1 class="title">Люди</h1>
+<div class="label">Мои тренеры</div>
+<div class="stack">
+<div class="glass card row">
+<div class="left"><div class="avatar">С</div><div><div class="b">Сергей</div><div class="cap">Назначает программы</div></div></div>
+<span class="chip on">активный</span>
+</div>
+<div class="glass card row">
+<div class="left"><div class="avatar">М</div><div><div class="b">Мадина</div><div class="cap">Видит тренировки, не назначает</div></div></div>
+<span class="chip">просмотр</span>
+</div>
+</div>
+<div class="label" style="margin-top: 8px">Мои подопечные</div>
+<div class="stack">
+<a class="glass card row" href="TraineeDawn.dc.html" style="color: inherit; text-decoration: none">
+<div class="left"><div class="avatar">А</div><div><div class="b">Айгерим</div><div class="cap">Тренировалась вчера</div></div></div>
+<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
+</a>
+<a class="glass card row" href="TraineeDawn.dc.html" style="color: inherit; text-decoration: none">
+<div class="left"><div class="avatar">Д</div><div><div class="b">Данияр</div><div class="cap">Программа не назначена</div></div></div>
+<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
+</a>
+</div>
+<div class="grow"></div>
+<button class="btn">Пригласить</button>
+<button class="btn text">Ввести код приглашения</button>
+</div>
+<nav class="glass panel tabbar" aria-label="Разделы">
+<a class="tab" href="HomeDawn.dc.html"><svg viewBox="0 0 24 24"><path d="M3 12h18M6 8v8M18 8v8M3.5 10v4M20.5 10v4"></path></svg>Главная</a>
+<a class="tab" href="HistoryDawn.dc.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg>История</a>
+<a class="tab" href="ProgressDawn.dc.html"><svg viewBox="0 0 24 24"><path d="M4 18l5-6 4 3 7-9"></path><path d="M4 21h16"></path></svg>Прогресс</a>
+<a class="tab on" href="PeopleDawn.dc.html"><svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="3.5"></circle><path d="M2.5 19c.6-3.2 3.2-5 6.5-5s5.9 1.8 6.5 5"></path><path d="M16 5.8a3.5 3.5 0 010 6.4M18.5 14.6c1.6.8 2.7 2.3 3 4.4"></path></svg>Люди</a>
+<a class="tab" href="ProfileDawn.dc.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4"></circle><path d="M4.5 20c.8-3.6 3.8-5.5 7.5-5.5s6.7 1.9 7.5 5.5"></path></svg>Профиль</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dusk","dawn"],"default":"dawn"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { theme: this.props.theme ?? 'dawn' };
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "@@locale": "ru",
+  "appTitle": "Progress Bar",
+  "tabHome": "Главная",
+  "tabHistory": "История",
+  "tabProgress": "Прогресс",
+  "tabPeople": "Люди",
+  "tabProfile": "Профиль",
+  "signInTitle": "Вход",
+  "signInPhoneLabel": "Номер телефона",
+  "signInContinue": "Продолжить",
+  "homeStartFreeWorkout": "Тренировка без программы",
+  "homeNewProgram": "Новая программа",
+  "programBuilderTitle": "Программа",
+  "workoutTitle": "Тренировка",
+  "traineeTitle": "Подопечный",
+  "profileSignOut": "Выйти",
+  "comingSoon": "Здесь пока пусто"
+}

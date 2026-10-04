@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Правка завершённой тренировки, тема Рассвет</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="pb.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Fira+Sans+Extra+Condensed:wght@600;700;800&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="pb" data-theme="{{theme}}" style="width: 390px; height: 844px">
+<div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+<div class="scr">
+<div class="left"><a class="icon" href="HistoryDawn.dc.html" aria-label="Назад"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"></path></svg></a><h1 class="title">2 октября</h1></div>
+<div class="banner" role="note"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.500"></circle><path d="M12 8v5M12 16v.500"></path></svg><span>Тренировка завершена. После правки тренер увидит пометку «изменено после завершения».</span></div>
+<div class="stack">
+<div class="glass card" style="display: grid; gap: 4px"><div class="row"><span class="b">Жим лёжа</span><button class="icon" aria-label="Исправить: Жим лёжа"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4z"></path></svg></button></div><div class="row"><span class="num n-sm plan">план 3 × 8 × 60 кг</span><span class="num n-md">3 × 8 × 60<span class="unit">кг</span></span></div></div>
+<div class="glass card" style="display: grid; gap: 4px"><div class="row"><span class="b">Жим на наклонной</span><button class="icon" aria-label="Исправить: Жим на наклонной"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4z"></path></svg></button></div><div class="row"><span class="num n-sm plan">план 3 × 10 × 22 кг</span><span class="num n-md">3 × 10 × 20<span class="unit">кг</span></span></div></div>
+<div class="glass card" style="display: grid; gap: 4px"><div class="row"><span class="b">Разводка в кроссовере</span><button class="icon" aria-label="Исправить: Разводка в кроссовере"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4z"></path></svg></button></div><div class="row"><span class="num n-sm plan">план 3 × 12 × 15 кг</span><span class="num n-md">3 × 12 × 15<span class="unit">кг</span></span></div></div>
+</div>
+<div class="grow"></div>
+<a class="btn" href="HistoryDawn.dc.html">Сохранить изменения</a>
+<a class="btn ghost" href="HistoryDawn.dc.html">Не сохранять</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dusk","dawn"],"default":"dawn"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { theme: this.props.theme ?? 'dawn' };
+}
+}
+</script>
+</body>
+</html>

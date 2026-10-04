@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>История тренировок</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="pb.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Fira+Sans+Extra+Condensed:wght@600;700;800&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="pb" data-theme="{{theme}}" style="width: 390px; height: 844px">
+<div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+<div class="scr tabs">
+<h1 class="title">История</h1>
+<section class="glass panel" style="padding: 16px; display: grid; gap: 6px" aria-label="Тренировка 2 октября">
+<div class="row">
+<div><div class="b">2 октября · Грудь и трицепс</div><div class="cap">Сила, 3 дня · тренер Сергей</div></div>
+<a class="icon" href="WorkoutEdit.dc.html" aria-label="Исправить тренировку"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4z"></path></svg></a>
+</div>
+<div>
+<div class="pf first" style="grid-template-columns: 1fr auto; align-items: end"><span><span class="b">Жим лёжа</span><br><span class="num n-sm plan">план 3 × 8 × 60 кг</span></span><span class="num n-md">3 × 8 × 60<span class="unit">кг</span></span></div>
+<div class="pf" style="grid-template-columns: 1fr auto; align-items: end"><span><span class="b">Жим на наклонной</span><br><span class="num n-sm plan">план 3 × 10 × 22 кг</span></span><span class="num n-md">3 × 10 × 20<span class="unit">кг</span></span></div>
+<div class="pf" style="grid-template-columns: 1fr auto; align-items: end"><span><span class="b">Разводка в кроссовере</span><br><span class="num n-sm plan">план 3 × 12 × 15 кг</span></span><span class="num n-md">3 × 12 × 15<span class="unit">кг</span></span></div>
+</div>
+<div class="row" style="justify-content: flex-start; gap: 8px; flex-wrap: wrap">
+<span class="chip under">1 упражнение ниже плана</span>
+<span class="chip">изменено после завершения</span>
+</div>
+</section>
+<div class="stack">
+<div class="glass card row">
+<div><div class="b">30 сентября · Ноги</div><div class="cap">Сила, 3 дня · тренер Сергей</div></div>
+<span class="chip ok">по плану</span>
+</div>
+<div class="glass card row">
+<div><div class="b">28 сентября · Спина и бицепс</div><div class="cap">Сила, 3 дня · тренер Сергей</div></div>
+<span class="chip ok">по плану</span>
+</div>
+<div class="glass card row">
+<div><div class="b">26 сентября</div><div class="cap">Без программы</div></div>
+<span class="chip">4 упражнения</span>
+</div>
+</div>
+</div>
+<nav class="glass panel tabbar" aria-label="Разделы">
+<a class="tab" href="Home.dc.html"><svg viewBox="0 0 24 24"><path d="M3 12h18M6 8v8M18 8v8M3.5 10v4M20.5 10v4"></path></svg>Главная</a>
+<a class="tab on" href="History.dc.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg>История</a>
+<a class="tab" href="Progress.dc.html"><svg viewBox="0 0 24 24"><path d="M4 18l5-6 4 3 7-9"></path><path d="M4 21h16"></path></svg>Прогресс</a>
+<a class="tab" href="People.dc.html"><svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="3.5"></circle><path d="M2.5 19c.6-3.2 3.2-5 6.5-5s5.9 1.8 6.5 5"></path><path d="M16 5.8a3.5 3.5 0 010 6.4M18.5 14.6c1.6.8 2.7 2.3 3 4.4"></path></svg>Люди</a>
+<a class="tab" href="Profile.dc.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4"></circle><path d="M4.5 20c.8-3.6 3.8-5.5 7.5-5.5s6.7 1.9 7.5 5.5"></path></svg>Профиль</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dusk","dawn"],"default":"dusk"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { theme: this.props.theme ?? 'dusk' };
+}
+}
+</script>
+</body>
+</html>

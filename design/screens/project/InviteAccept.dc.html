@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Принятие приглашения</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="pb.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Fira+Sans+Extra+Condensed:wght@600;700;800&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="pb" data-theme="{{theme}}" style="width: 390px; height: 844px">
+<div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+<div class="scr" style="gap: 12px">
+<div class="left"><a class="icon" href="People.dc.html" aria-label="Назад"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"></path></svg></a><h1 class="title">Приглашение</h1></div>
+<div class="row">
+<input class="field num" style="font-size: 28px; letter-spacing: 0.04em" type="text" aria-label="Код приглашения" value="K7M 42Q">
+<button class="icon step" aria-label="Сканировать QR"><svg viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3M8 12h8"></path></svg></button>
+</div>
+<section class="glass panel" style="padding: 16px; display: grid; gap: 12px" aria-label="Кто приглашает">
+<div class="left"><div class="avatar" style="width: 56px; height: 56px">С</div><div><div class="h">Сергей</div><div class="cap">приглашает вас как тренер</div></div></div>
+<p class="text">Сергей сможет назначать вам программы и видеть ваши тренировки.</p>
+</section>
+<div class="banner" role="note"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.500"></circle><path d="M12 8v5M12 16v.500"></path></svg><span>Сейчас ваш активный тренер — Мадина. Она останется с доступом на просмотр.</span></div>
+<div class="grow"></div>
+<a class="btn" href="People.dc.html">Принять и сделать активным</a>
+<a class="btn ghost" href="People.dc.html">Отклонить</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dusk","dawn"],"default":"dusk"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { theme: this.props.theme ?? 'dusk' };
+}
+}
+</script>
+</body>
+</html>

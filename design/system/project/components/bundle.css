@@ -1,0 +1,64 @@
+/* Progress Bar — styles shared by the component previews. */
+.pb-demo { font-family: var(--font-sans, "Golos Text", system-ui, sans-serif); color: var(--ink); background: var(--ground); margin: 0; }
+.pb-stage { position: relative; overflow: hidden; isolation: isolate; background: var(--ground); }
+.pb-glow { position: absolute; z-index: -1; border-radius: 50%; filter: blur(var(--glow-blur, 48px)); opacity: 0.6; aspect-ratio: 1; }
+[data-theme="dawn"] .pb-glow { opacity: 0.85; }
+.pb-glow--1 { width: 68%; left: -22%; top: -12%; background: var(--glow-1); }
+.pb-glow--2 { width: 62%; right: -24%; top: 28%; background: var(--glow-2); }
+.pb-glow--3 { width: 74%; left: 6%; bottom: -24%; background: var(--glow-3); }
+
+.pb-num { font-family: var(--font-num, "Fira Sans Extra Condensed", "Arial Narrow", sans-serif); font-variant-numeric: tabular-nums; }
+.pb-unit { color: var(--ink-muted); margin-left: var(--space-1, 4px); }
+.pb-label { font-size: 14px; line-height: 18px; font-weight: 600; letter-spacing: 0.02em; color: var(--ink-muted); }
+.pb-caption { font-size: 14px; line-height: 20px; font-weight: 500; color: var(--ink-muted); }
+.pb-heading { font-size: 20px; line-height: 26px; font-weight: 700; margin: 0; }
+
+.pb-glass { background: var(--glass); -webkit-backdrop-filter: blur(var(--glass-blur, 26px)) saturate(1.5); backdrop-filter: blur(var(--glass-blur, 26px)) saturate(1.5); border: 1px solid var(--glass-line); border-radius: var(--radius-lg, 20px); }
+.pb-glass--strong { background: var(--glass-strong); border-radius: var(--radius-xl, 28px); box-shadow: var(--shadow-float); }
+.pb-card { padding: var(--space-4, 16px); }
+
+.pb-button { display: flex; align-items: center; justify-content: center; width: 100%; min-height: var(--action-height, 56px); border: 0; border-radius: var(--radius-md, 16px); background: var(--accent); color: var(--on-accent); font: 700 17px/24px var(--font-sans, "Golos Text", system-ui, sans-serif); cursor: pointer; }
+.pb-button--text { background: none; color: var(--accent-text); min-height: var(--touch-min, 48px); }
+.pb-button:focus-visible, .pb-step:focus-visible, .pb-tab:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+/* PlanFactRow */
+.pb-planfact { display: grid; grid-template-columns: 104px 1fr auto; align-items: end; gap: var(--space-3, 12px); padding: var(--space-3, 12px) 0; border-top: 1px solid var(--line); white-space: nowrap; }
+.pb-planfact:first-of-type { border-top: 0; }
+.pb-planfact__plan { font-size: 20px; line-height: 22px; font-weight: 600; color: var(--ink-muted); }
+.pb-planfact__fact { font-size: 28px; line-height: 30px; font-weight: 700; color: var(--ink); }
+.pb-planfact__fact--empty { color: var(--ink-muted); }
+.pb-chip { display: inline-flex; align-items: center; gap: var(--space-1, 4px); min-height: 28px; padding: 0 var(--space-2, 8px); border-radius: var(--radius-sm, 8px); background: var(--sunken); font-size: 14px; line-height: 18px; font-weight: 600; white-space: nowrap; }
+.pb-chip--ok { color: var(--success); }
+.pb-chip--under { color: var(--warning); }
+.pb-chip svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* BarbellProgress */
+.pb-barbell { display: flex; align-items: center; gap: var(--space-3, 12px); }
+.pb-barbell__bar { position: relative; flex: 1; display: flex; align-items: center; gap: var(--space-2, 8px); height: 48px; padding-left: var(--space-4, 16px); }
+.pb-barbell__bar::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 6px; margin-top: -3px; border-radius: 3px; background: var(--line-strong); }
+.pb-plate { position: relative; flex: 0 0 auto; width: 16px; height: 48px; border-radius: var(--radius-sm, 8px); background: var(--sunken); box-shadow: inset 0 0 0 2px var(--line-strong); }
+.pb-plate--done { background: var(--accent); box-shadow: none; }
+.pb-plate--current { background: transparent; box-shadow: inset 0 0 0 2px var(--accent-text); }
+.pb-barbell__collar { position: relative; flex: 0 0 auto; width: 10px; height: 20px; border-radius: 4px; background: var(--ink); }
+.pb-barbell__count { font-size: 28px; line-height: 30px; font-weight: 700; white-space: nowrap; }
+
+/* SetEntryPanel */
+.pb-entry { padding: var(--space-4, 16px); display: grid; gap: var(--space-3, 12px); }
+.pb-entry__plan { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3, 12px); }
+.pb-entry__row { display: grid; grid-template-columns: 1fr var(--action-height, 56px) var(--action-height, 56px); align-items: end; gap: var(--space-2, 8px); }
+.pb-entry__field { display: grid; gap: 2px; }
+.pb-entry__value { font-size: 44px; line-height: 44px; font-weight: 700; }
+.pb-entry__value--hero { font-size: 72px; line-height: 72px; font-weight: 800; }
+.pb-step { width: var(--action-height, 56px); height: var(--action-height, 56px); border: 0; border-radius: var(--radius-md, 16px); background: var(--sunken); color: var(--ink); display: grid; place-items: center; cursor: pointer; }
+.pb-step svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; fill: none; }
+
+/* TabBar */
+.pb-tabbar { display: grid; grid-template-columns: repeat(5, 1fr); padding: var(--space-2, 8px); }
+.pb-tab { display: grid; justify-items: center; gap: 2px; min-height: var(--touch-min, 48px); padding: var(--space-1, 4px) 0; border: 0; background: none; color: var(--ink-muted); font: 600 12px/16px var(--font-sans, "Golos Text", system-ui, sans-serif); cursor: pointer; border-radius: var(--radius-lg, 20px); }
+.pb-tab svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.pb-tab[aria-current="page"] { color: var(--accent-text); background: var(--sunken); }
+
+/* List rows used behind panels in previews */
+.pb-list { display: grid; gap: var(--space-2, 8px); padding: var(--space-4, 16px); }
+.pb-row { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3, 12px); padding: var(--space-3, 12px) var(--space-4, 16px); font-size: 17px; line-height: 24px; }
+.pb-row--current { background: var(--glass-strong); box-shadow: inset 0 0 0 2px var(--accent-text); border-color: transparent; }

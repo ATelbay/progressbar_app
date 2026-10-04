@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Вход: имя и вес тела</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="pb.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Fira+Sans+Extra+Condensed:wght@600;700;800&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="pb" data-theme="{{theme}}" style="width: 390px; height: 844px">
+<div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+<div class="scr" style="gap: 16px">
+<h1 class="title">Пара вопросов</h1>
+<p class="text">Спросим один раз. Потом это можно поменять в профиле.</p>
+<div class="stack">
+<label class="label" for="name">Как вас зовут</label>
+<input id="name" class="field" type="text" value="Арман">
+</div>
+<section class="glass panel" style="padding: 16px; display: grid; gap: 8px" aria-label="Вес тела">
+<div class="erow"><div><div class="label">Вес тела</div><span class="num n-hero">78<span class="unit">кг</span></span></div><button class="icon step" aria-label="Меньше вес тела"><svg viewBox="0 0 24 24"><path d="M6 12h12"></path></svg></button><button class="icon step" aria-label="Больше вес тела"><svg viewBox="0 0 24 24"><path d="M6 12h12M12 6v12"></path></svg></button></div>
+<div class="cap">Нужен для подтягиваний, отжиманий и других упражнений с собственным весом.</div>
+</section>
+<div class="grow"></div>
+<a class="btn" href="HomeEmpty.dc.html">Готово</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dusk","dawn"],"default":"dusk"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { theme: this.props.theme ?? 'dusk' };
+}
+}
+</script>
+</body>
+</html>

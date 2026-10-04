@@ -1,0 +1,34 @@
+<!-- @dsCard height=288 -->
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Fira+Sans+Extra+Condensed:wght@600;700;800&display=swap">
+<style>
+body{margin:0;background:var(--ground)}
+.cover{position:relative;width:960px;height:288px;overflow:hidden}
+.cover svg{position:absolute;inset:0}
+.rod{fill:var(--line-strong)}
+.p-amber{fill:var(--accent);rx:var(--radius-md)}
+.p-coral{fill:var(--glow-1);rx:var(--radius-md)}
+.p-rose{fill:var(--glow-2);rx:var(--radius-md)}
+.p-sun{fill:var(--glow-3);rx:var(--radius-sm)}
+.p-ink{fill:var(--ink);rx:var(--radius-sm)}
+.name{position:absolute;left:32px;bottom:56px;margin:0;max-width:440px;font:800 104px/0.95 var(--font-num,"Fira Sans Extra Condensed","Arial Narrow",sans-serif);color:var(--ink)}
+.tag{position:absolute;left:32px;bottom:28px;margin:0;max-width:440px;font:400 14px/18px var(--font-sans,"Golos Text",system-ui,sans-serif);color:var(--ink-muted)}
+</style></head><body>
+<div class="cover">
+<!--
+blocks: accent 96×240, glow-1 72×240, glow-2 64×176, accent 48×128, glow-3 32×80, ink collar 40×56 — sides are multiples of space-4 (16px)
+arrangement: plates loaded on a sleeve, tallest first, stepping down to the collar; the bar bleeds off the right edge
+pattern: literal motif — the barbell the product is named after; the plates are the blocks, the bar is the single rule through them, in the sunset hues the glass sits over
+scales: gaps space-3 (12px); plate corners radius-md; small plate and collar radius-sm; bar height space-4
+-->
+<svg viewBox="0 0 960 288" width="960" height="288" aria-hidden="true">
+<rect class="rod" x="480" y="136" width="480" height="16"/>
+<rect class="p-amber" x="512" y="24" width="96" height="240"/>
+<rect class="p-coral" x="620" y="24" width="72" height="240"/>
+<rect class="p-rose" x="704" y="56" width="64" height="176"/>
+<rect class="p-amber" x="780" y="80" width="48" height="128"/>
+<rect class="p-sun" x="840" y="104" width="32" height="80"/>
+<rect class="p-ink" x="884" y="116" width="40" height="56"/>
+</svg>
+<p class="name">Progress Bar</p>
+<p class="tag">Журнал тренировок: тренер пишет план, спортсмен — факт.</p>
+</div></body></html>
