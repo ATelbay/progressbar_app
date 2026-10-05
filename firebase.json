@@ -1,0 +1,36 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "progressbar-app",
+          "appId": "1:592329183159:android:ec51ec90886cc5568f6232",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "progressbar-app",
+          "appId": "1:592329183159:ios:15951a39a385ffbb8f6232",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "progressbar-app",
+          "configurations": {
+            "android": "1:592329183159:android:ec51ec90886cc5568f6232",
+            "ios": "1:592329183159:ios:15951a39a385ffbb8f6232"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "database": "(default)",
+    "location": "europe-west3",
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}

@@ -1,8 +1,10 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'features/auth/auth_controller.dart';
+import 'features/auth/code_screen.dart';
+import 'features/auth/profile_setup_screen.dart';
 import 'features/auth/sign_in_screen.dart';
 import 'features/history/history_screen.dart';
 import 'features/home/home_screen.dart';
@@ -15,7 +17,10 @@ import 'features/shell.dart';
 import 'features/workout/workout_screen.dart';
 
 abstract final class Routes {
+  static const loading = '/loading';
   static const signIn = '/sign-in';
+  static const signInCode = '/sign-in/code';
+  static const welcome = '/welcome';
   static const home = '/';
   static const history = '/history';
   static const progress = '/progress';
@@ -29,7 +34,7 @@ abstract final class Routes {
 final _rootKey = GlobalKey<NavigatorState>();
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final signedIn = ref.watch(authControllerProvider);
+  final session = ref.watch(sessionProvider);
 
   GoRoute tab(String path, Widget screen) =>
       GoRoute(path: path, builder: (_, _) => screen);
@@ -43,12 +48,35 @@ final routerProvider = Provider<GoRouter>((ref) {
     navigatorKey: _rootKey,
     initialLocation: Routes.home,
     redirect: (_, state) {
-      final atSignIn = state.matchedLocation == Routes.signIn;
-      if (!signedIn) return atSignIn ? null : Routes.signIn;
-      return atSignIn ? Routes.home : null;
+      final at = state.matchedLocation;
+      return switch (session) {
+        Session.loading => Routes.loading,
+        Session.signedOut =>
+          at == Routes.signIn || at == Routes.signInCode ? null : Routes.signIn,
+        Session.needsProfile => Routes.welcome,
+        Session.ready =>
+          const {
+                Routes.loading,
+                Routes.signIn,
+                Routes.signInCode,
+                Routes.welcome,
+              }.contains(at)
+              ? Routes.home
+              : null,
+      };
     },
     routes: [
+      GoRoute(
+        path: Routes.loading,
+        builder: (_, _) =>
+            const Scaffold(body: Center(child: CircularProgressIndicator())),
+      ),
       GoRoute(path: Routes.signIn, builder: (_, _) => const SignInScreen()),
+      GoRoute(path: Routes.signInCode, builder: (_, _) => const CodeScreen()),
+      GoRoute(
+        path: Routes.welcome,
+        builder: (_, _) => const ProfileSetupScreen(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (_, _, shell) => AppShell(navigationShell: shell),
         branches: [

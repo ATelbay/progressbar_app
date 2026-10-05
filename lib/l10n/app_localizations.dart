@@ -148,12 +148,6 @@ abstract class AppLocalizations {
   /// **'Phone number'**
   String get signInPhoneLabel;
 
-  /// No description provided for @signInContinue.
-  ///
-  /// In en, this message translates to:
-  /// **'Continue'**
-  String get signInContinue;
-
   /// No description provided for @homeStartFreeWorkout.
   ///
   /// In en, this message translates to:
@@ -195,6 +189,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nothing here yet'**
   String get comingSoon;
+
+  /// No description provided for @signInTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'A training log. Your coach writes the plan, you log what happened.'**
+  String get signInTagline;
+
+  /// No description provided for @signInGetCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Get code'**
+  String get signInGetCode;
+
+  /// No description provided for @signInSmsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll text you a code. No password needed.'**
+  String get signInSmsHint;
+
+  /// No description provided for @codeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Code from SMS'**
+  String get codeTitle;
+
+  /// No description provided for @codeSentTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to {phone}'**
+  String codeSentTo(String phone);
+
+  /// No description provided for @codeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Six-digit code'**
+  String get codeLabel;
+
+  /// No description provided for @codeContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get codeContinue;
+
+  /// No description provided for @codeResend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send again'**
+  String get codeResend;
+
+  /// No description provided for @welcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Two quick questions'**
+  String get welcomeTitle;
+
+  /// No description provided for @welcomeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'We ask once. You can change this later in your profile.'**
+  String get welcomeHint;
+
+  /// No description provided for @welcomeNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name'**
+  String get welcomeNameLabel;
+
+  /// No description provided for @welcomeBodyWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Body weight'**
+  String get welcomeBodyWeight;
+
+  /// No description provided for @welcomeBodyWeightHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Used for pull-ups, dips and other body-weight exercises.'**
+  String get welcomeBodyWeightHint;
+
+  /// No description provided for @welcomeDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get welcomeDone;
+
+  /// No description provided for @unitKg.
+  ///
+  /// In en, this message translates to:
+  /// **'kg'**
+  String get unitKg;
+
+  /// No description provided for @decreaseBodyWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Decrease body weight'**
+  String get decreaseBodyWeight;
+
+  /// No description provided for @increaseBodyWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase body weight'**
+  String get increaseBodyWeight;
+
+  /// No description provided for @errorInvalidPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'That doesn\'t look like a phone number. Enter it with the country code, like +7 701 234 56 78.'**
+  String get errorInvalidPhone;
+
+  /// No description provided for @errorInvalidCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong code. Check the SMS and try again.'**
+  String get errorInvalidCode;
+
+  /// No description provided for @errorCodeExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'The code has expired. Request a new one.'**
+  String get errorCodeExpired;
+
+  /// No description provided for @errorTooManyRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Try again later.'**
+  String get errorTooManyRequests;
+
+  /// No description provided for @errorNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection. Check the network and try again.'**
+  String get errorNetwork;
+
+  /// No description provided for @errorUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t sign in. Try again.'**
+  String get errorUnknown;
+
+  /// No description provided for @errorNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your name.'**
+  String get errorNameRequired;
 }
 
 class _AppLocalizationsDelegate

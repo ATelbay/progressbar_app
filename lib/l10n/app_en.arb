@@ -8,12 +8,42 @@
   "tabProfile": "Profile",
   "signInTitle": "Sign in",
   "signInPhoneLabel": "Phone number",
-  "signInContinue": "Continue",
   "homeStartFreeWorkout": "Workout without a program",
   "homeNewProgram": "New program",
   "programBuilderTitle": "Program",
   "workoutTitle": "Workout",
   "traineeTitle": "Trainee",
   "profileSignOut": "Sign out",
-  "comingSoon": "Nothing here yet"
+  "comingSoon": "Nothing here yet",
+  "signInTagline": "A training log. Your coach writes the plan, you log what happened.",
+  "signInGetCode": "Get code",
+  "signInSmsHint": "We'll text you a code. No password needed.",
+  "codeTitle": "Code from SMS",
+  "codeSentTo": "Sent to {phone}",
+  "codeLabel": "Six-digit code",
+  "codeContinue": "Continue",
+  "codeResend": "Send again",
+  "welcomeTitle": "Two quick questions",
+  "welcomeHint": "We ask once. You can change this later in your profile.",
+  "welcomeNameLabel": "Your name",
+  "welcomeBodyWeight": "Body weight",
+  "welcomeBodyWeightHint": "Used for pull-ups, dips and other body-weight exercises.",
+  "welcomeDone": "Done",
+  "unitKg": "kg",
+  "decreaseBodyWeight": "Decrease body weight",
+  "increaseBodyWeight": "Increase body weight",
+  "errorInvalidPhone": "That doesn't look like a phone number. Enter it with the country code, like +7 701 234 56 78.",
+  "errorInvalidCode": "Wrong code. Check the SMS and try again.",
+  "errorCodeExpired": "The code has expired. Request a new one.",
+  "errorTooManyRequests": "Too many attempts. Try again later.",
+  "errorNetwork": "No connection. Check the network and try again.",
+  "errorUnknown": "Couldn't sign in. Try again.",
+  "errorNameRequired": "Enter your name.",
+  "@codeSentTo": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  }
 }
