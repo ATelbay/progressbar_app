@@ -55,6 +55,12 @@ rtk proxy npx -y firebase-tools@latest emulators:exec --only firestore --project
 rtk proxy npx -y firebase-tools@latest emulators:start --only firestore,auth --project progressbar-app
 tool/offline_storage_test.sh <simulator-id>
 
+# Проход по всему приложению на iOS-симуляторе со снимками экрана; эмуляторы запущены:
+tool/walkthrough.sh <simulator-id> <папка для снимков>
+
+# Ручной запуск против эмуляторов вместо боевого Firebase (только отладочная сборка):
+rtk proxy flutter run -d <device-id> --dart-define=USE_FIREBASE_EMULATORS=true
+
 # Развернуть правила доступа:
 rtk proxy npx -y firebase-tools@latest deploy --only firestore:rules --project progressbar-app
 

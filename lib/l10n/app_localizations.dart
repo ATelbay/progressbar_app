@@ -709,7 +709,7 @@ abstract class AppLocalizations {
   /// No description provided for @effortSome.
   ///
   /// In en, this message translates to:
-  /// **'Some strength left'**
+  /// **'Some left'**
   String get effortSome;
 
   /// No description provided for @effortNone.

@@ -341,7 +341,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get effortMore => 'Could do more';
 
   @override
-  String get effortSome => 'Some strength left';
+  String get effortSome => 'Some left';
 
   @override
   String get effortNone => 'Nothing left';

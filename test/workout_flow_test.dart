@@ -134,7 +134,7 @@ void main() {
     await tap(tester, find.text('Done'));
     expect(find.text('42.5 kg', findRichText: true), findsOneWidget);
 
-    await tap(tester, find.text('Some strength left'));
+    await tap(tester, find.text('Some left'));
     await tap(tester, find.text('Record set 1'));
     expect(find.text('Record set 2'), findsOneWidget);
     await tap(tester, find.text('Record set 2'));
