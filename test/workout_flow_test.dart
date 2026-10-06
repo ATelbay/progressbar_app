@@ -12,6 +12,8 @@ import 'package:progressbar_app/domain/models.dart';
 import 'package:progressbar_app/features/auth/auth_controller.dart';
 import 'package:progressbar_app/features/exercises/exercise_catalog_provider.dart';
 import 'package:progressbar_app/features/firestore_provider.dart';
+import 'package:progressbar_app/features/people/people_providers.dart';
+import 'package:progressbar_app/widgets/qr_code.dart';
 
 import 'support/fakes.dart';
 
@@ -19,6 +21,8 @@ void main() {
   late FakeProfileRepository profiles;
   late FakeFirebaseFirestore db;
   late Map<String, Exercise> catalog;
+  // What the app handed to the system share sheet.
+  final shared = <String>[];
 
   // Loaded once outside the tests' fake clock: an asset future cached by one
   // widget test never completes for the next one.
@@ -27,13 +31,17 @@ void main() {
     catalog = await AssetExerciseCatalogRepository(rootBundle).load();
   });
 
-  Future<void> openApp(WidgetTester tester) async {
+  Future<void> openApp(
+    WidgetTester tester, {
+    FakeFirebaseFirestore? seeded,
+  }) async {
     // A phone-sized screen, as in the mockups.
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     profiles = FakeProfileRepository();
-    db = FakeFirebaseFirestore();
+    db = seeded ?? FakeFirebaseFirestore();
+    shared.clear();
     await profiles.save(
       const UserProfile(
         id: 'user-1',
@@ -51,6 +59,9 @@ void main() {
           profileRepositoryProvider.overrideWithValue(profiles),
           firestoreProvider.overrideWithValue(db),
           exerciseCatalogProvider.overrideWith((ref) => catalog),
+          shareTextProvider.overrideWithValue(
+            (text, _) async => shared.add(text),
+          ),
         ],
         child: const ProgressBarApp(),
       ),
@@ -477,6 +488,14 @@ void main() {
     expect(stored.data()['inviterName'], 'Арман');
     expect(stored.data()['inviterRole'], 'trainee');
     expect(find.text(formatInviteCode(stored.id)), findsOneWidget);
+    // The same code goes out as a QR code and as a link to share.
+    expect(
+      tester.widget<QrCodeView>(find.byType(QrCodeView)).data,
+      inviteLink(stored.id),
+    );
+    await tap(tester, find.text('Share link'));
+    expect(shared.single, contains(inviteLink(stored.id)));
+    expect(shared.single, contains(formatInviteCode(stored.id)));
 
     // The other person accepts: they appear among the coaches.
     await tester.runAsync(() async {
@@ -491,5 +510,77 @@ void main() {
     await settle(tester);
     expect(find.text('Мадина'), findsOneWidget);
     expect(find.text('Assigns programs'), findsOneWidget);
+  });
+
+  testWidgets('an invitation link opens the invitation, ready to accept', (
+    tester,
+  ) async {
+    await openApp(tester);
+    late Invitation fromCoach;
+    await tester.runAsync(() async {
+      fromCoach = await FirestoreLinkRepository(db).createInvitation(
+        inviterId: 'sergey',
+        inviterName: 'Сергей',
+        role: LinkRole.coach,
+      );
+    });
+    // The way the system hands a link to a running app.
+    await tester.binding.defaultBinaryMessenger.handlePlatformMessage(
+      'flutter/navigation',
+      const JSONMethodCodec().encodeMethodCall(
+        MethodCall('pushRouteInformation', {
+          'location': inviteLink(fromCoach.code),
+        }),
+      ),
+      (_) {},
+    );
+    await settle(tester);
+    expect(find.text('invites you as a coach'), findsOneWidget);
+    await tap(tester, find.text('Accept'));
+    expect(find.text('Home'), findsWidgets);
+    expect(
+      (await db.doc('links/sergey_user-1').get()).data()!['status'],
+      'active',
+    );
+
+    // A link that is not an invitation leaves the app where it was.
+    await tester.binding.defaultBinaryMessenger.handlePlatformMessage(
+      'flutter/navigation',
+      const JSONMethodCodec().encodeMethodCall(
+        const MethodCall('pushRouteInformation', {
+          'location': 'progressbar://app/join/nonsense',
+        }),
+      ),
+      (_) {},
+    );
+    await settle(tester);
+    expect(find.text('Home'), findsWidgets);
+    expect(find.text('Find'), findsNothing);
+  });
+
+  testWidgets('started by an invitation link, the app opens the invitation', (
+    tester,
+  ) async {
+    final seeded = FakeFirebaseFirestore();
+    late Invitation fromCoach;
+    await tester.runAsync(() async {
+      fromCoach = await FirestoreLinkRepository(seeded).createInvitation(
+        inviterId: 'sergey',
+        inviterName: 'Сергей',
+        role: LinkRole.coach,
+      );
+    });
+    // The link arrives before the session is known; it waits for sign-in.
+    tester.binding.platformDispatcher.defaultRouteNameTestValue = inviteLink(
+      fromCoach.code,
+    );
+    addTearDown(
+      tester.binding.platformDispatcher.clearDefaultRouteNameTestValue,
+    );
+    await openApp(tester, seeded: seeded);
+    await settle(tester);
+    expect(find.text('invites you as a coach'), findsOneWidget);
+    await tap(tester, find.text('Accept'));
+    expect(find.text('Home'), findsWidgets);
   });
 }

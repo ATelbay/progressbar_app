@@ -26,6 +26,24 @@ CoachLink link(String coach, LinkStatus status, int day) => CoachLink(
 );
 
 void main() {
+  test(
+    'an invitation link carries the code and nothing else is taken for one',
+    () {
+      expect(inviteLink('K7M42Q'), 'progressbar://app/join/K7M42Q');
+      expect(inviteCodeFromLink(Uri.parse(inviteLink('K7M42Q'))), 'K7M42Q');
+      expect(inviteCodeFromLink(Uri.parse('/join/k7m42q')), 'K7M42Q');
+      for (final other in [
+        'https://app/join/K7M42Q',
+        'progressbar://app/join/K7M40Q',
+        'progressbar://app/join',
+        'progressbar://app/program/K7M42Q',
+        '/people',
+      ]) {
+        expect(inviteCodeFromLink(Uri.parse(other)), isNull, reason: other);
+      }
+    },
+  );
+
   test('codes are six unambiguous characters and survive sloppy typing', () {
     final code = newInviteCode(Random(1));
     expect(code.length, 6);

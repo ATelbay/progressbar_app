@@ -628,11 +628,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get inviteTitle => 'Invitation';
 
   @override
-  String get inviteShowCoach => 'You invite as a coach. Say or send this code.';
+  String get inviteShowCoach =>
+      'You invite as a coach. Show the QR code or say the code.';
 
   @override
   String get inviteShowTrainee =>
-      'You invite as a trainee. Say or send this code.';
+      'You invite as a trainee. Show the QR code or say the code.';
 
   @override
   String get inviteValid => 'The code works once and for 7 days.';
@@ -642,6 +643,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get inviteCopied => 'Code copied';
+
+  @override
+  String get inviteShare => 'Share link';
+
+  @override
+  String get inviteQrLabel => 'Invitation QR code';
+
+  @override
+  String inviteShareText(String code, String link) {
+    return 'Invitation to Progress Bar. Code: $code\nOpen in the app: $link';
+  }
 
   @override
   String get inviteCodeLabel => 'Invitation code';

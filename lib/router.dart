@@ -10,7 +10,9 @@ import 'features/exercises/exercise_picker_screen.dart';
 import 'features/history/history_screen.dart';
 import 'features/history/workout_edit_screen.dart';
 import 'features/home/home_screen.dart';
+import 'domain/link_logic.dart';
 import 'features/people/invite_screens.dart';
+import 'features/people/people_providers.dart';
 import 'features/people/people_screen.dart';
 import 'features/people/trainee_screen.dart';
 import 'features/profile/profile_screen.dart';
@@ -35,6 +37,7 @@ abstract final class Routes {
   static const assignedProgram = '/assigned';
   static const invite = '/invite';
   static const inviteAccept = '/invite-accept';
+  static const join = '/join';
   static const exercisePicker = '/exercises';
   static const exerciseCatalog = '/exercise-catalog';
   static const workoutEdit = '/workout-edit';
@@ -42,8 +45,19 @@ abstract final class Routes {
 
 final _rootKey = GlobalKey<NavigatorState>();
 
+class _Launch {
+  bool routed = false;
+}
+
+final _launchProvider = Provider((ref) => _Launch());
+
 final routerProvider = Provider<GoRouter>((ref) {
   final session = ref.watch(sessionProvider);
+  // The router is rebuilt when the session changes. Only the first one reads
+  // the link the app was started with, or an invitation would open twice.
+  final launch = ref.read(_launchProvider);
+  final restarted = launch.routed;
+  launch.routed = true;
 
   GoRoute tab(String path, Widget screen) =>
       GoRoute(path: path, builder: (_, _) => screen);
@@ -56,8 +70,18 @@ final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     navigatorKey: _rootKey,
     initialLocation: Routes.home,
+    overridePlatformDefaultLocation: restarted,
     redirect: (_, state) {
       final at = state.matchedLocation;
+      // An invitation link is not a screen of its own: the code is kept until
+      // the person is signed in and the shell opens it over the home screen.
+      final invited = inviteCodeFromLink(state.uri);
+      if (invited != null) {
+        Future.microtask(
+          () => ref.read(pendingInviteCodeProvider.notifier).set(invited),
+        );
+        if (session == Session.ready) return Routes.home;
+      }
       return switch (session) {
         Session.loading => Routes.loading,
         Session.signedOut =>
@@ -128,7 +152,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         ),
       ),
       overlay(Routes.invite, const InviteScreen()),
-      overlay(Routes.inviteAccept, const InviteAcceptScreen()),
+      GoRoute(
+        path: Routes.inviteAccept,
+        parentNavigatorKey: _rootKey,
+        builder: (_, state) =>
+            InviteAcceptScreen(initialCode: state.uri.queryParameters['code']),
+      ),
+      GoRoute(path: '${Routes.join}/:code', redirect: (_, _) => Routes.home),
       overlay(Routes.exercisePicker, const ExercisePickerScreen()),
       overlay(Routes.exerciseCatalog, const ExercisePickerScreen(manage: true)),
     ],

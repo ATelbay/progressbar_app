@@ -9,6 +9,7 @@ import '../../l10n/app_localizations.dart';
 import '../../theme.dart';
 import '../../widgets/glass_panel.dart';
 import '../../widgets/glow_background.dart';
+import '../../widgets/qr_code.dart';
 import '../../widgets/step_button.dart';
 import '../auth/auth_controller.dart';
 import 'people_providers.dart';
@@ -111,8 +112,12 @@ class _InviteScreenState extends ConsumerState<InviteScreen> {
           ),
           GlassPanel(
             child: Column(
-              spacing: PbSpace.s2,
+              spacing: PbSpace.s3,
               children: [
+                QrCodeView(
+                  data: inviteLink(invitation.code),
+                  label: l10n.inviteQrLabel,
+                ),
                 FittedBox(
                   fit: BoxFit.scaleDown,
                   child: SelectableText(
@@ -128,7 +133,22 @@ class _InviteScreenState extends ConsumerState<InviteScreen> {
             ),
           ),
           const Spacer(),
-          FilledButton(
+          Builder(
+            builder: (context) => FilledButton(
+              onPressed: () {
+                // The iPad share sheet needs to know where it grows from.
+                final box = context.findRenderObject() as RenderBox?;
+                ref.read(shareTextProvider)(
+                  l10n.inviteShareText(code, inviteLink(invitation.code)),
+                  box == null
+                      ? null
+                      : box.localToGlobal(Offset.zero) & box.size,
+                );
+              },
+              child: Text(l10n.inviteShare),
+            ),
+          ),
+          OutlinedButton(
             onPressed: () async {
               final messenger = ScaffoldMessenger.of(context);
               await Clipboard.setData(ClipboardData(text: code));
@@ -179,9 +199,12 @@ class _InviteScreenState extends ConsumerState<InviteScreen> {
   }
 }
 
-/// Type a code, see who invites and in which role, then accept or not.
+/// Type a code, see who invites and in which role, then accept or not. Opened
+/// from an invitation link, it arrives with the code and looks it up at once.
 class InviteAcceptScreen extends ConsumerStatefulWidget {
-  const InviteAcceptScreen({super.key});
+  const InviteAcceptScreen({super.key, this.initialCode});
+
+  final String? initialCode;
 
   @override
   ConsumerState<InviteAcceptScreen> createState() => _InviteAcceptScreenState();
@@ -192,6 +215,17 @@ class _InviteAcceptScreenState extends ConsumerState<InviteAcceptScreen> {
   Invitation? _invitation;
   String? _error;
   bool _busy = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final code = widget.initialCode;
+    if (code == null) return;
+    _code.text = formatInviteCode(code);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _find();
+    });
+  }
 
   @override
   void dispose() {
@@ -256,7 +290,7 @@ class _InviteAcceptScreenState extends ConsumerState<InviteAcceptScreen> {
         TextField(
           controller: _code,
           enabled: invitation == null,
-          autofocus: true,
+          autofocus: widget.initialCode == null,
           autocorrect: false,
           textCapitalization: TextCapitalization.characters,
           style: PbText.numMd.copyWith(color: c.ink),

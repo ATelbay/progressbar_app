@@ -27,6 +27,23 @@ String formatInviteCode(String code) => code.length == inviteCodeLength
     ? '${code.substring(0, 3)} ${code.substring(3)}'
     : code;
 
+/// The app's own link scheme: the system camera reads it from a QR code and
+/// opens the app, so no scanner is needed inside.
+const inviteLinkScheme = 'progressbar';
+
+/// «K7M42Q» → «progressbar://app/join/K7M42Q».
+String inviteLink(String code) => '$inviteLinkScheme://app/join/$code';
+
+/// The code inside an invitation link or its path («/join/K7M42Q»); null for
+/// anything else.
+String? inviteCodeFromLink(Uri uri) {
+  if (uri.hasScheme && uri.scheme != inviteLinkScheme) return null;
+  final parts = uri.pathSegments;
+  return parts.length == 2 && parts.first == 'join'
+      ? normalizeInviteCode(parts.last)
+      : null;
+}
+
 /// One link per pair of people, so the ID is made of both.
 String linkId(String coachId, String traineeId) => '${coachId}_$traineeId';
 

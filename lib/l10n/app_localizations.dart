@@ -1176,13 +1176,13 @@ abstract class AppLocalizations {
   /// No description provided for @inviteShowCoach.
   ///
   /// In en, this message translates to:
-  /// **'You invite as a coach. Say or send this code.'**
+  /// **'You invite as a coach. Show the QR code or say the code.'**
   String get inviteShowCoach;
 
   /// No description provided for @inviteShowTrainee.
   ///
   /// In en, this message translates to:
-  /// **'You invite as a trainee. Say or send this code.'**
+  /// **'You invite as a trainee. Show the QR code or say the code.'**
   String get inviteShowTrainee;
 
   /// No description provided for @inviteValid.
@@ -1202,6 +1202,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Code copied'**
   String get inviteCopied;
+
+  /// No description provided for @inviteShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share link'**
+  String get inviteShare;
+
+  /// No description provided for @inviteQrLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation QR code'**
+  String get inviteQrLabel;
+
+  /// No description provided for @inviteShareText.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation to Progress Bar. Code: {code}\nOpen in the app: {link}'**
+  String inviteShareText(String code, String link);
 
   /// No description provided for @inviteCodeLabel.
   ///

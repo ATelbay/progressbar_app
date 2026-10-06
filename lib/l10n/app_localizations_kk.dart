@@ -628,11 +628,11 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get inviteShowCoach =>
-      'Сіз жаттықтырушы ретінде шақырасыз. Осы кодты айтыңыз не жіберіңіз.';
+      'Сіз жаттықтырушы ретінде шақырасыз. QR кодын көрсетіңіз не кодты айтыңыз.';
 
   @override
   String get inviteShowTrainee =>
-      'Сіз шәкірт ретінде шақырасыз. Осы кодты айтыңыз не жіберіңіз.';
+      'Сіз шәкірт ретінде шақырасыз. QR кодын көрсетіңіз не кодты айтыңыз.';
 
   @override
   String get inviteValid => 'Код бір рет және 7 күн жарамды.';
@@ -642,6 +642,17 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get inviteCopied => 'Код көшірілді';
+
+  @override
+  String get inviteShare => 'Сілтемемен бөлісу';
+
+  @override
+  String get inviteQrLabel => 'Шақырудың QR коды';
+
+  @override
+  String inviteShareText(String code, String link) {
+    return 'Progress Bar шақыруы. Код: $code\nҚолданбада ашу: $link';
+  }
 
   @override
   String get inviteCodeLabel => 'Шақыру коды';

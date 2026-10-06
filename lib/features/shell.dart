@@ -8,6 +8,7 @@ import '../domain/link_logic.dart';
 import '../domain/models.dart';
 import '../l10n/app_localizations.dart';
 import 'auth/auth_controller.dart';
+import '../router.dart';
 import 'people/people_providers.dart';
 
 class AppShell extends ConsumerWidget {
@@ -32,6 +33,14 @@ class AppShell extends ConsumerWidget {
         );
       }
     });
+    final invited = ref.watch(pendingInviteCodeProvider);
+    if (invited != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (ref.read(pendingInviteCodeProvider) != invited) return;
+        ref.read(pendingInviteCodeProvider.notifier).set(null);
+        context.push('${Routes.inviteAccept}?code=$invited');
+      });
+    }
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: NavigationBar(

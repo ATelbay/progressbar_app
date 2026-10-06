@@ -639,11 +639,11 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get inviteShowCoach =>
-      'Вы приглашаете как тренер. Продиктуйте или отправьте этот код.';
+      'Вы приглашаете как тренер. Покажите QR или продиктуйте код.';
 
   @override
   String get inviteShowTrainee =>
-      'Вы приглашаете как подопечный. Продиктуйте или отправьте этот код.';
+      'Вы приглашаете как подопечный. Покажите QR или продиктуйте код.';
 
   @override
   String get inviteValid => 'Код действует один раз и 7 дней.';
@@ -653,6 +653,17 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get inviteCopied => 'Код скопирован';
+
+  @override
+  String get inviteShare => 'Поделиться ссылкой';
+
+  @override
+  String get inviteQrLabel => 'QR-код приглашения';
+
+  @override
+  String inviteShareText(String code, String link) {
+    return 'Приглашение в Progress Bar. Код: $code\nОткрыть в приложении: $link';
+  }
 
   @override
   String get inviteCodeLabel => 'Код приглашения';
