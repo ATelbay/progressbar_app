@@ -26,3 +26,22 @@ Map<String, Exercise> mergeCatalog(
   Map<String, Exercise> builtIn,
   Iterable<Exercise> personal,
 ) => Map.unmodifiable({...builtIn, ...indexExercises(personal)});
+
+/// Broad body areas the exercise picker filters by.
+enum MuscleArea { chest, back, legs, shoulders, arms, core }
+
+/// The area of a catalog muscle group; null for a group the app does not know.
+MuscleArea? areaOf(String muscleGroup) => switch (muscleGroup) {
+  'chest' => MuscleArea.chest,
+  'middle back' || 'lats' || 'lower back' || 'traps' => MuscleArea.back,
+  'quadriceps' ||
+  'hamstrings' ||
+  'glutes' ||
+  'calves' ||
+  'abductors' ||
+  'adductors' => MuscleArea.legs,
+  'shoulders' => MuscleArea.shoulders,
+  'biceps' || 'triceps' || 'forearms' => MuscleArea.arms,
+  'abdominals' => MuscleArea.core,
+  _ => null,
+};

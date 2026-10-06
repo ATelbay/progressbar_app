@@ -345,3 +345,139 @@ SetValues? prefillFor(
   }
   return exercise.sets.where((s) => !s.isExtra).firstOrNull?.plan;
 }
+
+/// How hard a set felt, as the user picks it: three answers instead of the
+/// full 1–10 scale. Each is stored as one number on that scale.
+enum Effort {
+  /// 7 or less: could have done more.
+  more(7),
+
+  /// 8–9: a rep or two left.
+  some(8.5),
+
+  /// 10: nothing left.
+  none(10);
+
+  const Effort(this.rpe);
+
+  final double rpe;
+
+  /// The answer a stored value falls under, also one typed on the full scale.
+  static Effort of(double rpe) => rpe >= 10
+      ? none
+      : rpe > 7
+      ? some
+      : more;
+}
+
+/// Steps of the entry panel buttons; finer weights are typed on the keypad.
+const weightStepKg = 2.5;
+const secondsStep = 5;
+const maxWeightKg = 999.75;
+
+/// Exercises that already have at least one recorded set.
+int recordedCount(Workout workout) =>
+    workout.exercises.where((e) => e.hasFact).length;
+
+/// The exercise to record next: the first one without a result.
+WorkoutExercise? nextExercise(Workout workout) =>
+    workout.exercises.where((e) => !e.hasFact).firstOrNull;
+
+/// The set to record next in per-set entry: the first one without a fact.
+WorkoutSet? nextSet(WorkoutExercise exercise) =>
+    exercise.sets.where((s) => s.fact == null).firstOrNull;
+
+/// «3 × 8 × 60»: [count] sets and, when they are all alike, their [values].
+class SetsSummary {
+  const SetsSummary(this.count, this.values);
+
+  final int count;
+  final SetValues? values;
+}
+
+SetsSummary? summarizeSets(Iterable<SetValues> sets) {
+  final all = sets.toList();
+  if (all.isEmpty) return null;
+  return SetsSummary(
+    all.length,
+    all.every((v) => v == all.first) ? all.first : null,
+  );
+}
+
+SetsSummary? planSummary(WorkoutExercise exercise) =>
+    summarizeSets(exercise.sets.map((s) => s.plan).nonNulls);
+
+SetsSummary? factSummary(WorkoutExercise exercise) =>
+    summarizeSets(exercise.sets.map((s) => s.fact).nonNulls);
+
+/// What was recorded for this exercise in the latest completed workout.
+SetsSummary? lastResult(
+  WorkoutExercise exercise,
+  Iterable<Workout> earlierWorkouts,
+) {
+  final sorted = earlierWorkouts.where((w) => w.isCompleted).toList()
+    ..sort((a, b) => b.completedAt!.compareTo(a.completedAt!));
+  for (final workout in sorted) {
+    for (final past in workout.exercises) {
+      if (past.exerciseId != exercise.exerciseId) continue;
+      final summary = factSummary(past);
+      if (summary != null) return summary;
+    }
+  }
+  return null;
+}
+
+/// Makes stored values fit how the exercise is measured now.
+SetValues _fit(SetValues? values, Measure measure) => measure == Measure.time
+    ? SetValues(seconds: values?.seconds ?? 30, weightKg: values?.weightKg ?? 0)
+    : SetValues(reps: values?.reps ?? 10, weightKg: values?.weightKg ?? 0);
+
+/// What summary entry opens with. A recorded exercise opens with its own
+/// result. Otherwise the values are last time's result, falling back to the
+/// plan; the number of sets is the plan's, or without a plan the one the user
+/// entered last ([lastSetCount]).
+({int setCount, SetValues values}) summaryDraft(
+  WorkoutExercise exercise,
+  Iterable<Workout> earlierWorkouts, {
+  int? lastSetCount,
+}) {
+  final fact = factSummary(exercise);
+  if (fact != null) {
+    final values =
+        fact.values ?? exercise.sets.map((s) => s.fact).nonNulls.last;
+    return (setCount: fact.count, values: _fit(values, exercise.measure));
+  }
+  final planned = exercise.sets.where((s) => !s.isExtra).length;
+  return (
+    setCount: planned > 0 ? planned : lastSetCount ?? 3,
+    values: _fit(prefillFor(exercise, earlierWorkouts), exercise.measure),
+  );
+}
+
+/// What per-set entry opens with for [set]: its own fact when correcting,
+/// else the previous set of this exercise, its plan, or last time's result.
+SetValues setDraft(
+  WorkoutExercise exercise,
+  WorkoutSet set,
+  Iterable<Workout> earlierWorkouts,
+) {
+  final before = exercise.sets
+      .takeWhile((s) => s.id != set.id)
+      .map((s) => s.fact)
+      .nonNulls
+      .lastOrNull;
+  return _fit(
+    set.fact ?? before ?? set.plan ?? prefillFor(exercise, earlierWorkouts),
+    exercise.measure,
+  );
+}
+
+double stepWeight(double kg, double by) =>
+    (kg + by).clamp(0, maxWeightKg).toDouble();
+
+/// A weight typed on the keypad, with a comma or a dot; null when it is not a
+/// weight the app accepts.
+double? parseWeight(String text) {
+  final kg = double.tryParse(text.trim().replaceAll(',', '.'));
+  return kg != null && isValidWeight(kg) ? kg : null;
+}

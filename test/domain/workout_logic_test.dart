@@ -511,4 +511,144 @@ void main() {
     expect(isValidRpe(8.3), isFalse);
     expect(isValidRpe(0.5), isFalse);
   });
+
+  group('entry panel', () {
+    Workout done(Workout w, SetValues fact, {int sets = 3, int day = 1}) =>
+        completeWorkout(
+          recordSummary(
+            w,
+            w.exercises.first.id,
+            setCount: sets,
+            fact: fact,
+            newId: counter(),
+            now: monday,
+          ),
+          now: monday.add(Duration(days: day)),
+        );
+
+    test('the next exercise is the first one without a result', () {
+      var w = start();
+      expect(recordedCount(w), 0);
+      expect(nextExercise(w)!.exerciseId, 'bench');
+      w = recordSummary(
+        w,
+        w.exercises.first.id,
+        setCount: 1,
+        fact: plan60x8,
+        newId: counter(),
+        now: monday,
+      );
+      expect(recordedCount(w), 1);
+      expect(nextExercise(w)!.exerciseId, 'plank');
+    });
+
+    test('alike sets fold into one line, different ones only count', () {
+      var w = start();
+      final bench = w.exercises.first;
+      expect(planSummary(bench)!.count, 3);
+      expect(planSummary(bench)!.values, plan60x8);
+      expect(factSummary(bench), isNull);
+      w = recordSet(w, bench.id, bench.sets[0].id, fact: plan60x8, now: monday);
+      w = recordSet(
+        w,
+        bench.id,
+        bench.sets[1].id,
+        fact: const SetValues(reps: 6, weightKg: 60),
+        now: monday,
+      );
+      final fact = factSummary(w.exercises.first)!;
+      expect(fact.count, 2);
+      expect(fact.values, isNull);
+    });
+
+    test('summary entry opens with last time, set count from the plan', () {
+      const last = SetValues(reps: 8, weightKg: 57.5);
+      final earlier = [done(start(), last, sets: 4)];
+      final draft = summaryDraft(start().exercises.first, earlier);
+      expect(draft.setCount, 3);
+      expect(draft.values, last);
+      expect(lastResult(start().exercises.first, earlier)!.count, 4);
+      expect(lastResult(start().exercises.first, earlier)!.values, last);
+      expect(lastResult(start().exercises.last, earlier), isNull);
+    });
+
+    test('without history summary entry opens with the plan', () {
+      final draft = summaryDraft(start().exercises.first, const []);
+      expect(draft.setCount, 3);
+      expect(draft.values, plan60x8);
+      final timed = summaryDraft(start().exercises.last, const []);
+      expect(timed.setCount, 1);
+      expect(timed.values, const SetValues(seconds: 60));
+    });
+
+    test('without a plan the remembered set count is used', () {
+      final free = addExercise(
+        startWorkout(
+          id: 'w',
+          traineeId: 'me',
+          now: monday,
+          newId: counter(),
+          catalog: catalog,
+          languageCode: 'ru',
+        ),
+        plank,
+        languageCode: 'ru',
+        newId: counter(),
+        now: monday,
+      ).exercises.single;
+      expect(summaryDraft(free, const [], lastSetCount: 5).setCount, 5);
+      final draft = summaryDraft(free, const []);
+      expect(draft.setCount, 3);
+      expect(draft.values.seconds, isNotNull);
+      expect(draft.values.reps, isNull);
+    });
+
+    test('a recorded exercise reopens with its own result', () {
+      final w = recordSummary(
+        start(),
+        start().exercises.first.id,
+        setCount: 2,
+        fact: const SetValues(reps: 5, weightKg: 70),
+        newId: counter(),
+        now: monday,
+      );
+      final draft = summaryDraft(w.exercises.first, const []);
+      expect(draft.setCount, 2);
+      expect(draft.values, const SetValues(reps: 5, weightKg: 70));
+    });
+
+    test('per-set entry follows the previous set, then the plan', () {
+      var w = start();
+      final bench = w.exercises.first;
+      expect(nextSet(bench)!.id, bench.sets.first.id);
+      expect(setDraft(bench, bench.sets.first, const []), plan60x8);
+      const fact = SetValues(reps: 6, weightKg: 62.5);
+      w = recordSet(w, bench.id, bench.sets.first.id, fact: fact, now: monday);
+      final after = w.exercises.first;
+      expect(nextSet(after)!.id, bench.sets[1].id);
+      expect(setDraft(after, after.sets[1], const []), fact);
+      expect(setDraft(after, after.sets[0], const []), fact);
+    });
+
+    test('effort is three answers stored on the 1–10 scale', () {
+      expect(Effort.values.map((e) => e.rpe), [7, 8.5, 10]);
+      expect(Effort.values.map((e) => isValidRpe(e.rpe)), everyElement(true));
+      expect(Effort.of(5), Effort.more);
+      expect(Effort.of(7), Effort.more);
+      expect(Effort.of(7.5), Effort.some);
+      expect(Effort.of(9.5), Effort.some);
+      expect(Effort.of(10), Effort.none);
+    });
+
+    test('weight steps stay in range and typed weights are checked', () {
+      expect(stepWeight(0, -weightStepKg), 0);
+      expect(stepWeight(57.5, weightStepKg), 60);
+      expect(stepWeight(maxWeightKg, weightStepKg), maxWeightKg);
+      expect(parseWeight('42,5'), 42.5);
+      expect(parseWeight('42.25'), 42.25);
+      expect(parseWeight('42,3'), isNull);
+      expect(parseWeight(''), isNull);
+      expect(parseWeight('1000'), isNull);
+    });
+  });
 }
