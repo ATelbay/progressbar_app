@@ -4,9 +4,98 @@ service cloud.firestore {
   match /databases/{database}/documents {
     // Everything is closed unless a rule below opens it.
 
-    // A signed-in user reads and writes only their own profile.
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      // A signed-in user reads and writes only their own profile.
+      allow read, write: if isOwner(userId);
+
+      // Programs the user wrote. Coaches' programs become readable to their
+      // trainees together with coach–trainee links.
+      match /programs/{programId} {
+        allow read, delete: if isOwner(userId);
+        allow create, update: if isOwner(userId)
+          && request.resource.data.authorId == userId
+          && request.resource.data.name is string
+          && request.resource.data.days is list;
+      }
+
+      // The user's own exercises and their edits of built-in ones.
+      match /exercises/{exerciseId} {
+        allow read, delete: if isOwner(userId);
+        allow create, update: if isOwner(userId)
+          && request.resource.data.id is string
+          && request.resource.data.names is map
+          && request.resource.data.muscleGroup is string
+          && request.resource.data.measure in ['reps', 'time']
+          && request.resource.data.usesBodyWeight is bool;
+      }
+
+      // One workout in progress at a time. state/activeWorkout names it; the
+      // rules below hold two facts after every write, so the pointer and the
+      // workout can only change together, in one batch:
+      //   - a workout in progress is the one the pointer names;
+      //   - the pointer moves away only from a workout that is no longer in
+      //     progress.
+      function pointerPath() {
+        return /databases/$(database)/documents/users/$(userId)/state/activeWorkout;
+      }
+      function workoutPath(workoutId) {
+        return /databases/$(database)/documents/users/$(userId)/workouts/$(workoutId);
+      }
+      function activeAfter(workoutId) {
+        return existsAfter(pointerPath())
+          && getAfter(pointerPath()).data.workoutId == workoutId;
+      }
+      function inProgressAfter(workoutId) {
+        return existsAfter(workoutPath(workoutId))
+          && getAfter(workoutPath(workoutId)).data.status == 'inProgress';
+      }
+      // No coach–trainee links exist yet, so a workout cannot name a coach.
+      function validWorkout() {
+        return request.resource.data.traineeId == userId
+          && request.resource.data.get('supervisorCoachId', null) == null
+          && request.resource.data.status in ['inProgress', 'completed']
+          && request.resource.data.startedAt is timestamp
+          && request.resource.data.exercises is list;
+      }
+
+      match /workouts/{workoutId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId)
+          && validWorkout()
+          && request.resource.data.status == 'inProgress'
+          && activeAfter(workoutId);
+        // A completed workout may be corrected but never reopened.
+        allow update: if isOwner(userId)
+          && validWorkout()
+          && request.resource.data.startedAt == resource.data.startedAt
+          && (
+            (request.resource.data.status == 'inProgress'
+              && resource.data.status == 'inProgress'
+              && activeAfter(workoutId))
+            || (request.resource.data.status == 'completed'
+              && !activeAfter(workoutId))
+          );
+        allow delete: if isOwner(userId) && !activeAfter(workoutId);
+      }
+
+      match /state/activeWorkout {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId)
+          && request.resource.data.keys().hasOnly(['workoutId', 'updatedAt'])
+          && (request.resource.data.workoutId == null
+            || inProgressAfter(request.resource.data.workoutId))
+          && (resource == null
+            || resource.data.workoutId == null
+            || resource.data.workoutId == request.resource.data.workoutId
+            || !inProgressAfter(resource.data.workoutId));
+        allow delete: if isOwner(userId)
+          && (resource.data.workoutId == null
+            || !inProgressAfter(resource.data.workoutId));
+      }
     }
   }
 }

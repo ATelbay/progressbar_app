@@ -12,3 +12,17 @@ Map<String, Exercise> indexExercises(Iterable<Exercise> exercises) {
   }
   return Map.unmodifiable(result);
 }
+
+const builtInExercisePrefix = 'free-exercise-db/';
+
+/// IDs of exercises a user adds themselves; never collides with a built-in one.
+const customExercisePrefix = 'custom/';
+
+bool isBuiltInExercise(String id) => id.startsWith(builtInExercisePrefix);
+
+/// The catalog a user actually sees: a personal entry with a built-in ID
+/// replaces that exercise, any other personal entry is added.
+Map<String, Exercise> mergeCatalog(
+  Map<String, Exercise> builtIn,
+  Iterable<Exercise> personal,
+) => Map.unmodifiable({...builtIn, ...indexExercises(personal)});
