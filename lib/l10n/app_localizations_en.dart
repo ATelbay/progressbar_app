@@ -517,4 +517,56 @@ class AppLocalizationsEn extends AppLocalizations {
   ) {
     return 'Chart: from $from on $fromDate to $to on $toDate';
   }
+
+  @override
+  String get profileSettings => 'Settings';
+
+  @override
+  String get profileLanguage => 'Language';
+
+  @override
+  String get languageSystem => 'Same as the phone';
+
+  @override
+  String get profileEntryMode => 'Result entry';
+
+  @override
+  String get entryModeSummary => 'In one line';
+
+  @override
+  String get entryModePerSet => 'Set by set';
+
+  @override
+  String get profileCatalog => 'Exercise catalog';
+
+  @override
+  String get profileEdit => 'Edit name and body weight';
+
+  @override
+  String get exerciseOwn => 'Your own exercise';
+
+  @override
+  String get exerciseName => 'Name';
+
+  @override
+  String get exerciseMeasure => 'Measured in';
+
+  @override
+  String get exerciseBodyWeight => 'Uses body weight';
+
+  @override
+  String get exerciseBodyWeightHint =>
+      'Body weight is added to the load; you enter only the extra weight.';
+
+  @override
+  String get exerciseRestore => 'Restore the original';
+
+  @override
+  String get exerciseSave => 'Save';
+
+  @override
+  String get exerciseEdited => 'edited';
+
+  @override
+  String get exerciseMine => 'yours';
 }

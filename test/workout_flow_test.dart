@@ -315,4 +315,77 @@ void main() {
     expect(find.text('5 kg', findRichText: true), findsOneWidget);
     expect(find.text('+7.5 kg over 2 workouts'), findsOneWidget);
   });
+
+  testWidgets('profile changes language, entry mode, name and body weight', (
+    tester,
+  ) async {
+    await openApp(tester);
+    await tap(tester, find.text('Profile'));
+    expect(find.text('Арман'), findsOneWidget);
+    expect(find.text('80 kg', findRichText: true), findsOneWidget);
+
+    await tap(tester, find.text('Result entry'));
+    await tap(tester, find.text('Set by set'));
+    expect(profiles.profileOf('user-1')!.entryMode, EntryMode.perSet);
+
+    await tap(tester, find.text('Арман'));
+    await tester.enterText(find.byType(TextField), 'Арман Т.');
+    await tap(tester, find.byTooltip('More: Body weight'));
+    await tap(tester, find.text('Save'));
+    expect(profiles.profileOf('user-1')!.name, 'Арман Т.');
+    expect(profiles.profileOf('user-1')!.bodyWeightKg, 80.5);
+
+    await tap(tester, find.text('Language'));
+    await tap(tester, find.text('Русский'));
+    expect(profiles.profileOf('user-1')!.languageCode, 'ru');
+    // The whole interface follows at once.
+    expect(find.text('Профиль'), findsWidgets);
+    expect(find.text('Справочник упражнений'), findsOneWidget);
+
+    await tap(tester, find.text('Язык'));
+    await tap(tester, find.text('Как в телефоне'));
+    expect(profiles.profileOf('user-1')!.languageCode, isNull);
+    expect(find.text('Exercise catalog'), findsOneWidget);
+  });
+
+  testWidgets('the catalog takes own exercises and edits of built-in ones', (
+    tester,
+  ) async {
+    await openApp(tester);
+    await tap(tester, find.text('Profile'));
+    await tap(tester, find.text('Exercise catalog'));
+
+    await tap(tester, find.text('Your own exercise'));
+    await tester.enterText(find.byType(TextField).last, 'Sled push');
+    await tap(tester, find.widgetWithText(TextButton, 'Legs').last);
+    await tap(tester, find.widgetWithText(TextButton, 'Time'));
+    await tap(tester, find.text('Save'));
+    await tester.enterText(find.byType(TextField), 'sled');
+    await settle(tester);
+    expect(find.text('Sled push'), findsOneWidget);
+    expect(find.text('yours'), findsOneWidget);
+    var stored = (await db.collection('users/user-1/exercises').get()).docs;
+    expect(stored.single.data()['id'], startsWith('custom/'));
+    expect(stored.single.data()['measure'], 'time');
+    expect(stored.single.data()['muscleGroup'], 'quadriceps');
+
+    await tester.enterText(find.byType(TextField), 'bench press');
+    await settle(tester);
+    await tap(tester, find.textContaining('Bench Press').first);
+    await tester.enterText(find.byType(TextField).last, 'My bench');
+    await settle(tester);
+    await tap(tester, find.text('Save'));
+    await tester.enterText(find.byType(TextField), 'my bench');
+    await settle(tester);
+    expect(find.text('My bench'), findsOneWidget);
+    expect(find.text('edited'), findsOneWidget);
+    stored = (await db.collection('users/user-1/exercises').get()).docs;
+    expect(stored.length, 2);
+
+    await tap(tester, find.text('My bench'));
+    await tap(tester, find.text('Restore the original'));
+    expect(find.text('My bench'), findsNothing);
+    stored = (await db.collection('users/user-1/exercises').get()).docs;
+    expect(stored.single.data()['id'], startsWith('custom/'));
+  });
 }

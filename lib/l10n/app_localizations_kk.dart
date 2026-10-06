@@ -516,4 +516,56 @@ class AppLocalizationsKk extends AppLocalizations {
   ) {
     return 'Кесте: $fromDate $from бастап $toDate $to дейін';
   }
+
+  @override
+  String get profileSettings => 'Баптаулар';
+
+  @override
+  String get profileLanguage => 'Тіл';
+
+  @override
+  String get languageSystem => 'Телефондағыдай';
+
+  @override
+  String get profileEntryMode => 'Нәтижені енгізу';
+
+  @override
+  String get entryModeSummary => 'Бір жолмен';
+
+  @override
+  String get entryModePerSet => 'Тәсіл бойынша';
+
+  @override
+  String get profileCatalog => 'Жаттығулар анықтамалығы';
+
+  @override
+  String get profileEdit => 'Атты және дене салмағын өзгерту';
+
+  @override
+  String get exerciseOwn => 'Өз жаттығуыңыз';
+
+  @override
+  String get exerciseName => 'Атауы';
+
+  @override
+  String get exerciseMeasure => 'Немен өлшенеді';
+
+  @override
+  String get exerciseBodyWeight => 'Өз салмағымен';
+
+  @override
+  String get exerciseBodyWeightHint =>
+      'Дене салмағы жүктемеге қосылады, тек қосымша салмақ енгізіледі.';
+
+  @override
+  String get exerciseRestore => 'Бастапқы қалпына келтіру';
+
+  @override
+  String get exerciseSave => 'Сақтау';
+
+  @override
+  String get exerciseEdited => 'өзгертілген';
+
+  @override
+  String get exerciseMine => 'өзіңіздікі';
 }

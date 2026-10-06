@@ -9,6 +9,11 @@ import '../../theme.dart';
 import '../../widgets/glass_panel.dart';
 import '../../widgets/glow_background.dart';
 import '../../widgets/step_button.dart';
+import '../../widgets/sheet.dart';
+import '../auth/auth_controller.dart';
+import '../format.dart';
+import '../workout/workout_providers.dart';
+import 'exercise_edit_sheet.dart';
 import 'personal_exercises_provider.dart';
 
 String areaName(AppLocalizations l10n, MuscleArea area) => switch (area) {
@@ -32,9 +37,12 @@ String? equipmentName(AppLocalizations l10n, String? equipment) =>
       _ => null,
     };
 
-/// Picks one exercise from the user's catalog and returns it to the caller.
+/// The user's catalog. As a picker it returns the tapped exercise to the
+/// caller; with [manage] a tap opens the exercise for editing instead.
 class ExercisePickerScreen extends ConsumerStatefulWidget {
-  const ExercisePickerScreen({super.key});
+  const ExercisePickerScreen({super.key, this.manage = false});
+
+  final bool manage;
 
   @override
   ConsumerState<ExercisePickerScreen> createState() =>
@@ -44,6 +52,33 @@ class ExercisePickerScreen extends ConsumerStatefulWidget {
 class _ExercisePickerScreenState extends ConsumerState<ExercisePickerScreen> {
   String _query = '';
   MuscleArea? _area;
+
+  /// Creates or changes an exercise; returns the stored one.
+  Future<Exercise?> _edit([Exercise? exercise]) async {
+    final uid = ref.read(uidProvider).value;
+    if (uid == null) return null;
+    final result = await showPbSheet<ExerciseEdit>(
+      context,
+      ExerciseEditSheet(
+        ownerId: uid,
+        newId: ref.read(newIdProvider)(),
+        exercise: exercise,
+      ),
+    );
+    if (result == null) return null;
+    final exercises = ref.read(personalExerciseRepositoryProvider);
+    if (result.restore) {
+      await exercises.restoreBuiltIn(uid, exercise!.id);
+      return null;
+    }
+    await exercises.save(result.exercise!);
+    return result.exercise;
+  }
+
+  Future<void> _create() async {
+    final created = await _edit();
+    if (created != null && !widget.manage && mounted) context.pop(created);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,9 +119,11 @@ class _ExercisePickerScreenState extends ConsumerState<ExercisePickerScreen> {
                       size: PbSize.touchMin,
                       onTap: () => context.pop(),
                     ),
-                    Text(
-                      l10n.pickerTitle,
-                      style: PbText.title.copyWith(color: c.ink),
+                    Expanded(
+                      child: Text(
+                        widget.manage ? l10n.profileCatalog : l10n.pickerTitle,
+                        style: PbText.title.copyWith(color: c.ink),
+                      ),
                     ),
                   ],
                 ),
@@ -132,7 +169,7 @@ class _ExercisePickerScreenState extends ConsumerState<ExercisePickerScreen> {
                           ),
                         )
                       : ListView.separated(
-                          padding: const EdgeInsets.only(bottom: PbSpace.s6),
+                          padding: const EdgeInsets.only(bottom: PbSpace.s3),
                           itemCount: found.length,
                           separatorBuilder: (_, _) =>
                               const SizedBox(height: PbSpace.s2),
@@ -146,7 +183,9 @@ class _ExercisePickerScreenState extends ConsumerState<ExercisePickerScreen> {
                               ?equipmentName(l10n, exercise.equipment),
                             ].join(' · ');
                             return GlassCard(
-                              onTap: () => context.pop(exercise),
+                              onTap: () => widget.manage
+                                  ? _edit(exercise)
+                                  : context.pop(exercise),
                               child: Row(
                                 spacing: PbSpace.s3,
                                 children: [
@@ -170,12 +209,33 @@ class _ExercisePickerScreenState extends ConsumerState<ExercisePickerScreen> {
                                       ],
                                     ),
                                   ),
-                                  Icon(Icons.add, color: c.ink),
+                                  if (exercise.ownerId != null)
+                                    PbChip(
+                                      isBuiltInExercise(exercise.id)
+                                          ? l10n.exerciseEdited
+                                          : l10n.exerciseMine,
+                                    ),
+                                  Icon(
+                                    widget.manage
+                                        ? Icons.chevron_right
+                                        : Icons.add,
+                                    color: c.ink,
+                                  ),
                                 ],
                               ),
                             );
                           },
                         ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    bottom: PbSpace.s4 + MediaQuery.paddingOf(context).bottom,
+                  ),
+                  child: OutlinedButton.icon(
+                    onPressed: _create,
+                    icon: const Icon(Icons.add),
+                    label: Text(l10n.exerciseOwn),
+                  ),
                 ),
               ],
             ),

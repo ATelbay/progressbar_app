@@ -307,5 +307,22 @@
         "type": "String"
       }
     }
-  }
+  },
+  "profileSettings": "Settings",
+  "profileLanguage": "Language",
+  "languageSystem": "Same as the phone",
+  "profileEntryMode": "Result entry",
+  "entryModeSummary": "In one line",
+  "entryModePerSet": "Set by set",
+  "profileCatalog": "Exercise catalog",
+  "profileEdit": "Edit name and body weight",
+  "exerciseOwn": "Your own exercise",
+  "exerciseName": "Name",
+  "exerciseMeasure": "Measured in",
+  "exerciseBodyWeight": "Uses body weight",
+  "exerciseBodyWeightHint": "Body weight is added to the load; you enter only the extra weight.",
+  "exerciseRestore": "Restore the original",
+  "exerciseSave": "Save",
+  "exerciseEdited": "edited",
+  "exerciseMine": "yours"
 }

@@ -142,5 +142,22 @@
   "progressChange": "{count, plural, other{{count} жаттығуда}} {change}",
   "progressEmptyTitle": "Әзірге бірде-бір нүкте жоқ",
   "progressEmptyText": "Кесте алғашқы аяқталған жаттығудан кейін пайда болады. Бір жаттығу — бір нүкте: сол күнгі ең жақсы нәтиже.",
-  "progressChartLabel": "Кесте: {fromDate} {from} бастап {toDate} {to} дейін"
+  "progressChartLabel": "Кесте: {fromDate} {from} бастап {toDate} {to} дейін",
+  "profileSettings": "Баптаулар",
+  "profileLanguage": "Тіл",
+  "languageSystem": "Телефондағыдай",
+  "profileEntryMode": "Нәтижені енгізу",
+  "entryModeSummary": "Бір жолмен",
+  "entryModePerSet": "Тәсіл бойынша",
+  "profileCatalog": "Жаттығулар анықтамалығы",
+  "profileEdit": "Атты және дене салмағын өзгерту",
+  "exerciseOwn": "Өз жаттығуыңыз",
+  "exerciseName": "Атауы",
+  "exerciseMeasure": "Немен өлшенеді",
+  "exerciseBodyWeight": "Өз салмағымен",
+  "exerciseBodyWeightHint": "Дене салмағы жүктемеге қосылады, тек қосымша салмақ енгізіледі.",
+  "exerciseRestore": "Бастапқы қалпына келтіру",
+  "exerciseSave": "Сақтау",
+  "exerciseEdited": "өзгертілген",
+  "exerciseMine": "өзіңіздікі"
 }

@@ -142,5 +142,22 @@
   "progressChange": "{change} за {count, plural, one{{count} тренировку} few{{count} тренировки} many{{count} тренировок} other{{count} тренировок}}",
   "progressEmptyTitle": "Пока нет ни одной точки",
   "progressEmptyText": "График появится после первой завершённой тренировки. Одна тренировка — одна точка: лучший результат за день.",
-  "progressChartLabel": "График: с {from} {fromDate} до {to} {toDate}"
+  "progressChartLabel": "График: с {from} {fromDate} до {to} {toDate}",
+  "profileSettings": "Настройки",
+  "profileLanguage": "Язык",
+  "languageSystem": "Как в телефоне",
+  "profileEntryMode": "Ввод результата",
+  "entryModeSummary": "Одной строкой",
+  "entryModePerSet": "По подходам",
+  "profileCatalog": "Справочник упражнений",
+  "profileEdit": "Изменить имя и вес тела",
+  "exerciseOwn": "Своё упражнение",
+  "exerciseName": "Название",
+  "exerciseMeasure": "Чем измеряется",
+  "exerciseBodyWeight": "С собственным весом",
+  "exerciseBodyWeightHint": "Вес тела прибавляется к нагрузке, вводится только дополнительный вес.",
+  "exerciseRestore": "Вернуть как было",
+  "exerciseSave": "Сохранить",
+  "exerciseEdited": "изменено",
+  "exerciseMine": "своё"
 }

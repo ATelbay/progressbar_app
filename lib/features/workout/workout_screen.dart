@@ -53,16 +53,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     unawaited(
       ref
           .read(profileRepositoryProvider)
-          .save(
-            UserProfile(
-              id: profile.id,
-              name: profile.name,
-              phone: profile.phone,
-              bodyWeightKg: profile.bodyWeightKg,
-              entryMode: mode ?? profile.entryMode,
-              lastSetCount: setCount ?? profile.lastSetCount,
-            ),
-          )
+          .save(profile.copyWith(entryMode: mode, lastSetCount: setCount))
           .catchError((_) {}),
     );
   }

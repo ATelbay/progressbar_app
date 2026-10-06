@@ -34,4 +34,19 @@ void main() {
     expect(catalog['unknown'], isNull);
     expect(() => catalog.clear(), throwsUnsupportedError);
   });
+
+  test('every area files an exercise under a group of that same area', () {
+    for (final area in MuscleArea.values) {
+      expect(areaOf(muscleGroupFor(area)), area);
+    }
+    expect(areaOf('neck'), isNull);
+  });
+
+  test('a profile copy can set the language and clear it again', () {
+    const profile = UserProfile(id: 'u', name: 'A', phone: '+7');
+    final russian = profile.copyWith(languageCode: () => 'ru');
+    expect(russian.languageCode, 'ru');
+    expect(russian.copyWith(bodyWeightKg: 80).languageCode, 'ru');
+    expect(russian.copyWith(languageCode: () => null).languageCode, isNull);
+  });
 }

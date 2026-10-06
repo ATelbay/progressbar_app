@@ -29,6 +29,7 @@ class FirestoreProfileRepository implements ProfileRepository {
       entryMode:
           EntryMode.values.asNameMap()[data['entryMode']] ?? EntryMode.summary,
       lastSetCount: data['lastSetCount'] as int?,
+      languageCode: data['languageCode'] as String?,
     );
   });
 
@@ -39,6 +40,7 @@ class FirestoreProfileRepository implements ProfileRepository {
     'bodyWeightKg': profile.bodyWeightKg,
     'entryMode': profile.entryMode.name,
     'lastSetCount': profile.lastSetCount,
+    'languageCode': profile.languageCode,
     'updatedAt': FieldValue.serverTimestamp(),
   }, SetOptions(merge: true));
 }

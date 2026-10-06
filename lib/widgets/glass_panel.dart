@@ -29,11 +29,10 @@ class _Glass extends StatelessWidget {
     final solid = MediaQuery.highContrastOf(context);
     Widget content = Padding(padding: padding, child: child);
     if (onTap != null) {
-      content = Material(
-        type: MaterialType.transparency,
-        child: InkWell(onTap: onTap, borderRadius: shape, child: content),
-      );
+      content = InkWell(onTap: onTap, borderRadius: shape, child: content);
     }
+    // Lets switches, list rows and ink effects inside paint on the glass.
+    content = Material(type: MaterialType.transparency, child: content);
     final panel = DecoratedBox(
       decoration: BoxDecoration(
         color: solid

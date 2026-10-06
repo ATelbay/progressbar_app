@@ -526,4 +526,56 @@ class AppLocalizationsRu extends AppLocalizations {
   ) {
     return 'График: с $from $fromDate до $to $toDate';
   }
+
+  @override
+  String get profileSettings => 'Настройки';
+
+  @override
+  String get profileLanguage => 'Язык';
+
+  @override
+  String get languageSystem => 'Как в телефоне';
+
+  @override
+  String get profileEntryMode => 'Ввод результата';
+
+  @override
+  String get entryModeSummary => 'Одной строкой';
+
+  @override
+  String get entryModePerSet => 'По подходам';
+
+  @override
+  String get profileCatalog => 'Справочник упражнений';
+
+  @override
+  String get profileEdit => 'Изменить имя и вес тела';
+
+  @override
+  String get exerciseOwn => 'Своё упражнение';
+
+  @override
+  String get exerciseName => 'Название';
+
+  @override
+  String get exerciseMeasure => 'Чем измеряется';
+
+  @override
+  String get exerciseBodyWeight => 'С собственным весом';
+
+  @override
+  String get exerciseBodyWeightHint =>
+      'Вес тела прибавляется к нагрузке, вводится только дополнительный вес.';
+
+  @override
+  String get exerciseRestore => 'Вернуть как было';
+
+  @override
+  String get exerciseSave => 'Сохранить';
+
+  @override
+  String get exerciseEdited => 'изменено';
+
+  @override
+  String get exerciseMine => 'своё';
 }

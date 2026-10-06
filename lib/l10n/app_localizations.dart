@@ -962,6 +962,108 @@ abstract class AppLocalizations {
     String to,
     String toDate,
   );
+
+  /// No description provided for @profileSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get profileSettings;
+
+  /// No description provided for @profileLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get profileLanguage;
+
+  /// No description provided for @languageSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Same as the phone'**
+  String get languageSystem;
+
+  /// No description provided for @profileEntryMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Result entry'**
+  String get profileEntryMode;
+
+  /// No description provided for @entryModeSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'In one line'**
+  String get entryModeSummary;
+
+  /// No description provided for @entryModePerSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Set by set'**
+  String get entryModePerSet;
+
+  /// No description provided for @profileCatalog.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise catalog'**
+  String get profileCatalog;
+
+  /// No description provided for @profileEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit name and body weight'**
+  String get profileEdit;
+
+  /// No description provided for @exerciseOwn.
+  ///
+  /// In en, this message translates to:
+  /// **'Your own exercise'**
+  String get exerciseOwn;
+
+  /// No description provided for @exerciseName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get exerciseName;
+
+  /// No description provided for @exerciseMeasure.
+  ///
+  /// In en, this message translates to:
+  /// **'Measured in'**
+  String get exerciseMeasure;
+
+  /// No description provided for @exerciseBodyWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Uses body weight'**
+  String get exerciseBodyWeight;
+
+  /// No description provided for @exerciseBodyWeightHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Body weight is added to the load; you enter only the extra weight.'**
+  String get exerciseBodyWeightHint;
+
+  /// No description provided for @exerciseRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore the original'**
+  String get exerciseRestore;
+
+  /// No description provided for @exerciseSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get exerciseSave;
+
+  /// No description provided for @exerciseEdited.
+  ///
+  /// In en, this message translates to:
+  /// **'edited'**
+  String get exerciseEdited;
+
+  /// No description provided for @exerciseMine.
+  ///
+  /// In en, this message translates to:
+  /// **'yours'**
+  String get exerciseMine;
 }
 
 class _AppLocalizationsDelegate

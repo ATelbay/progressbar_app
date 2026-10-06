@@ -32,6 +32,7 @@ abstract final class Routes {
   static const workout = '/workout';
   static const trainee = '/trainee';
   static const exercisePicker = '/exercises';
+  static const exerciseCatalog = '/exercise-catalog';
   static const workoutEdit = '/workout-edit';
 }
 
@@ -110,6 +111,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       overlay(Routes.trainee, const TraineeScreen()),
       overlay(Routes.exercisePicker, const ExercisePickerScreen()),
+      overlay(Routes.exerciseCatalog, const ExercisePickerScreen(manage: true)),
     ],
   );
 });

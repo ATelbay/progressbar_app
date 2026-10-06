@@ -21,6 +21,7 @@ class UserProfile {
     this.bodyWeightKg,
     this.entryMode = EntryMode.summary,
     this.lastSetCount,
+    this.languageCode,
   });
 
   final String id;
@@ -31,6 +32,26 @@ class UserProfile {
 
   /// Number of sets last entered in summary mode, reused for the next entry.
   final int? lastSetCount;
+
+  /// Interface language the user chose; null follows the phone.
+  final String? languageCode;
+
+  /// [languageCode] is a function so that it can also be set back to null.
+  UserProfile copyWith({
+    String? name,
+    double? bodyWeightKg,
+    EntryMode? entryMode,
+    int? lastSetCount,
+    String? Function()? languageCode,
+  }) => UserProfile(
+    id: id,
+    name: name ?? this.name,
+    phone: phone,
+    bodyWeightKg: bodyWeightKg ?? this.bodyWeightKg,
+    entryMode: entryMode ?? this.entryMode,
+    lastSetCount: lastSetCount ?? this.lastSetCount,
+    languageCode: languageCode == null ? this.languageCode : languageCode(),
+  );
 }
 
 /// A catalog entry. Built-in exercises have no [ownerId] and carry a name per

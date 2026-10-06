@@ -30,6 +30,17 @@ Map<String, Exercise> mergeCatalog(
 /// Broad body areas the exercise picker filters by.
 enum MuscleArea { chest, back, legs, shoulders, arms, core }
 
+/// The catalog muscle group stored for an exercise the user files under
+/// [area].
+String muscleGroupFor(MuscleArea area) => switch (area) {
+  MuscleArea.chest => 'chest',
+  MuscleArea.back => 'lats',
+  MuscleArea.legs => 'quadriceps',
+  MuscleArea.shoulders => 'shoulders',
+  MuscleArea.arms => 'biceps',
+  MuscleArea.core => 'abdominals',
+};
+
 /// The area of a catalog muscle group; null for a group the app does not know.
 MuscleArea? areaOf(String muscleGroup) => switch (muscleGroup) {
   'chest' => MuscleArea.chest,
