@@ -1,30 +1,239 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../data/workout_repository.dart';
+import '../../domain/models.dart';
+import '../../domain/workout_logic.dart';
 import '../../l10n/app_localizations.dart';
 import '../../router.dart';
+import '../../theme.dart';
+import '../../widgets/barbell.dart';
+import '../../widgets/glass_panel.dart';
+import '../../widgets/glow_background.dart';
+import '../auth/auth_controller.dart';
+import '../format.dart';
+import '../program/program_providers.dart';
+import '../workout/workout_providers.dart';
+import '../workout/workout_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
+
+  Future<void> _startFree(BuildContext context, WidgetRef ref) async {
+    final uid = ref.read(uidProvider).value;
+    if (uid == null) return;
+    final l10n = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    final newId = ref.read(newIdProvider);
+    final workout = startWorkout(
+      id: newId(),
+      traineeId: uid,
+      now: DateTime.now(),
+      newId: newId,
+      catalog: const {},
+      languageCode: Localizations.localeOf(context).languageCode,
+      bodyWeightKg: ref.read(profileProvider).value?.bodyWeightKg,
+    );
+    try {
+      await ref.read(workoutRepositoryProvider).start(workout);
+    } on ActiveWorkoutExists {
+      // Already running: just open it.
+    } on WorkoutStoreUnavailable {
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.errorStoreUnavailable)),
+      );
+      return;
+    }
+    if (context.mounted) context.push(Routes.workout);
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final c = context.pb;
+    // Watched from the first screen after sign-in, so a start without a
+    // network already knows whether a workout is in progress.
+    final active = ref.watch(activeWorkoutProvider).value;
+    final programs = ref.watch(ownProgramsProvider).value ?? const <Program>[];
+    final empty = active == null && programs.isEmpty;
+
+    void newProgram() => context.push(Routes.programBuilder);
+    return Scaffold(
+      body: GlowBackground(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(PbSpace.s4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: PbSpace.s3,
+              children: [
+                Text(l10n.tabHome, style: PbText.title.copyWith(color: c.ink)),
+                Expanded(
+                  child: empty
+                      ? const _EmptyHome()
+                      : ListView(
+                          children: [
+                            if (active != null) _ActiveWorkout(active),
+                            if (programs.isNotEmpty) ...[
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: PbSpace.s3,
+                                ),
+                                child: Text(
+                                  l10n.homeMyPrograms,
+                                  style: PbText.label.copyWith(
+                                    color: c.inkMuted,
+                                  ),
+                                ),
+                              ),
+                              for (final program in programs)
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    bottom: PbSpace.s2,
+                                  ),
+                                  child: _ProgramCard(program),
+                                ),
+                            ],
+                          ],
+                        ),
+                ),
+                if (empty) ...[
+                  FilledButton(
+                    onPressed: newProgram,
+                    child: Text(l10n.homeNewProgram),
+                  ),
+                  OutlinedButton(
+                    onPressed: () => _startFree(context, ref),
+                    child: Text(l10n.homeStartFreeWorkout),
+                  ),
+                ] else ...[
+                  if (active == null)
+                    OutlinedButton(
+                      onPressed: () => _startFree(context, ref),
+                      child: Text(l10n.homeStartFreeWorkout),
+                    ),
+                  TextButton(
+                    onPressed: newProgram,
+                    child: Text(l10n.homeNewProgram),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ActiveWorkout extends StatelessWidget {
+  const _ActiveWorkout(this.workout);
+
+  final Workout workout;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.tabHome)),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+    final c = context.pb;
+    final done = recordedCount(workout);
+    final total = workout.exercises.length;
+    return GlassPanel(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: PbSpace.s3,
+        children: [
+          Text(
+            l10n.homeActiveLabel,
+            style: PbText.label.copyWith(color: c.inkMuted),
+          ),
+          Text(
+            workout.dayName ?? l10n.workoutTitle,
+            style: PbText.heading.copyWith(color: c.ink),
+          ),
+          Barbell(
+            plates: platesOf(workout, currentId: nextExercise(workout)?.id),
+            label: l10n.workoutProgressLabel(done, total),
+            count: TextSpan(
+              text: '$done',
+              children: [
+                TextSpan(
+                  text: ' ${l10n.workoutOfTotal(total)}',
+                  style: TextStyle(color: c.inkMuted),
+                ),
+              ],
+            ),
+          ),
+          FilledButton(
+            onPressed: () => context.push(Routes.workout),
+            child: Text(l10n.homeContinue),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProgramCard extends StatelessWidget {
+  const _ProgramCard(this.program);
+
+  final Program program;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final c = context.pb;
+    return GlassCard(
+      onTap: () => context.push('${Routes.programBuilder}/${program.id}'),
+      child: Row(
+        spacing: PbSpace.s3,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  program.name,
+                  style: PbText.bodyStrong.copyWith(color: c.ink),
+                ),
+                Text(
+                  l10n.homeOwnProgram,
+                  style: PbText.caption.copyWith(color: c.inkMuted),
+                ),
+              ],
+            ),
+          ),
+          PbChip(l10n.homeDays(program.days.length)),
+        ],
+      ),
+    );
+  }
+}
+
+class _EmptyHome extends StatelessWidget {
+  const _EmptyHome();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final c = context.pb;
+    return Center(
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: PbSpace.s3,
           children: [
-            FilledButton(
-              onPressed: () => context.push(Routes.workout),
-              child: Text(l10n.homeStartFreeWorkout),
+            Barbell(
+              plates: List.filled(5, Plate.waiting),
+              label: l10n.homeEmptyTitle,
             ),
-            const SizedBox(height: 12),
-            OutlinedButton(
-              onPressed: () => context.push(Routes.programBuilder),
-              child: Text(l10n.homeNewProgram),
+            Text(
+              l10n.homeEmptyTitle,
+              style: PbText.heading.copyWith(color: c.ink),
+            ),
+            Text(
+              l10n.homeEmptyText,
+              style: PbText.body.copyWith(color: c.inkMuted),
             ),
           ],
         ),

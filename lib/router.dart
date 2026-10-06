@@ -6,6 +6,7 @@ import 'features/auth/auth_controller.dart';
 import 'features/auth/code_screen.dart';
 import 'features/auth/profile_setup_screen.dart';
 import 'features/auth/sign_in_screen.dart';
+import 'features/exercises/exercise_picker_screen.dart';
 import 'features/history/history_screen.dart';
 import 'features/home/home_screen.dart';
 import 'features/people/people_screen.dart';
@@ -29,6 +30,7 @@ abstract final class Routes {
   static const programBuilder = '/program';
   static const workout = '/workout';
   static const trainee = '/trainee';
+  static const exercisePicker = '/exercises';
 }
 
 final _rootKey = GlobalKey<NavigatorState>();
@@ -91,8 +93,15 @@ final routerProvider = Provider<GoRouter>((ref) {
         ],
       ),
       overlay(Routes.programBuilder, const ProgramBuilderScreen()),
+      GoRoute(
+        path: '${Routes.programBuilder}/:id',
+        parentNavigatorKey: _rootKey,
+        builder: (_, state) =>
+            ProgramBuilderScreen(programId: state.pathParameters['id']),
+      ),
       overlay(Routes.workout, const WorkoutScreen()),
       overlay(Routes.trainee, const TraineeScreen()),
+      overlay(Routes.exercisePicker, const ExercisePickerScreen()),
     ],
   );
 });

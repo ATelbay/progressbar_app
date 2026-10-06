@@ -132,4 +132,275 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get errorNameRequired => 'Введите имя.';
+
+  @override
+  String get workoutFinish => 'Завершить';
+
+  @override
+  String workoutProgressLabel(int done, int total) {
+    return 'Записано $done из $total упражнений';
+  }
+
+  @override
+  String workoutOfTotal(int total) {
+    return 'из $total';
+  }
+
+  @override
+  String get workoutAddExercise => 'Добавить упражнение';
+
+  @override
+  String get workoutAllRecorded => 'Всё записано';
+
+  @override
+  String get workoutEmptyHint => 'Добавьте первое упражнение.';
+
+  @override
+  String get chipAsPlanned => 'по плану';
+
+  @override
+  String get chipBelowPlan => 'ниже плана';
+
+  @override
+  String get chipAbovePlan => 'выше плана';
+
+  @override
+  String get chipNow => 'сейчас';
+
+  @override
+  String get entryPlan => 'План';
+
+  @override
+  String get entryFact => 'Факт';
+
+  @override
+  String get entrySets => 'Подходы';
+
+  @override
+  String get entryReps => 'Повторения';
+
+  @override
+  String get entryWeight => 'Вес';
+
+  @override
+  String get entryExtraWeight => 'Доп. вес';
+
+  @override
+  String get entryTime => 'Время';
+
+  @override
+  String get unitSec => 'с';
+
+  @override
+  String setsCount(int count) {
+    return '$count подх.';
+  }
+
+  @override
+  String entryLastTime(String result) {
+    return 'Прошлый раз: $result';
+  }
+
+  @override
+  String entryBodyWeightNote(String kg) {
+    return 'Вес тела $kg кг берётся из профиля.';
+  }
+
+  @override
+  String get entryRecord => 'Записать';
+
+  @override
+  String get entryEachSet => 'Добавить каждый подход';
+
+  @override
+  String entryRecordSet(int number) {
+    return 'Записать подход $number';
+  }
+
+  @override
+  String get entryExtraSet => 'Сверх плана';
+
+  @override
+  String get entrySummaryOnly => 'Только итог';
+
+  @override
+  String get entryEffort => 'Тяжесть, по желанию';
+
+  @override
+  String entryDecrease(String what) {
+    return 'Меньше: $what';
+  }
+
+  @override
+  String entryIncrease(String what) {
+    return 'Больше: $what';
+  }
+
+  @override
+  String get keyComma => 'Запятая';
+
+  @override
+  String get keyErase => 'Стереть';
+
+  @override
+  String get finishTitle => 'Завершить тренировку?';
+
+  @override
+  String finishBody(int done, int total) {
+    return 'Записано $done из $total упражнений. Остальные останутся без результата — тренер увидит их как пропущенные.';
+  }
+
+  @override
+  String get finishBodyAll => 'Все упражнения записаны.';
+
+  @override
+  String get finishBack => 'Вернуться к тренировке';
+
+  @override
+  String get finishCancel => 'Отменить тренировку и удалить записи';
+
+  @override
+  String get homeActiveLabel => 'Идёт тренировка';
+
+  @override
+  String get homeContinue => 'Продолжить';
+
+  @override
+  String get homeMyPrograms => 'Мои программы';
+
+  @override
+  String get homeOwnProgram => 'Своя программа';
+
+  @override
+  String homeDays(int count) {
+    return '$count дн.';
+  }
+
+  @override
+  String get homeEmptyTitle => 'Гриф пока пустой';
+
+  @override
+  String get homeEmptyText =>
+      'Составьте свою программу или начните тренировку без неё.';
+
+  @override
+  String get errorStoreUnavailable =>
+      'Пока нет связи с сервером. Подключитесь к сети один раз и попробуйте снова.';
+
+  @override
+  String get pickerTitle => 'Упражнение';
+
+  @override
+  String get pickerSearch => 'Поиск';
+
+  @override
+  String get pickerNothing => 'Ничего не найдено';
+
+  @override
+  String get groupAll => 'Все';
+
+  @override
+  String get groupChest => 'Грудь';
+
+  @override
+  String get groupBack => 'Спина';
+
+  @override
+  String get groupLegs => 'Ноги';
+
+  @override
+  String get groupShoulders => 'Плечи';
+
+  @override
+  String get groupArms => 'Руки';
+
+  @override
+  String get groupCore => 'Пресс';
+
+  @override
+  String get equipDumbbell => 'гантели';
+
+  @override
+  String get equipBarbell => 'штанга';
+
+  @override
+  String get equipMachine => 'тренажёр';
+
+  @override
+  String get equipCable => 'блок';
+
+  @override
+  String get equipBodyOnly => 'свой вес';
+
+  @override
+  String get equipEzBar => 'EZ-гриф';
+
+  @override
+  String get equipKettlebell => 'гиря';
+
+  @override
+  String get effortMore => 'Могу ещё';
+
+  @override
+  String get effortSome => 'Остались силы';
+
+  @override
+  String get effortNone => 'Больше не могу';
+
+  @override
+  String get builderNameHint => 'Название программы';
+
+  @override
+  String get builderAddDay => 'Добавить день';
+
+  @override
+  String get builderDayName => 'Название дня';
+
+  @override
+  String builderDayDefault(int number) {
+    return 'День $number';
+  }
+
+  @override
+  String get builderNote => 'Заметка к упражнению';
+
+  @override
+  String builderNotePrefix(String note) {
+    return 'Заметка: $note';
+  }
+
+  @override
+  String get builderRemoveExercise => 'Убрать из дня';
+
+  @override
+  String get builderRemoveDay => 'Удалить день';
+
+  @override
+  String get builderDeleteProgram => 'Удалить программу';
+
+  @override
+  String builderDeleteConfirm(String name) {
+    return 'Удалить «$name»? Уже записанные тренировки останутся в истории.';
+  }
+
+  @override
+  String get builderDelete => 'Удалить';
+
+  @override
+  String get builderKeep => 'Оставить';
+
+  @override
+  String get builderStart => 'Начать тренировку';
+
+  @override
+  String get builderBodyWeight => 'Собственный вес';
+
+  @override
+  String get builderTimed => 'На время';
+
+  @override
+  String get builderEmptyDay => 'В этом дне пока нет упражнений.';
+
+  @override
+  String get builderActiveExists => 'Сначала завершите идущую тренировку.';
 }

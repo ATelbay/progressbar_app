@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/firestore_writes.dart';
@@ -6,16 +5,17 @@ import '../../data/workout_repository.dart';
 import '../../domain/models.dart';
 import '../../domain/workout_logic.dart';
 import '../auth/auth_controller.dart';
+import '../firestore_provider.dart';
 
 final workoutRepositoryProvider = Provider<WorkoutRepository>(
-  (ref) => FirestoreWorkoutRepository(FirebaseFirestore.instance),
+  (ref) => FirestoreWorkoutRepository(ref.watch(firestoreProvider)),
 );
 
 /// IDs for new programs, workouts, exercises and sets.
-final newIdProvider = Provider<IdGenerator>(
-  (ref) =>
-      () => newFirestoreId(FirebaseFirestore.instance),
-);
+final newIdProvider = Provider<IdGenerator>((ref) {
+  final db = ref.watch(firestoreProvider);
+  return () => newFirestoreId(db);
+});
 
 /// The workout in progress, restored after a restart; null when there is none.
 final activeWorkoutProvider = StreamProvider<Workout?>((ref) {

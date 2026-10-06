@@ -333,6 +333,492 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter your name.'**
   String get errorNameRequired;
+
+  /// No description provided for @workoutFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get workoutFinish;
+
+  /// No description provided for @workoutProgressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded {done} of {total} exercises'**
+  String workoutProgressLabel(int done, int total);
+
+  /// No description provided for @workoutOfTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'of {total}'**
+  String workoutOfTotal(int total);
+
+  /// No description provided for @workoutAddExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Add exercise'**
+  String get workoutAddExercise;
+
+  /// No description provided for @workoutAllRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything is recorded'**
+  String get workoutAllRecorded;
+
+  /// No description provided for @workoutEmptyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the first exercise.'**
+  String get workoutEmptyHint;
+
+  /// No description provided for @chipAsPlanned.
+  ///
+  /// In en, this message translates to:
+  /// **'on plan'**
+  String get chipAsPlanned;
+
+  /// No description provided for @chipBelowPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'below plan'**
+  String get chipBelowPlan;
+
+  /// No description provided for @chipAbovePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'above plan'**
+  String get chipAbovePlan;
+
+  /// No description provided for @chipNow.
+  ///
+  /// In en, this message translates to:
+  /// **'now'**
+  String get chipNow;
+
+  /// No description provided for @entryPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get entryPlan;
+
+  /// No description provided for @entryFact.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get entryFact;
+
+  /// No description provided for @entrySets.
+  ///
+  /// In en, this message translates to:
+  /// **'Sets'**
+  String get entrySets;
+
+  /// No description provided for @entryReps.
+  ///
+  /// In en, this message translates to:
+  /// **'Reps'**
+  String get entryReps;
+
+  /// No description provided for @entryWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get entryWeight;
+
+  /// No description provided for @entryExtraWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Extra weight'**
+  String get entryExtraWeight;
+
+  /// No description provided for @entryTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get entryTime;
+
+  /// No description provided for @unitSec.
+  ///
+  /// In en, this message translates to:
+  /// **'s'**
+  String get unitSec;
+
+  /// No description provided for @setsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} sets'**
+  String setsCount(int count);
+
+  /// No description provided for @entryLastTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Last time: {result}'**
+  String entryLastTime(String result);
+
+  /// No description provided for @entryBodyWeightNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Body weight {kg} kg comes from your profile.'**
+  String entryBodyWeightNote(String kg);
+
+  /// No description provided for @entryRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Record'**
+  String get entryRecord;
+
+  /// No description provided for @entryEachSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Add each set'**
+  String get entryEachSet;
+
+  /// No description provided for @entryRecordSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Record set {number}'**
+  String entryRecordSet(int number);
+
+  /// No description provided for @entryExtraSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Beyond plan'**
+  String get entryExtraSet;
+
+  /// No description provided for @entrySummaryOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Total only'**
+  String get entrySummaryOnly;
+
+  /// No description provided for @entryEffort.
+  ///
+  /// In en, this message translates to:
+  /// **'Effort, optional'**
+  String get entryEffort;
+
+  /// No description provided for @entryDecrease.
+  ///
+  /// In en, this message translates to:
+  /// **'Less: {what}'**
+  String entryDecrease(String what);
+
+  /// No description provided for @entryIncrease.
+  ///
+  /// In en, this message translates to:
+  /// **'More: {what}'**
+  String entryIncrease(String what);
+
+  /// No description provided for @keyComma.
+  ///
+  /// In en, this message translates to:
+  /// **'Decimal point'**
+  String get keyComma;
+
+  /// No description provided for @keyErase.
+  ///
+  /// In en, this message translates to:
+  /// **'Erase'**
+  String get keyErase;
+
+  /// No description provided for @finishTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish the workout?'**
+  String get finishTitle;
+
+  /// No description provided for @finishBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded {done} of {total} exercises. The rest stay without a result — a coach will see them as skipped.'**
+  String finishBody(int done, int total);
+
+  /// No description provided for @finishBodyAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All exercises are recorded.'**
+  String get finishBodyAll;
+
+  /// No description provided for @finishBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to the workout'**
+  String get finishBack;
+
+  /// No description provided for @finishCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel the workout and delete the records'**
+  String get finishCancel;
+
+  /// No description provided for @homeActiveLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout in progress'**
+  String get homeActiveLabel;
+
+  /// No description provided for @homeContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get homeContinue;
+
+  /// No description provided for @homeMyPrograms.
+  ///
+  /// In en, this message translates to:
+  /// **'My programs'**
+  String get homeMyPrograms;
+
+  /// No description provided for @homeOwnProgram.
+  ///
+  /// In en, this message translates to:
+  /// **'Your own program'**
+  String get homeOwnProgram;
+
+  /// No description provided for @homeDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days'**
+  String homeDays(int count);
+
+  /// No description provided for @homeEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The bar is empty for now'**
+  String get homeEmptyTitle;
+
+  /// No description provided for @homeEmptyText.
+  ///
+  /// In en, this message translates to:
+  /// **'Build your own program or start a workout without one.'**
+  String get homeEmptyText;
+
+  /// No description provided for @errorStoreUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection to the server yet. Go online once and try again.'**
+  String get errorStoreUnavailable;
+
+  /// No description provided for @pickerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise'**
+  String get pickerTitle;
+
+  /// No description provided for @pickerSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get pickerSearch;
+
+  /// No description provided for @pickerNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing found'**
+  String get pickerNothing;
+
+  /// No description provided for @groupAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get groupAll;
+
+  /// No description provided for @groupChest.
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get groupChest;
+
+  /// No description provided for @groupBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get groupBack;
+
+  /// No description provided for @groupLegs.
+  ///
+  /// In en, this message translates to:
+  /// **'Legs'**
+  String get groupLegs;
+
+  /// No description provided for @groupShoulders.
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulders'**
+  String get groupShoulders;
+
+  /// No description provided for @groupArms.
+  ///
+  /// In en, this message translates to:
+  /// **'Arms'**
+  String get groupArms;
+
+  /// No description provided for @groupCore.
+  ///
+  /// In en, this message translates to:
+  /// **'Core'**
+  String get groupCore;
+
+  /// No description provided for @equipDumbbell.
+  ///
+  /// In en, this message translates to:
+  /// **'dumbbells'**
+  String get equipDumbbell;
+
+  /// No description provided for @equipBarbell.
+  ///
+  /// In en, this message translates to:
+  /// **'barbell'**
+  String get equipBarbell;
+
+  /// No description provided for @equipMachine.
+  ///
+  /// In en, this message translates to:
+  /// **'machine'**
+  String get equipMachine;
+
+  /// No description provided for @equipCable.
+  ///
+  /// In en, this message translates to:
+  /// **'cable'**
+  String get equipCable;
+
+  /// No description provided for @equipBodyOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'body weight'**
+  String get equipBodyOnly;
+
+  /// No description provided for @equipEzBar.
+  ///
+  /// In en, this message translates to:
+  /// **'EZ bar'**
+  String get equipEzBar;
+
+  /// No description provided for @equipKettlebell.
+  ///
+  /// In en, this message translates to:
+  /// **'kettlebell'**
+  String get equipKettlebell;
+
+  /// No description provided for @effortMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Could do more'**
+  String get effortMore;
+
+  /// No description provided for @effortSome.
+  ///
+  /// In en, this message translates to:
+  /// **'Some strength left'**
+  String get effortSome;
+
+  /// No description provided for @effortNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing left'**
+  String get effortNone;
+
+  /// No description provided for @builderNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Program name'**
+  String get builderNameHint;
+
+  /// No description provided for @builderAddDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Add day'**
+  String get builderAddDay;
+
+  /// No description provided for @builderDayName.
+  ///
+  /// In en, this message translates to:
+  /// **'Day name'**
+  String get builderDayName;
+
+  /// No description provided for @builderDayDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {number}'**
+  String builderDayDefault(int number);
+
+  /// No description provided for @builderNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note for the trainee'**
+  String get builderNote;
+
+  /// No description provided for @builderNotePrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Note: {note}'**
+  String builderNotePrefix(String note);
+
+  /// No description provided for @builderRemoveExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from the day'**
+  String get builderRemoveExercise;
+
+  /// No description provided for @builderRemoveDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete day'**
+  String get builderRemoveDay;
+
+  /// No description provided for @builderDeleteProgram.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete program'**
+  String get builderDeleteProgram;
+
+  /// No description provided for @builderDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete «{name}»? Workouts already recorded stay in history.'**
+  String builderDeleteConfirm(String name);
+
+  /// No description provided for @builderDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get builderDelete;
+
+  /// No description provided for @builderKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep'**
+  String get builderKeep;
+
+  /// No description provided for @builderStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start workout'**
+  String get builderStart;
+
+  /// No description provided for @builderBodyWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Body weight'**
+  String get builderBodyWeight;
+
+  /// No description provided for @builderTimed.
+  ///
+  /// In en, this message translates to:
+  /// **'Timed'**
+  String get builderTimed;
+
+  /// No description provided for @builderEmptyDay.
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises in this day yet.'**
+  String get builderEmptyDay;
+
+  /// No description provided for @builderActiveExists.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish the workout in progress first.'**
+  String get builderActiveExists;
 }
 
 class _AppLocalizationsDelegate

@@ -6,6 +6,7 @@ import '../../l10n/app_localizations.dart';
 import '../../theme.dart';
 import '../../widgets/glass_panel.dart';
 import '../../widgets/glow_background.dart';
+import '../../widgets/step_button.dart';
 import 'auth_controller.dart';
 
 class ProfileSetupScreen extends ConsumerStatefulWidget {
@@ -128,13 +129,13 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                               style: PbText.numHero.copyWith(color: c.ink),
                             ),
                           ),
-                          _Step(
+                          StepButton(
                             icon: Icons.remove,
                             label: l10n.decreaseBodyWeight,
                             onTap: () => _nudge(-_stepKg),
                           ),
                           const SizedBox(width: PbSpace.s2),
-                          _Step(
+                          StepButton(
                             icon: Icons.add,
                             label: l10n.increaseBodyWeight,
                             onTap: () => _nudge(_stepKg),
@@ -157,32 +158,6 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Step extends StatelessWidget {
-  const _Step({required this.icon, required this.label, required this.onTap});
-
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.pb;
-    return IconButton(
-      onPressed: onTap,
-      tooltip: label,
-      icon: Icon(icon),
-      style: IconButton.styleFrom(
-        fixedSize: const Size.square(PbSize.actionHeight),
-        backgroundColor: c.sunken,
-        foregroundColor: c.ink,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(PbRadius.md),
         ),
       ),
     );

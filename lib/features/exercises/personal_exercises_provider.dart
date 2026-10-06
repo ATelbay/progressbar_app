@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/personal_exercise_repository.dart';
@@ -6,9 +5,10 @@ import '../../domain/exercise_catalog.dart';
 import '../../domain/models.dart';
 import '../auth/auth_controller.dart';
 import 'exercise_catalog_provider.dart';
+import '../firestore_provider.dart';
 
 final personalExerciseRepositoryProvider = Provider<PersonalExerciseRepository>(
-  (ref) => FirestorePersonalExerciseRepository(FirebaseFirestore.instance),
+  (ref) => FirestorePersonalExerciseRepository(ref.watch(firestoreProvider)),
 );
 
 /// The signed-in user's own exercises and edits of built-in ones.

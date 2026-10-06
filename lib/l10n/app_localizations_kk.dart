@@ -134,4 +134,275 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get errorNameRequired => 'Атыңызды енгізіңіз.';
+
+  @override
+  String get workoutFinish => 'Аяқтау';
+
+  @override
+  String workoutProgressLabel(int done, int total) {
+    return '$total жаттығудың $done-і жазылды';
+  }
+
+  @override
+  String workoutOfTotal(int total) {
+    return '/ $total';
+  }
+
+  @override
+  String get workoutAddExercise => 'Жаттығу қосу';
+
+  @override
+  String get workoutAllRecorded => 'Барлығы жазылды';
+
+  @override
+  String get workoutEmptyHint => 'Алғашқы жаттығуды қосыңыз.';
+
+  @override
+  String get chipAsPlanned => 'жоспар бойынша';
+
+  @override
+  String get chipBelowPlan => 'жоспардан төмен';
+
+  @override
+  String get chipAbovePlan => 'жоспардан жоғары';
+
+  @override
+  String get chipNow => 'қазір';
+
+  @override
+  String get entryPlan => 'Жоспар';
+
+  @override
+  String get entryFact => 'Нақты';
+
+  @override
+  String get entrySets => 'Тәсілдер';
+
+  @override
+  String get entryReps => 'Қайталау';
+
+  @override
+  String get entryWeight => 'Салмақ';
+
+  @override
+  String get entryExtraWeight => 'Қосымша салмақ';
+
+  @override
+  String get entryTime => 'Уақыт';
+
+  @override
+  String get unitSec => 'с';
+
+  @override
+  String setsCount(int count) {
+    return '$count тәсіл';
+  }
+
+  @override
+  String entryLastTime(String result) {
+    return 'Өткен жолы: $result';
+  }
+
+  @override
+  String entryBodyWeightNote(String kg) {
+    return 'Дене салмағы $kg кг профильден алынады.';
+  }
+
+  @override
+  String get entryRecord => 'Жазу';
+
+  @override
+  String get entryEachSet => 'Әр тәсілді қосу';
+
+  @override
+  String entryRecordSet(int number) {
+    return '$number-тәсілді жазу';
+  }
+
+  @override
+  String get entryExtraSet => 'Жоспардан тыс';
+
+  @override
+  String get entrySummaryOnly => 'Тек қорытынды';
+
+  @override
+  String get entryEffort => 'Ауырлық, қалауыңызша';
+
+  @override
+  String entryDecrease(String what) {
+    return 'Азайту: $what';
+  }
+
+  @override
+  String entryIncrease(String what) {
+    return 'Көбейту: $what';
+  }
+
+  @override
+  String get keyComma => 'Үтір';
+
+  @override
+  String get keyErase => 'Өшіру';
+
+  @override
+  String get finishTitle => 'Жаттығуды аяқтайсыз ба?';
+
+  @override
+  String finishBody(int done, int total) {
+    return '$total жаттығудың $done-і жазылды. Қалғандары нәтижесіз қалады — жаттықтырушы оларды өткізілген деп көреді.';
+  }
+
+  @override
+  String get finishBodyAll => 'Барлық жаттығу жазылды.';
+
+  @override
+  String get finishBack => 'Жаттығуға оралу';
+
+  @override
+  String get finishCancel => 'Жаттығудан бас тартып, жазбаларды жою';
+
+  @override
+  String get homeActiveLabel => 'Жаттығу жүріп жатыр';
+
+  @override
+  String get homeContinue => 'Жалғастыру';
+
+  @override
+  String get homeMyPrograms => 'Менің бағдарламаларым';
+
+  @override
+  String get homeOwnProgram => 'Өз бағдарламаңыз';
+
+  @override
+  String homeDays(int count) {
+    return '$count күн';
+  }
+
+  @override
+  String get homeEmptyTitle => 'Гриф әзірге бос';
+
+  @override
+  String get homeEmptyText =>
+      'Өз бағдарламаңызды құрыңыз немесе бағдарламасыз жаттығуды бастаңыз.';
+
+  @override
+  String get errorStoreUnavailable =>
+      'Серверге әзірге қосылым жоқ. Желіге бір рет қосылып, қайталап көріңіз.';
+
+  @override
+  String get pickerTitle => 'Жаттығу';
+
+  @override
+  String get pickerSearch => 'Іздеу';
+
+  @override
+  String get pickerNothing => 'Ештеңе табылмады';
+
+  @override
+  String get groupAll => 'Барлығы';
+
+  @override
+  String get groupChest => 'Кеуде';
+
+  @override
+  String get groupBack => 'Арқа';
+
+  @override
+  String get groupLegs => 'Аяқ';
+
+  @override
+  String get groupShoulders => 'Иық';
+
+  @override
+  String get groupArms => 'Қол';
+
+  @override
+  String get groupCore => 'Іш';
+
+  @override
+  String get equipDumbbell => 'гантельдер';
+
+  @override
+  String get equipBarbell => 'штанга';
+
+  @override
+  String get equipMachine => 'тренажёр';
+
+  @override
+  String get equipCable => 'блок';
+
+  @override
+  String get equipBodyOnly => 'өз салмағы';
+
+  @override
+  String get equipEzBar => 'EZ-гриф';
+
+  @override
+  String get equipKettlebell => 'гір';
+
+  @override
+  String get effortMore => 'Тағы жасай аламын';
+
+  @override
+  String get effortSome => 'Күш қалды';
+
+  @override
+  String get effortNone => 'Бұдан артық алмаймын';
+
+  @override
+  String get builderNameHint => 'Бағдарлама атауы';
+
+  @override
+  String get builderAddDay => 'Күн қосу';
+
+  @override
+  String get builderDayName => 'Күн атауы';
+
+  @override
+  String builderDayDefault(int number) {
+    return '$number-күн';
+  }
+
+  @override
+  String get builderNote => 'Жаттығуға ескертпе';
+
+  @override
+  String builderNotePrefix(String note) {
+    return 'Ескертпе: $note';
+  }
+
+  @override
+  String get builderRemoveExercise => 'Күннен алып тастау';
+
+  @override
+  String get builderRemoveDay => 'Күнді жою';
+
+  @override
+  String get builderDeleteProgram => 'Бағдарламаны жою';
+
+  @override
+  String builderDeleteConfirm(String name) {
+    return '«$name» жойылсын ба? Жазылған жаттығулар тарихта қалады.';
+  }
+
+  @override
+  String get builderDelete => 'Жою';
+
+  @override
+  String get builderKeep => 'Қалдыру';
+
+  @override
+  String get builderStart => 'Жаттығуды бастау';
+
+  @override
+  String get builderBodyWeight => 'Өз салмағы';
+
+  @override
+  String get builderTimed => 'Уақытқа';
+
+  @override
+  String get builderEmptyDay => 'Бұл күнде әзірге жаттығу жоқ.';
+
+  @override
+  String get builderActiveExists => 'Алдымен жүріп жатқан жаттығуды аяқтаңыз.';
 }

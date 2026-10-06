@@ -1,3 +1,4 @@
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -5,18 +6,21 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:progressbar_app/app.dart';
 import 'package:progressbar_app/domain/models.dart';
 import 'package:progressbar_app/features/auth/auth_controller.dart';
+import 'package:progressbar_app/features/firestore_provider.dart';
 
 import 'support/fakes.dart';
 
 void main() {
   late FakeAuthRepository auth;
   late FakeProfileRepository profiles;
+  late FakeFirebaseFirestore db;
 
   Widget app({Key? key}) => ProviderScope(
     key: key,
     overrides: [
       authRepositoryProvider.overrideWithValue(auth),
       profileRepositoryProvider.overrideWithValue(profiles),
+      firestoreProvider.overrideWithValue(db),
     ],
     child: const ProgressBarApp(),
   );
@@ -24,6 +28,7 @@ void main() {
   setUp(() {
     auth = FakeAuthRepository();
     profiles = FakeProfileRepository();
+    db = FakeFirebaseFirestore();
   });
 
   testWidgets('phone, code and first-time profile lead to the tabs', (

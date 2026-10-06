@@ -1,12 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/program_repository.dart';
 import '../../domain/models.dart';
 import '../auth/auth_controller.dart';
+import '../firestore_provider.dart';
 
 final programRepositoryProvider = Provider<ProgramRepository>(
-  (ref) => FirestoreProgramRepository(FirebaseFirestore.instance),
+  (ref) => FirestoreProgramRepository(ref.watch(firestoreProvider)),
 );
 
 /// Programs the signed-in user wrote.

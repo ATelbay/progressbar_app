@@ -131,4 +131,275 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorNameRequired => 'Enter your name.';
+
+  @override
+  String get workoutFinish => 'Finish';
+
+  @override
+  String workoutProgressLabel(int done, int total) {
+    return 'Recorded $done of $total exercises';
+  }
+
+  @override
+  String workoutOfTotal(int total) {
+    return 'of $total';
+  }
+
+  @override
+  String get workoutAddExercise => 'Add exercise';
+
+  @override
+  String get workoutAllRecorded => 'Everything is recorded';
+
+  @override
+  String get workoutEmptyHint => 'Add the first exercise.';
+
+  @override
+  String get chipAsPlanned => 'on plan';
+
+  @override
+  String get chipBelowPlan => 'below plan';
+
+  @override
+  String get chipAbovePlan => 'above plan';
+
+  @override
+  String get chipNow => 'now';
+
+  @override
+  String get entryPlan => 'Plan';
+
+  @override
+  String get entryFact => 'Done';
+
+  @override
+  String get entrySets => 'Sets';
+
+  @override
+  String get entryReps => 'Reps';
+
+  @override
+  String get entryWeight => 'Weight';
+
+  @override
+  String get entryExtraWeight => 'Extra weight';
+
+  @override
+  String get entryTime => 'Time';
+
+  @override
+  String get unitSec => 's';
+
+  @override
+  String setsCount(int count) {
+    return '$count sets';
+  }
+
+  @override
+  String entryLastTime(String result) {
+    return 'Last time: $result';
+  }
+
+  @override
+  String entryBodyWeightNote(String kg) {
+    return 'Body weight $kg kg comes from your profile.';
+  }
+
+  @override
+  String get entryRecord => 'Record';
+
+  @override
+  String get entryEachSet => 'Add each set';
+
+  @override
+  String entryRecordSet(int number) {
+    return 'Record set $number';
+  }
+
+  @override
+  String get entryExtraSet => 'Beyond plan';
+
+  @override
+  String get entrySummaryOnly => 'Total only';
+
+  @override
+  String get entryEffort => 'Effort, optional';
+
+  @override
+  String entryDecrease(String what) {
+    return 'Less: $what';
+  }
+
+  @override
+  String entryIncrease(String what) {
+    return 'More: $what';
+  }
+
+  @override
+  String get keyComma => 'Decimal point';
+
+  @override
+  String get keyErase => 'Erase';
+
+  @override
+  String get finishTitle => 'Finish the workout?';
+
+  @override
+  String finishBody(int done, int total) {
+    return 'Recorded $done of $total exercises. The rest stay without a result — a coach will see them as skipped.';
+  }
+
+  @override
+  String get finishBodyAll => 'All exercises are recorded.';
+
+  @override
+  String get finishBack => 'Back to the workout';
+
+  @override
+  String get finishCancel => 'Cancel the workout and delete the records';
+
+  @override
+  String get homeActiveLabel => 'Workout in progress';
+
+  @override
+  String get homeContinue => 'Continue';
+
+  @override
+  String get homeMyPrograms => 'My programs';
+
+  @override
+  String get homeOwnProgram => 'Your own program';
+
+  @override
+  String homeDays(int count) {
+    return '$count days';
+  }
+
+  @override
+  String get homeEmptyTitle => 'The bar is empty for now';
+
+  @override
+  String get homeEmptyText =>
+      'Build your own program or start a workout without one.';
+
+  @override
+  String get errorStoreUnavailable =>
+      'No connection to the server yet. Go online once and try again.';
+
+  @override
+  String get pickerTitle => 'Exercise';
+
+  @override
+  String get pickerSearch => 'Search';
+
+  @override
+  String get pickerNothing => 'Nothing found';
+
+  @override
+  String get groupAll => 'All';
+
+  @override
+  String get groupChest => 'Chest';
+
+  @override
+  String get groupBack => 'Back';
+
+  @override
+  String get groupLegs => 'Legs';
+
+  @override
+  String get groupShoulders => 'Shoulders';
+
+  @override
+  String get groupArms => 'Arms';
+
+  @override
+  String get groupCore => 'Core';
+
+  @override
+  String get equipDumbbell => 'dumbbells';
+
+  @override
+  String get equipBarbell => 'barbell';
+
+  @override
+  String get equipMachine => 'machine';
+
+  @override
+  String get equipCable => 'cable';
+
+  @override
+  String get equipBodyOnly => 'body weight';
+
+  @override
+  String get equipEzBar => 'EZ bar';
+
+  @override
+  String get equipKettlebell => 'kettlebell';
+
+  @override
+  String get effortMore => 'Could do more';
+
+  @override
+  String get effortSome => 'Some strength left';
+
+  @override
+  String get effortNone => 'Nothing left';
+
+  @override
+  String get builderNameHint => 'Program name';
+
+  @override
+  String get builderAddDay => 'Add day';
+
+  @override
+  String get builderDayName => 'Day name';
+
+  @override
+  String builderDayDefault(int number) {
+    return 'Day $number';
+  }
+
+  @override
+  String get builderNote => 'Note for the trainee';
+
+  @override
+  String builderNotePrefix(String note) {
+    return 'Note: $note';
+  }
+
+  @override
+  String get builderRemoveExercise => 'Remove from the day';
+
+  @override
+  String get builderRemoveDay => 'Delete day';
+
+  @override
+  String get builderDeleteProgram => 'Delete program';
+
+  @override
+  String builderDeleteConfirm(String name) {
+    return 'Delete «$name»? Workouts already recorded stay in history.';
+  }
+
+  @override
+  String get builderDelete => 'Delete';
+
+  @override
+  String get builderKeep => 'Keep';
+
+  @override
+  String get builderStart => 'Start workout';
+
+  @override
+  String get builderBodyWeight => 'Body weight';
+
+  @override
+  String get builderTimed => 'Timed';
+
+  @override
+  String get builderEmptyDay => 'No exercises in this day yet.';
+
+  @override
+  String get builderActiveExists => 'Finish the workout in progress first.';
 }

@@ -45,5 +45,183 @@
         "type": "String"
       }
     }
-  }
+  },
+  "workoutFinish": "Finish",
+  "workoutProgressLabel": "Recorded {done} of {total} exercises",
+  "@workoutProgressLabel": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "workoutOfTotal": "of {total}",
+  "@workoutOfTotal": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "workoutAddExercise": "Add exercise",
+  "workoutAllRecorded": "Everything is recorded",
+  "workoutEmptyHint": "Add the first exercise.",
+  "chipAsPlanned": "on plan",
+  "chipBelowPlan": "below plan",
+  "chipAbovePlan": "above plan",
+  "chipNow": "now",
+  "entryPlan": "Plan",
+  "entryFact": "Done",
+  "entrySets": "Sets",
+  "entryReps": "Reps",
+  "entryWeight": "Weight",
+  "entryExtraWeight": "Extra weight",
+  "entryTime": "Time",
+  "unitSec": "s",
+  "setsCount": "{count} sets",
+  "@setsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "entryLastTime": "Last time: {result}",
+  "@entryLastTime": {
+    "placeholders": {
+      "result": {
+        "type": "String"
+      }
+    }
+  },
+  "entryBodyWeightNote": "Body weight {kg} kg comes from your profile.",
+  "@entryBodyWeightNote": {
+    "placeholders": {
+      "kg": {
+        "type": "String"
+      }
+    }
+  },
+  "entryRecord": "Record",
+  "entryEachSet": "Add each set",
+  "entryRecordSet": "Record set {number}",
+  "@entryRecordSet": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "entryExtraSet": "Beyond plan",
+  "entrySummaryOnly": "Total only",
+  "entryEffort": "Effort, optional",
+  "entryDecrease": "Less: {what}",
+  "@entryDecrease": {
+    "placeholders": {
+      "what": {
+        "type": "String"
+      }
+    }
+  },
+  "entryIncrease": "More: {what}",
+  "@entryIncrease": {
+    "placeholders": {
+      "what": {
+        "type": "String"
+      }
+    }
+  },
+  "keyComma": "Decimal point",
+  "keyErase": "Erase",
+  "finishTitle": "Finish the workout?",
+  "finishBody": "Recorded {done} of {total} exercises. The rest stay without a result — a coach will see them as skipped.",
+  "@finishBody": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "finishBodyAll": "All exercises are recorded.",
+  "finishBack": "Back to the workout",
+  "finishCancel": "Cancel the workout and delete the records",
+  "homeActiveLabel": "Workout in progress",
+  "homeContinue": "Continue",
+  "homeMyPrograms": "My programs",
+  "homeOwnProgram": "Your own program",
+  "homeDays": "{count} days",
+  "@homeDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeEmptyTitle": "The bar is empty for now",
+  "homeEmptyText": "Build your own program or start a workout without one.",
+  "errorStoreUnavailable": "No connection to the server yet. Go online once and try again.",
+  "pickerTitle": "Exercise",
+  "pickerSearch": "Search",
+  "pickerNothing": "Nothing found",
+  "groupAll": "All",
+  "groupChest": "Chest",
+  "groupBack": "Back",
+  "groupLegs": "Legs",
+  "groupShoulders": "Shoulders",
+  "groupArms": "Arms",
+  "groupCore": "Core",
+  "equipDumbbell": "dumbbells",
+  "equipBarbell": "barbell",
+  "equipMachine": "machine",
+  "equipCable": "cable",
+  "equipBodyOnly": "body weight",
+  "equipEzBar": "EZ bar",
+  "equipKettlebell": "kettlebell",
+  "effortMore": "Could do more",
+  "effortSome": "Some strength left",
+  "effortNone": "Nothing left",
+  "builderNameHint": "Program name",
+  "builderAddDay": "Add day",
+  "builderDayName": "Day name",
+  "builderDayDefault": "Day {number}",
+  "@builderDayDefault": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "builderNote": "Note for the trainee",
+  "builderNotePrefix": "Note: {note}",
+  "@builderNotePrefix": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "builderRemoveExercise": "Remove from the day",
+  "builderRemoveDay": "Delete day",
+  "builderDeleteProgram": "Delete program",
+  "builderDeleteConfirm": "Delete «{name}»? Workouts already recorded stay in history.",
+  "@builderDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "builderDelete": "Delete",
+  "builderKeep": "Keep",
+  "builderStart": "Start workout",
+  "builderBodyWeight": "Body weight",
+  "builderTimed": "Timed",
+  "builderEmptyDay": "No exercises in this day yet.",
+  "builderActiveExists": "Finish the workout in progress first."
 }

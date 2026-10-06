@@ -1,17 +1,17 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/auth_repository.dart';
 import '../../data/profile_repository.dart';
 import '../../domain/models.dart';
+import '../firestore_provider.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>(
   (ref) => FirebaseAuthRepository(FirebaseAuth.instance),
 );
 
 final profileRepositoryProvider = Provider<ProfileRepository>(
-  (ref) => FirestoreProfileRepository(FirebaseFirestore.instance),
+  (ref) => FirestoreProfileRepository(ref.watch(firestoreProvider)),
 );
 
 final uidProvider = StreamProvider<String?>(
