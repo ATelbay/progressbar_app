@@ -495,3 +495,19 @@ bool hasPlan(Workout workout) =>
     skipped: kinds.where((k) => k == DeviationKind.missing).length,
   );
 }
+
+/// Exercises that have a result in a completed workout, most recently done
+/// first, each under the name it was last recorded with.
+List<({String exerciseId, String name})> exercisesWithResults(
+  Iterable<Workout> workouts,
+) {
+  final sorted = workouts.where((w) => w.isCompleted).toList()
+    ..sort((a, b) => b.completedAt!.compareTo(a.completedAt!));
+  final seen = <String>{};
+  return [
+    for (final workout in sorted)
+      for (final exercise in workout.exercises)
+        if (exercise.hasFact && seen.add(exercise.exerciseId))
+          (exerciseId: exercise.exerciseId, name: exercise.name),
+  ];
+}

@@ -134,5 +134,13 @@
   "historyToPrograms": "К программам",
   "editNotice": "Тренировка завершена. После правки тренер увидит пометку «изменено после завершения».",
   "editSave": "Сохранить изменения",
-  "editDiscard": "Не сохранять"
+  "editDiscard": "Не сохранять",
+  "progressMaxWeight": "Максимальный вес",
+  "progressMaxTime": "Максимальное время",
+  "progressMaxReps": "Максимум повторений",
+  "unitReps": "повт.",
+  "progressChange": "{change} за {count, plural, one{{count} тренировку} few{{count} тренировки} many{{count} тренировок} other{{count} тренировок}}",
+  "progressEmptyTitle": "Пока нет ни одной точки",
+  "progressEmptyText": "График появится после первой завершённой тренировки. Одна тренировка — одна точка: лучший результат за день.",
+  "progressChartLabel": "График: с {from} {fromDate} до {to} {toDate}"
 }

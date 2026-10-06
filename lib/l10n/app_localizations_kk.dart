@@ -477,4 +477,43 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get editDiscard => 'Сақтамау';
+
+  @override
+  String get progressMaxWeight => 'Ең үлкен салмақ';
+
+  @override
+  String get progressMaxTime => 'Ең ұзақ уақыт';
+
+  @override
+  String get progressMaxReps => 'Ең көп қайталау';
+
+  @override
+  String get unitReps => 'қайт.';
+
+  @override
+  String progressChange(String change, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count жаттығуда',
+    );
+    return '$_temp0 $change';
+  }
+
+  @override
+  String get progressEmptyTitle => 'Әзірге бірде-бір нүкте жоқ';
+
+  @override
+  String get progressEmptyText =>
+      'Кесте алғашқы аяқталған жаттығудан кейін пайда болады. Бір жаттығу — бір нүкте: сол күнгі ең жақсы нәтиже.';
+
+  @override
+  String progressChartLabel(
+    String from,
+    String fromDate,
+    String to,
+    String toDate,
+  ) {
+    return 'Кесте: $fromDate $from бастап $toDate $to дейін';
+  }
 }

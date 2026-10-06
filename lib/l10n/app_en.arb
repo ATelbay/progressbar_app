@@ -273,5 +273,39 @@
   "historyToPrograms": "To programs",
   "editNotice": "This workout is completed. After a change a coach will see it marked «edited after completion».",
   "editSave": "Save changes",
-  "editDiscard": "Don't save"
+  "editDiscard": "Don't save",
+  "progressMaxWeight": "Heaviest weight",
+  "progressMaxTime": "Longest time",
+  "progressMaxReps": "Most reps",
+  "unitReps": "reps",
+  "progressChange": "{change} over {count, plural, one{{count} workout} other{{count} workouts}}",
+  "@progressChange": {
+    "placeholders": {
+      "change": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressEmptyTitle": "No points yet",
+  "progressEmptyText": "The chart appears after the first completed workout. One workout is one point: the best result of that day.",
+  "progressChartLabel": "Chart: from {from} on {fromDate} to {to} on {toDate}",
+  "@progressChartLabel": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "fromDate": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "toDate": {
+        "type": "String"
+      }
+    }
+  }
 }

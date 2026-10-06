@@ -396,6 +396,7 @@ class _PlannedCard extends StatelessWidget {
                     usesBodyWeight: exercise.usesBodyWeight,
                   ),
                   style: PbText.numSm,
+                  beside: true,
                 ),
             ],
           ),

@@ -74,7 +74,13 @@ NumberLine setLine(
 ]);
 
 class NumberText extends StatelessWidget {
-  const NumberText(this.line, {super.key, required this.style, this.color});
+  const NumberText(
+    this.line, {
+    super.key,
+    required this.style,
+    this.color,
+    this.beside = false,
+  });
 
   final NumberLine line;
   final TextStyle style;
@@ -82,10 +88,14 @@ class NumberText extends StatelessWidget {
   /// Colour of the numbers; units are always muted.
   final Color? color;
 
+  /// Set when the numbers share a row with a name: a long line then shrinks
+  /// to under half the screen instead of squeezing the name out.
+  final bool beside;
+
   @override
   Widget build(BuildContext context) {
     final c = context.pb;
-    return Text.rich(
+    final text = Text.rich(
       TextSpan(
         children: [
           for (final (text, isUnit) in line.parts)
@@ -97,6 +107,13 @@ class NumberText extends StatelessWidget {
       ),
       style: style.copyWith(color: color ?? c.ink),
       softWrap: false,
+    );
+    if (!beside) return text;
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.sizeOf(context).width * 0.45,
+      ),
+      child: FittedBox(fit: BoxFit.scaleDown, child: text),
     );
   }
 }

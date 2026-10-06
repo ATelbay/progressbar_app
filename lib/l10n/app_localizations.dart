@@ -909,6 +909,59 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Don\'t save'**
   String get editDiscard;
+
+  /// No description provided for @progressMaxWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Heaviest weight'**
+  String get progressMaxWeight;
+
+  /// No description provided for @progressMaxTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Longest time'**
+  String get progressMaxTime;
+
+  /// No description provided for @progressMaxReps.
+  ///
+  /// In en, this message translates to:
+  /// **'Most reps'**
+  String get progressMaxReps;
+
+  /// No description provided for @unitReps.
+  ///
+  /// In en, this message translates to:
+  /// **'reps'**
+  String get unitReps;
+
+  /// No description provided for @progressChange.
+  ///
+  /// In en, this message translates to:
+  /// **'{change} over {count, plural, one{{count} workout} other{{count} workouts}}'**
+  String progressChange(String change, int count);
+
+  /// No description provided for @progressEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No points yet'**
+  String get progressEmptyTitle;
+
+  /// No description provided for @progressEmptyText.
+  ///
+  /// In en, this message translates to:
+  /// **'The chart appears after the first completed workout. One workout is one point: the best result of that day.'**
+  String get progressEmptyText;
+
+  /// No description provided for @progressChartLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Chart: from {from} on {fromDate} to {to} on {toDate}'**
+  String progressChartLabel(
+    String from,
+    String fromDate,
+    String to,
+    String toDate,
+  );
 }
 
 class _AppLocalizationsDelegate

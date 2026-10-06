@@ -134,5 +134,13 @@
   "historyToPrograms": "Бағдарламаларға",
   "editNotice": "Жаттығу аяқталған. Түзетуден кейін жаттықтырушы «аяқталғаннан кейін өзгертілген» белгісін көреді.",
   "editSave": "Өзгерістерді сақтау",
-  "editDiscard": "Сақтамау"
+  "editDiscard": "Сақтамау",
+  "progressMaxWeight": "Ең үлкен салмақ",
+  "progressMaxTime": "Ең ұзақ уақыт",
+  "progressMaxReps": "Ең көп қайталау",
+  "unitReps": "қайт.",
+  "progressChange": "{count, plural, other{{count} жаттығуда}} {change}",
+  "progressEmptyTitle": "Әзірге бірде-бір нүкте жоқ",
+  "progressEmptyText": "Кесте алғашқы аяқталған жаттығудан кейін пайда болады. Бір жаттығу — бір нүкте: сол күнгі ең жақсы нәтиже.",
+  "progressChartLabel": "Кесте: {fromDate} {from} бастап {toDate} {to} дейін"
 }

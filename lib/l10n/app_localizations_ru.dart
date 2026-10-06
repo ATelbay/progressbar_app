@@ -484,4 +484,46 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get editDiscard => 'Не сохранять';
+
+  @override
+  String get progressMaxWeight => 'Максимальный вес';
+
+  @override
+  String get progressMaxTime => 'Максимальное время';
+
+  @override
+  String get progressMaxReps => 'Максимум повторений';
+
+  @override
+  String get unitReps => 'повт.';
+
+  @override
+  String progressChange(String change, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count тренировок',
+      many: '$count тренировок',
+      few: '$count тренировки',
+      one: '$count тренировку',
+    );
+    return '$change за $_temp0';
+  }
+
+  @override
+  String get progressEmptyTitle => 'Пока нет ни одной точки';
+
+  @override
+  String get progressEmptyText =>
+      'График появится после первой завершённой тренировки. Одна тренировка — одна точка: лучший результат за день.';
+
+  @override
+  String progressChartLabel(
+    String from,
+    String fromDate,
+    String to,
+    String toDate,
+  ) {
+    return 'График: с $from $fromDate до $to $toDate';
+  }
 }

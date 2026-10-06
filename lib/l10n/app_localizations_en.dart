@@ -477,4 +477,44 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editDiscard => 'Don\'t save';
+
+  @override
+  String get progressMaxWeight => 'Heaviest weight';
+
+  @override
+  String get progressMaxTime => 'Longest time';
+
+  @override
+  String get progressMaxReps => 'Most reps';
+
+  @override
+  String get unitReps => 'reps';
+
+  @override
+  String progressChange(String change, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count workouts',
+      one: '$count workout',
+    );
+    return '$change over $_temp0';
+  }
+
+  @override
+  String get progressEmptyTitle => 'No points yet';
+
+  @override
+  String get progressEmptyText =>
+      'The chart appears after the first completed workout. One workout is one point: the best result of that day.';
+
+  @override
+  String progressChartLabel(
+    String from,
+    String fromDate,
+    String to,
+    String toDate,
+  ) {
+    return 'Chart: from $from on $fromDate to $to on $toDate';
+  }
 }

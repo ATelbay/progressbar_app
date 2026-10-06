@@ -71,16 +71,7 @@ class PlanFactRow extends StatelessWidget {
             style: PbText.numSm.copyWith(color: c.inkMuted),
           );
     final result = fact != null
-        // A long result shrinks rather than squeezing the name out.
-        ? ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.sizeOf(context).width * 0.45,
-            ),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: NumberText(line(fact), style: PbText.numMd),
-            ),
-          )
+        ? NumberText(line(fact), style: PbText.numMd, beside: true)
         : Text(
             l10n.historySkippedMark,
             style: PbText.caption.copyWith(color: c.warning),

@@ -692,4 +692,47 @@ void main() {
     );
     expect(hasPlan(free), isFalse);
   });
+
+  test('progress offers only exercises with results, latest first', () {
+    Workout done(String id, int day, {required bool plankToo}) {
+      var w = startWorkout(
+        id: id,
+        traineeId: 'arman',
+        now: monday,
+        newId: counter(),
+        catalog: catalog,
+        languageCode: 'ru',
+        program: programWith(const [plan60x8]),
+        day: programWith(const [plan60x8]).days.first,
+      );
+      w = recordSummary(
+        w,
+        w.exercises.first.id,
+        setCount: 1,
+        fact: plan60x8,
+        newId: counter(),
+        now: monday,
+      );
+      if (plankToo) {
+        w = recordSummary(
+          w,
+          w.exercises.last.id,
+          setCount: 1,
+          fact: const SetValues(seconds: 60),
+          newId: counter(),
+          now: monday,
+        );
+      }
+      return completeWorkout(w, now: monday.add(Duration(days: day)));
+    }
+
+    final found = exercisesWithResults([
+      done('a', 1, plankToo: true),
+      done('b', 2, plankToo: false),
+      start(),
+    ]);
+    expect(found.map((e) => e.exerciseId), ['bench', 'plank']);
+    expect(found.first.name, 'Жим лёжа');
+    expect(exercisesWithResults([start()]), isEmpty);
+  });
 }

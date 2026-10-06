@@ -327,6 +327,7 @@ class _ExerciseCard extends StatelessWidget {
                 usesBodyWeight: exercise.usesBodyWeight,
               ),
               style: PbText.numSm,
+              beside: true,
             )
           else if (plan != null)
             Text(

@@ -286,4 +286,33 @@ void main() {
     await tap(tester, find.text('To programs'));
     expect(find.text('The bar is empty for now'), findsOneWidget);
   });
+
+  testWidgets('progress shows a point per finished workout', (tester) async {
+    await openApp(tester);
+    await tap(tester, find.text('Progress'));
+    expect(find.text('No points yet'), findsOneWidget);
+    await tap(tester, find.text('Home'));
+
+    for (final presses in [2, 3]) {
+      await tap(tester, find.text('Workout without a program'));
+      await tap(tester, find.text('Add exercise'));
+      await tester.enterText(find.byType(TextField), 'bench press');
+      await settle(tester);
+      await tap(tester, find.textContaining('Bench Press').first);
+      // The second workout opens with the first one's result.
+      for (var i = 0; i < presses; i++) {
+        await tap(tester, find.byTooltip('More: Weight'));
+      }
+      await tap(tester, find.text('Record'));
+      await tap(tester, find.widgetWithText(FilledButton, 'Finish'));
+      await tap(tester, find.widgetWithText(FilledButton, 'Finish').last);
+    }
+
+    await tap(tester, find.text('Progress'));
+    expect(find.text('Heaviest weight'), findsOneWidget);
+    // 5 kg, then 5 + 7.5 kg: the latest twice, in the panel and in the list.
+    expect(find.text('12.5 kg', findRichText: true), findsNWidgets(2));
+    expect(find.text('5 kg', findRichText: true), findsOneWidget);
+    expect(find.text('+7.5 kg over 2 workouts'), findsOneWidget);
+  });
 }
