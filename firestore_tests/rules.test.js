@@ -459,3 +459,33 @@ test('supervisor name is retained when a workout is edited', async () => {
   await assertFails(setDoc(workoutRef(db, 'w'), workout({ supervisorCoachId: 'coach', supervisorCoachName: 'Другой' })));
   await assertSucceeds(setDoc(workoutRef(db, 'w'), workout({ supervisorCoachId: 'coach', supervisorCoachName: 'Сергей', exercises: [{ id: 'e' }] })));
 });
+
+test('a removed coach who is added again sees the earlier workouts and plans', async () => {
+  await setupAssignment();
+  const own = dbOf('athlete');
+  const coach = dbOf('coach');
+  await setDoc(assignmentRef(coach), assignment());
+  await start(own, 'w1', workout({ supervisorCoachId: 'coach', supervisorCoachName: 'coach' }));
+  await writeBatch(own)
+    .set(workoutRef(own, 'w1'), completed({ supervisorCoachId: 'coach', supervisorCoachName: 'coach' }))
+    .set(pointerRef(own), { workoutId: null })
+    .commit();
+
+  await setStatus('athlete', 'coach', 'athlete', 'removed');
+  await assertFails(getDoc(workoutRef(coach, 'w1')));
+  // The trainee keeps the workout, the coach's name on it and the assignment.
+  const kept = await assertSucceeds(getDoc(workoutRef(own, 'w1')));
+  if (kept.data().supervisorCoachId !== 'coach') throw new Error('supervisor lost');
+  await assertSucceeds(getDoc(assignmentRef(own)));
+  await assertFails(getDoc(programRef(own)));
+
+  await assertSucceeds(invite('coach', 'coach', 'EEEEEE'));
+  await assertSucceeds(accept('athlete', 'coach', 'athlete', 'EEEEEE'));
+  const again = await assertSucceeds(getDocs(collection(coach, 'users/athlete/workouts')));
+  if (again.docs.length !== 1 || again.docs[0].data().supervisorCoachId !== 'coach') {
+    throw new Error('earlier workout not returned');
+  }
+  await assertSucceeds(getDoc(programRef(own)));
+  await assertSucceeds(getDocs(query(collection(coach, 'users/athlete/assignments'), where('coachId', '==', 'coach'))));
+  await assertSucceeds(setDoc(assignmentRef(coach), assignment()));
+});

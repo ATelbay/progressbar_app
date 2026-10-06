@@ -23,7 +23,7 @@ import 'package:progressbar_app/l10n/app_localizations.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets('two users invite, assign, train offline and revoke access', (
+  testWidgets('two users invite, assign, train offline, revoke access and reconnect', (
     tester,
   ) async {
     await Firebase.initializeApp(
@@ -308,6 +308,43 @@ void main() {
     await tap(find.text(l.tabHistory));
     await wait(find.text(l.workoutCoach('Сергей')));
     await shot('14-retained-history');
+
+    // The removed coach is added again: the same link is renewed, so the
+    // earlier workouts and the assigned program come back by themselves.
+    await login(coachPhone, 'Сергей');
+    await tap(find.text(l.tabPeople));
+    await tap(find.text(l.peopleInvite));
+    await tap(find.text(l.inviteCreate));
+    await wait(find.text(l.inviteCopy));
+    final secondInvite =
+        (await db
+                .collection('invitations')
+                .where('inviterId', isEqualTo: coachId)
+                .get())
+            .docs
+            .single
+            .id;
+    await login(traineePhone, 'Айгерим');
+    await tap(find.text(l.tabPeople));
+    await tap(find.text(l.peopleEnterCode));
+    await tester.enterText(find.byType(TextField), secondInvite);
+    await tap(find.text(l.inviteFind));
+    await wait(find.text(l.inviteAccept));
+    await tap(find.text(l.inviteAccept));
+    await wait(find.text('Сергей'));
+    await tap(find.text(l.tabHome));
+    await wait(find.text(l.assignedBy('Сергей')));
+    await shot('15-readded-trainee-home');
+    await login(coachPhone, 'Сергей');
+    await tap(find.text(l.tabPeople));
+    await tap(find.text('Айгерим'));
+    await wait(find.byType(TraineeScreen));
+    await wait(find.text(l.assignProgram));
+    await wait(find.text(l.workoutCoach('Сергей')));
+    expect(find.text(l.workoutSolo), findsNothing);
+    await shot('16-readded-coach-mine');
+    await tap(find.text(l.traineeAll));
+    await wait(find.text(l.workoutSolo));
     await auth.signOut();
   });
 }
