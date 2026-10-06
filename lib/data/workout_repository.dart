@@ -35,6 +35,9 @@ abstract interface class WorkoutRepository {
   /// Completed workouts, newest first.
   Stream<List<Workout>> watchCompleted(String uid);
 
+  /// All workouts, including the current one, without reading private state.
+  Stream<List<Workout>> watchAll(String uid);
+
   /// Stores a just-started workout. Throws [ActiveWorkoutExists] if another
   /// one is in progress.
   Future<void> start(Workout workout);
@@ -155,6 +158,13 @@ class FirestoreWorkoutRepository implements WorkoutRepository {
             [for (final doc in snap.docs) workoutFromMap(doc.id, doc.data())]
               ..sort((a, b) => b.completedAt!.compareTo(a.completedAt!)),
       );
+
+  @override
+  Stream<List<Workout>> watchAll(String uid) => _workouts(uid).snapshots().map(
+    (snap) =>
+        [for (final doc in snap.docs) workoutFromMap(doc.id, doc.data())]
+          ..sort((a, b) => b.startedAt.compareTo(a.startedAt)),
+  );
 
   @override
   Future<void> start(Workout workout) => _serially(() async {

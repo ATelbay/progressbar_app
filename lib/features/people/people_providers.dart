@@ -6,6 +6,7 @@ import '../../domain/models.dart';
 import '../../domain/workout_logic.dart';
 import '../auth/auth_controller.dart';
 import '../firestore_provider.dart';
+import '../workout/workout_providers.dart';
 
 final linkRepositoryProvider = Provider<LinkRepository>(
   (ref) => FirestoreLinkRepository(ref.watch(firestoreProvider)),
@@ -32,3 +33,9 @@ final activeCoachProvider = Provider<CoachLink?>((ref) {
   final coachId = uid == null ? null : activeCoachOf(uid, coaches);
   return coaches.where((l) => l.coachId == coachId).firstOrNull;
 });
+
+final traineeWorkoutsProvider = StreamProvider.autoDispose
+    .family<List<Workout>, String>((ref, traineeId) {
+      ref.watch(uidProvider);
+      return ref.watch(workoutRepositoryProvider).watchAll(traineeId);
+    });

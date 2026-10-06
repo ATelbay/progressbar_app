@@ -9,6 +9,8 @@ abstract interface class ProgramRepository {
   /// Programs written by [uid], by name.
   Stream<List<Program>> watchOwn(String uid);
 
+  Stream<Program?> watchProgram(String authorId, String programId);
+
   /// Creates or replaces the program. Workouts already started from it keep
   /// their own copy of the plan.
   Future<void> save(Program program);
@@ -31,6 +33,16 @@ class FirestoreProgramRepository implements ProgramRepository {
         [for (final doc in snap.docs) programFromMap(doc.id, doc.data())]
           ..sort((a, b) => a.name.compareTo(b.name)),
   );
+
+  @override
+  Stream<Program?> watchProgram(String authorId, String programId) =>
+      _programs(authorId)
+          .doc(programId)
+          .snapshots()
+          .map(
+            (snap) =>
+                snap.exists ? programFromMap(snap.id, snap.data()!) : null,
+          );
 
   @override
   Future<void> save(Program program) async => sendWrite(

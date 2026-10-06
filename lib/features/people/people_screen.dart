@@ -149,7 +149,9 @@ class PeopleScreen extends ConsumerWidget {
                                   Icons.chevron_right,
                                   color: c.ink,
                                 ),
-                                onTap: () => context.push(Routes.trainee),
+                                onTap: () => context.push(
+                                  '${Routes.trainee}/${link.traineeId}',
+                                ),
                               ),
                           ],
                         ),

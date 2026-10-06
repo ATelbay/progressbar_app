@@ -14,6 +14,7 @@ import '../../theme.dart';
 import '../../widgets/glass_panel.dart';
 import '../../widgets/glow_background.dart';
 import '../../widgets/step_button.dart';
+import '../../widgets/sheet.dart';
 import '../auth/auth_controller.dart';
 import '../exercises/personal_exercises_provider.dart';
 import '../format.dart';
@@ -21,14 +22,19 @@ import '../people/people_providers.dart';
 import '../workout/number_field.dart';
 import '../workout/workout_providers.dart';
 import 'program_providers.dart';
+import 'assignment_providers.dart';
+import 'assignment_sheet.dart';
 
 /// Builds a program: days, exercises in a day, planned sets. Every change is
 /// saved at once, as soon as the program has a name.
 class ProgramBuilderScreen extends ConsumerStatefulWidget {
-  const ProgramBuilderScreen({super.key, this.programId});
+  const ProgramBuilderScreen({super.key, this.programId, this.authorId});
 
   /// Null for a new program.
   final String? programId;
+
+  /// Present only for an assigned program; always read-only.
+  final String? authorId;
 
   @override
   ConsumerState<ProgramBuilderScreen> createState() =>
@@ -48,6 +54,18 @@ class _ProgramBuilderScreenState extends ConsumerState<ProgramBuilderScreen> {
 
   /// Opens the stored program once it is loaded, or starts a new one.
   Program? _open(AppLocalizations l10n) {
+    if (widget.authorId != null) {
+      final program = ref
+          .watch(
+            sharedProgramProvider((
+              authorId: widget.authorId!,
+              programId: widget.programId!,
+            )),
+          )
+          .value;
+      _dayId ??= program?.days.firstOrNull?.id;
+      return program;
+    }
     if (_program != null) return _program;
     final uid = ref.watch(uidProvider).value;
     final programs = ref.watch(ownProgramsProvider).value;
@@ -76,6 +94,7 @@ class _ProgramBuilderScreenState extends ConsumerState<ProgramBuilderScreen> {
 
   /// Applies an edit and stores it. A program without a name is not stored.
   void _apply(Program program) {
+    if (widget.authorId != null) return;
     final named = renameProgram(program, _name.text.trim());
     setState(() => _program = named);
     if (named.name.isNotEmpty) {
@@ -159,7 +178,7 @@ class _ProgramBuilderScreenState extends ConsumerState<ProgramBuilderScreen> {
     final newId = ref.read(newIdProvider);
     final workout = startWorkout(
       id: newId(),
-      traineeId: program.authorId,
+      traineeId: ref.read(uidProvider).value!,
       now: DateTime.now(),
       newId: newId,
       catalog: catalog,
@@ -167,6 +186,7 @@ class _ProgramBuilderScreenState extends ConsumerState<ProgramBuilderScreen> {
       program: program,
       day: day,
       supervisorCoachId: ref.read(activeCoachProvider)?.coachId,
+      supervisorCoachName: ref.read(activeCoachProvider)?.coachName,
       bodyWeightKg: ref.read(profileProvider).value?.bodyWeightKg,
     );
     try {
@@ -207,17 +227,92 @@ class _ProgramBuilderScreenState extends ConsumerState<ProgramBuilderScreen> {
     context.pop();
   }
 
+  Widget _loading() => Scaffold(
+    appBar: AppBar(),
+    body: const GlowBackground(
+      child: Center(child: CircularProgressIndicator()),
+    ),
+  );
+
+  Widget _unavailable(String message, [VoidCallback? retry]) => Scaffold(
+    appBar: AppBar(),
+    body: GlowBackground(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(PbSpace.s4),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(message),
+              if (retry != null)
+                TextButton(
+                  onPressed: retry,
+                  child: Text(AppLocalizations.of(context)!.retry),
+                ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final c = context.pb;
-    final program = _open(l10n);
-    final catalog = ref.watch(userCatalogProvider).value;
-    if (program == null || catalog == null) {
-      return const Scaffold(
-        body: GlowBackground(child: Center(child: CircularProgressIndicator())),
-      );
+    final readOnly = widget.authorId != null;
+    if (readOnly) {
+      final assignments = ref.watch(availableAssignmentsProvider);
+      if (assignments.hasError) {
+        return _unavailable(l10n.dataLoadFailed, () {
+          ref.invalidate(ownAssignmentsProvider);
+          ref.invalidate(myCoachesProvider);
+        });
+      }
+      if (assignments.isLoading) return _loading();
+      if (!(assignments.value ?? []).any(
+        (a) => a.coachId == widget.authorId && a.programId == widget.programId,
+      )) {
+        return _unavailable(l10n.programUnavailable);
+      }
     }
+    final program = _open(l10n);
+    final catalogSource = readOnly
+        ? ref.watch(authorCatalogProvider(widget.authorId!))
+        : ref.watch(userCatalogProvider);
+    final catalog = catalogSource.value;
+    if (readOnly) {
+      final source = ref.watch(
+        sharedProgramProvider((
+          authorId: widget.authorId!,
+          programId: widget.programId!,
+        )),
+      );
+      if (source.hasError || (!source.isLoading && program == null)) {
+        return _unavailable(
+          l10n.programUnavailable,
+          () => ref.invalidate(
+            sharedProgramProvider((
+              authorId: widget.authorId!,
+              programId: widget.programId!,
+            )),
+          ),
+        );
+      }
+    }
+    if (catalogSource.hasError) {
+      return _unavailable(l10n.dataLoadFailed, () {
+        if (readOnly) {
+          ref.invalidate(authorExercisesProvider(widget.authorId!));
+        } else {
+          ref.invalidate(personalExercisesProvider);
+        }
+      });
+    }
+    if (program == null || catalog == null) {
+      return _loading();
+    }
+    if (program.days.isEmpty) return _unavailable(l10n.builderEmptyDay);
     final day =
         program.days.where((d) => d.id == _dayId).firstOrNull ??
         program.days.first;
@@ -244,27 +339,39 @@ class _ProgramBuilderScreenState extends ConsumerState<ProgramBuilderScreen> {
                       onTap: () => context.pop(),
                     ),
                     Expanded(
-                      child: TextField(
-                        controller: _name,
-                        autofocus: widget.programId == null,
-                        textCapitalization: TextCapitalization.sentences,
-                        textInputAction: TextInputAction.done,
-                        style: PbText.title.copyWith(color: c.ink),
-                        // The title is edited in place, without a field frame.
-                        decoration: InputDecoration(
-                          isCollapsed: true,
-                          filled: false,
-                          border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          hintText: l10n.builderNameHint,
-                          hintStyle: PbText.title.copyWith(color: c.inkMuted),
-                        ),
-                        onChanged: (_) => _apply(program),
-                      ),
+                      child: readOnly
+                          ? Text(
+                              program.name,
+                              style: PbText.title.copyWith(color: c.ink),
+                            )
+                          : TextField(
+                              controller: _name,
+                              autofocus: widget.programId == null,
+                              textCapitalization: TextCapitalization.sentences,
+                              textInputAction: TextInputAction.done,
+                              style: PbText.title.copyWith(color: c.ink),
+                              // The title is edited in place, without a field frame.
+                              decoration: InputDecoration(
+                                isCollapsed: true,
+                                filled: false,
+                                border: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                hintText: l10n.builderNameHint,
+                                hintStyle: PbText.title.copyWith(
+                                  color: c.inkMuted,
+                                ),
+                              ),
+                              onChanged: (_) => _apply(program),
+                            ),
                     ),
                   ],
                 ),
+                if (readOnly)
+                  Text(
+                    l10n.programReadOnly,
+                    style: PbText.caption.copyWith(color: c.inkMuted),
+                  ),
                 SizedBox(
                   height: PbSize.touchMin,
                   child: ListView(
@@ -277,17 +384,18 @@ class _ProgramBuilderScreenState extends ConsumerState<ProgramBuilderScreen> {
                           child: PbPill(
                             selected: d.id == day.id,
                             // A second tap on the open day edits it.
-                            onTap: () => d.id == day.id
+                            onTap: () => !readOnly && d.id == day.id
                                 ? _editDay(program, d)
                                 : setState(() => _dayId = d.id),
                             child: Text(d.name),
                           ),
                         ),
-                      PbPill(
-                        tooltip: l10n.builderAddDay,
-                        onTap: () => _addDay(program, l10n),
-                        child: const Icon(Icons.add),
-                      ),
+                      if (!readOnly)
+                        PbPill(
+                          tooltip: l10n.builderAddDay,
+                          onTap: () => _addDay(program, l10n),
+                          child: const Icon(Icons.add),
+                        ),
                     ],
                   ),
                 ),
@@ -312,19 +420,25 @@ class _ProgramBuilderScreenState extends ConsumerState<ProgramBuilderScreen> {
                               name: exercise.nameFor(language),
                               exercise: exercise,
                               planned: planned,
-                              onTap: () => _editExercise(
-                                program,
-                                day,
-                                exercise,
-                                planned: planned,
-                              ),
+                              onTap: readOnly
+                                  ? null
+                                  : () => _editExercise(
+                                      program,
+                                      day,
+                                      exercise,
+                                      planned: planned,
+                                    ),
                             ),
                           ),
-                      OutlinedButton.icon(
-                        onPressed: () => _addExercise(program, day),
-                        icon: const Icon(Icons.add),
-                        label: Text(l10n.pickerTitle),
-                      ),
+                      for (final planned in day.exercises)
+                        if (!catalog.containsKey(planned.exerciseId))
+                          Text(l10n.programMissingExercise),
+                      if (!readOnly)
+                        OutlinedButton.icon(
+                          onPressed: () => _addExercise(program, day),
+                          icon: const Icon(Icons.add),
+                          label: Text(l10n.pickerTitle),
+                        ),
                     ],
                   ),
                 ),
@@ -334,7 +448,15 @@ class _ProgramBuilderScreenState extends ConsumerState<ProgramBuilderScreen> {
                       : null,
                   child: Text(l10n.builderStart),
                 ),
-                if (stored && widget.programId != null)
+                if (!readOnly && stored)
+                  OutlinedButton(
+                    onPressed: () => showPbSheet<void>(
+                      context,
+                      AssignmentSheet(program: program),
+                    ),
+                    child: Text(l10n.assignTrainee),
+                  ),
+                if (!readOnly && stored && widget.programId != null)
                   TextButton(
                     onPressed: () => _delete(program),
                     style: TextButton.styleFrom(foregroundColor: c.danger),
@@ -360,7 +482,7 @@ class _PlannedCard extends StatelessWidget {
   final String name;
   final Exercise exercise;
   final ProgramExercise planned;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

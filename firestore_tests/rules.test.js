@@ -17,6 +17,7 @@ import {
   query,
   where,
   setDoc,
+  serverTimestamp,
   Timestamp,
   writeBatch,
 } from 'firebase/firestore';
@@ -357,4 +358,104 @@ test('a workout names only the active coach, once', async () => {
   );
   await assertFails(start(own, 'w2', workout({ supervisorCoachId: 'coach' })));
   await assertSucceeds(start(own, 'w2'));
+});
+
+// --- Program assignments ----------------------------------------------------
+const programRef = (db, coach = 'coach', id = 'p1') => doc(db, 'users/' + coach + '/programs/' + id);
+const assignmentRef = (db, coach = 'coach', id = 'p1') => doc(db, 'users/athlete/assignments/' + coach + '_' + id);
+const assignment = (overrides = {}) => ({
+  coachId: 'coach', traineeId: 'athlete', programId: 'p1',
+  assignedAt: serverTimestamp(), ...overrides,
+});
+async function setupAssignment() {
+  await invite('coach', 'coach');
+  await accept('athlete', 'coach', 'athlete');
+  await setDoc(programRef(dbOf('coach')), { authorId: 'coach', name: 'Plan', days: [] });
+  await setDoc(doc(dbOf('coach'), 'users/coach/exercises/custom~one'), {
+    id: 'custom/one', names: { ru: 'Тяга' }, muscleGroup: 'lats',
+    measure: 'reps', usesBodyWeight: false,
+  });
+}
+
+test('only the active coach assigns their existing program to a linked trainee', async () => {
+  await setupAssignment();
+  const coach = dbOf('coach');
+  for (const uid of ['athlete', 'other', null]) {
+    await assertFails(setDoc(assignmentRef(dbOf(uid)), assignment()));
+  }
+  await assertFails(setDoc(assignmentRef(coach, 'coach', 'missing'), assignment({ programId: 'missing' })));
+  await assertFails(setDoc(assignmentRef(coach), assignment({ traineeId: 'other' })));
+  await assertFails(setDoc(assignmentRef(coach), assignment({ coachId: 'other' })));
+  await assertFails(setDoc(assignmentRef(coach), assignment({ extra: true })));
+  await assertFails(setDoc(doc(coach, 'users/athlete/assignments/wrong'), assignment()));
+  await assertFails(setDoc(assignmentRef(coach), assignment({ assignedAt: startedAt })));
+  await assertSucceeds(setDoc(assignmentRef(coach), assignment()));
+  await assertSucceeds(setDoc(assignmentRef(coach), assignment()));
+  await setStatus('athlete', 'coach', 'athlete', 'readOnly');
+  await assertFails(setDoc(assignmentRef(coach), assignment()));
+  await setStatus('athlete', 'coach', 'athlete', 'removed');
+  await assertFails(setDoc(assignmentRef(coach), assignment()));
+});
+
+test('assignment allows only the selected program, without write access', async () => {
+  await setupAssignment();
+  const athlete = dbOf('athlete');
+  await assertFails(getDoc(programRef(athlete)));
+  await setDoc(assignmentRef(dbOf('coach')), assignment());
+  await assertSucceeds(getDoc(programRef(athlete)));
+  await assertSucceeds(getDocs(collection(athlete, 'users/coach/exercises')));
+  await assertSucceeds(getDocs(collection(athlete, 'users/athlete/assignments')));
+  await assertFails(getDocs(collection(athlete, 'users/coach/programs')));
+  await assertFails(getDoc(programRef(athlete, 'coach', 'p2')));
+  await assertFails(setDoc(programRef(athlete), { authorId: 'coach', name: 'Changed', days: [] }));
+  await assertFails(deleteDoc(programRef(athlete)));
+  await assertFails(setDoc(doc(athlete, 'users/coach/exercises/custom~one'), { names: { ru: 'X' } }, { merge: true }));
+  await assertFails(deleteDoc(doc(athlete, 'users/coach/exercises/custom~one')));
+  await assertFails(deleteDoc(assignmentRef(athlete)));
+  for (const uid of ['other', null]) {
+    await assertFails(getDoc(programRef(dbOf(uid))));
+    await assertFails(getDoc(assignmentRef(dbOf(uid))));
+    await assertFails(getDocs(collection(dbOf(uid), 'users/coach/exercises')));
+  }
+  // Coach may list only their assignments, not those by a different coach.
+  await assertSucceeds(getDocs(query(collection(dbOf('coach'), 'users/athlete/assignments'), where('coachId', '==', 'coach'))));
+  await assertFails(getDocs(collection(dbOf('coach'), 'users/athlete/assignments')));
+});
+
+test('deactivation keeps program access; removal revokes program and exercises', async () => {
+  await setupAssignment();
+  const athlete = dbOf('athlete');
+  const coach = dbOf('coach');
+  await setDoc(assignmentRef(coach), assignment());
+  await setStatus('athlete', 'coach', 'athlete', 'readOnly');
+  await assertSucceeds(getDoc(programRef(athlete)));
+  await assertSucceeds(getDocs(collection(athlete, 'users/coach/exercises')));
+  await assertSucceeds(getDocs(query(collection(coach, 'users/athlete/assignments'), where('coachId', '==', 'coach'))));
+  await setStatus('athlete', 'coach', 'athlete', 'removed');
+  await assertFails(getDoc(programRef(athlete)));
+  await assertFails(getDocs(collection(athlete, 'users/coach/exercises')));
+  await assertFails(getDoc(assignmentRef(coach)));
+});
+
+test('same program ID from different coaches keeps separate assignments', async () => {
+  await setupAssignment();
+  await setDoc(assignmentRef(dbOf('coach')), assignment());
+  await invite('coach2', 'coach', 'BBBBBB');
+  await accept('athlete', 'coach2', 'athlete', 'BBBBBB');
+  await setStatus('athlete', 'coach', 'athlete', 'readOnly');
+  const coach2 = dbOf('coach2');
+  await setDoc(programRef(coach2, 'coach2'), { authorId: 'coach2', name: 'Other', days: [] });
+  await assertSucceeds(setDoc(assignmentRef(coach2, 'coach2'), assignment({ coachId: 'coach2' })));
+  await assertFails(setDoc(assignmentRef(coach2), assignment({ coachId: 'coach2' })));
+  await assertSucceeds(getDoc(programRef(dbOf('athlete'))));
+  await assertSucceeds(getDoc(programRef(dbOf('athlete'), 'coach2')));
+  await assertFails(getDoc(programRef(dbOf('coach2'))));
+});
+
+test('supervisor name is retained when a workout is edited', async () => {
+  await setupAssignment();
+  const db = dbOf('athlete');
+  await start(db, 'w', workout({ supervisorCoachId: 'coach', supervisorCoachName: 'Сергей' }));
+  await assertFails(setDoc(workoutRef(db, 'w'), workout({ supervisorCoachId: 'coach', supervisorCoachName: 'Другой' })));
+  await assertSucceeds(setDoc(workoutRef(db, 'w'), workout({ supervisorCoachId: 'coach', supervisorCoachName: 'Сергей', exercises: [{ id: 'e' }] })));
 });

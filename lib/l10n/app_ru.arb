@@ -200,5 +200,49 @@
   "coachDeactivate": "Деактивировать",
   "coachDeactivateHint": "{name} продолжит видеть ваши тренировки, но не сможет назначать программы.",
   "coachRemoveHint": "{name} потеряет доступ полностью. Ваши тренировки останутся у вас.",
-  "coachKeep": "Ничего не менять"
+  "coachKeep": "Ничего не менять",
+  "traineeMine": "Мои",
+  "traineeAll": "Все",
+  "traineeReadOnly": "Вы больше не активный тренер. Тренировки видны, назначать программы нельзя.",
+  "traineeUnavailable": "Доступ к подопечному закрыт.",
+  "traineeEmpty": "В этой вкладке пока нет тренировок.",
+  "assignedPrograms": "Назначенные программы",
+  "assignProgram": "Назначить программу",
+  "assignTrainee": "Назначить подопечному",
+  "assignEmptyPrograms": "Сначала создайте свою программу.",
+  "assignEmptyTrainees": "Пока нет подопечных, которым вы можете назначить программу.",
+  "assignSuccess": "Программа назначена",
+  "assignFailed": "Не удалось подтвердить назначение. Проверьте сеть и статус связи, затем повторите.",
+  "assignedBy": "Назначил: {name}",
+  "assignedOn": "Назначена {date}",
+  "programReadOnly": "Программа тренера — доступна для просмотра и тренировки.",
+  "programUnavailable": "Программа недоступна: она удалена или доступ закрыт.",
+  "dataLoadFailed": "Не удалось загрузить данные. Проверьте сеть и повторите.",
+  "retry": "Повторить",
+  "workoutCoach": "Тренер: {name}",
+  "workoutCoachUnknown": "Тренер: имя не сохранено",
+  "workoutSolo": "Без тренера",
+  "workoutPendingMark": "ещё не записано",
+  "programMissingExercise": "Упражнение недоступно. Начать этот день пока нельзя.",
+  "@assignedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@assignedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@workoutCoach": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

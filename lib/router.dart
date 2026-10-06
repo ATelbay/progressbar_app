@@ -32,6 +32,7 @@ abstract final class Routes {
   static const programBuilder = '/program';
   static const workout = '/workout';
   static const trainee = '/trainee';
+  static const assignedProgram = '/assigned';
   static const invite = '/invite';
   static const inviteAccept = '/invite-accept';
   static const exercisePicker = '/exercises';
@@ -112,7 +113,20 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, state) =>
             WorkoutEditScreen(workoutId: state.pathParameters['id']!),
       ),
-      overlay(Routes.trainee, const TraineeScreen()),
+      GoRoute(
+        path: '${Routes.trainee}/:id',
+        parentNavigatorKey: _rootKey,
+        builder: (_, state) =>
+            TraineeScreen(traineeId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '${Routes.assignedProgram}/:coachId/:id',
+        parentNavigatorKey: _rootKey,
+        builder: (_, state) => ProgramBuilderScreen(
+          programId: state.pathParameters['id'],
+          authorId: state.pathParameters['coachId'],
+        ),
+      ),
       overlay(Routes.invite, const InviteScreen()),
       overlay(Routes.inviteAccept, const InviteAcceptScreen()),
       overlay(Routes.exercisePicker, const ExercisePickerScreen()),

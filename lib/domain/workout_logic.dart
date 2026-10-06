@@ -48,12 +48,14 @@ Workout startWorkout({
   Program? program,
   ProgramDay? day,
   String? supervisorCoachId,
+  String? supervisorCoachName,
   double? bodyWeightKg,
 }) {
   return Workout(
     id: id,
     traineeId: traineeId,
     supervisorCoachId: supervisorCoachId,
+    supervisorCoachName: supervisorCoachName,
     programId: program?.id,
     programName: program?.name,
     dayName: day?.name,

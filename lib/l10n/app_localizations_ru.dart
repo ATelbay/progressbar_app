@@ -721,4 +721,86 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get coachKeep => 'Ничего не менять';
+
+  @override
+  String get traineeMine => 'Мои';
+
+  @override
+  String get traineeAll => 'Все';
+
+  @override
+  String get traineeReadOnly =>
+      'Вы больше не активный тренер. Тренировки видны, назначать программы нельзя.';
+
+  @override
+  String get traineeUnavailable => 'Доступ к подопечному закрыт.';
+
+  @override
+  String get traineeEmpty => 'В этой вкладке пока нет тренировок.';
+
+  @override
+  String get assignedPrograms => 'Назначенные программы';
+
+  @override
+  String get assignProgram => 'Назначить программу';
+
+  @override
+  String get assignTrainee => 'Назначить подопечному';
+
+  @override
+  String get assignEmptyPrograms => 'Сначала создайте свою программу.';
+
+  @override
+  String get assignEmptyTrainees =>
+      'Пока нет подопечных, которым вы можете назначить программу.';
+
+  @override
+  String get assignSuccess => 'Программа назначена';
+
+  @override
+  String get assignFailed =>
+      'Не удалось подтвердить назначение. Проверьте сеть и статус связи, затем повторите.';
+
+  @override
+  String assignedBy(String name) {
+    return 'Назначил: $name';
+  }
+
+  @override
+  String assignedOn(String date) {
+    return 'Назначена $date';
+  }
+
+  @override
+  String get programReadOnly =>
+      'Программа тренера — доступна для просмотра и тренировки.';
+
+  @override
+  String get programUnavailable =>
+      'Программа недоступна: она удалена или доступ закрыт.';
+
+  @override
+  String get dataLoadFailed =>
+      'Не удалось загрузить данные. Проверьте сеть и повторите.';
+
+  @override
+  String get retry => 'Повторить';
+
+  @override
+  String workoutCoach(String name) {
+    return 'Тренер: $name';
+  }
+
+  @override
+  String get workoutCoachUnknown => 'Тренер: имя не сохранено';
+
+  @override
+  String get workoutSolo => 'Без тренера';
+
+  @override
+  String get workoutPendingMark => 'ещё не записано';
+
+  @override
+  String get programMissingExercise =>
+      'Упражнение недоступно. Начать этот день пока нельзя.';
 }

@@ -200,5 +200,49 @@
   "coachDeactivate": "Белсенділіктен шығару",
   "coachDeactivateHint": "{name} жаттығуларыңызды көре береді, бірақ бағдарлама тағайындай алмайды.",
   "coachRemoveHint": "{name} рұқсатынан толық айырылады. Жаттығуларыңыз сізде қалады.",
-  "coachKeep": "Ештеңе өзгертпеу"
+  "coachKeep": "Ештеңе өзгертпеу",
+  "traineeMine": "Менің",
+  "traineeAll": "Барлығы",
+  "traineeReadOnly": "Сіз енді белсенді жаттықтырушы емессіз. Жаттығулар көрінеді, бағдарлама тағайындау мүмкін емес.",
+  "traineeUnavailable": "Шәкіртке қол жеткізу жабық.",
+  "traineeEmpty": "Бұл қойындыда әлі жаттығу жоқ.",
+  "assignedPrograms": "Тағайындалған бағдарламалар",
+  "assignProgram": "Бағдарлама тағайындау",
+  "assignTrainee": "Шәкіртке тағайындау",
+  "assignEmptyPrograms": "Алдымен өз бағдарламаңызды жасаңыз.",
+  "assignEmptyTrainees": "Әзірге бағдарлама тағайындай алатын шәкірттер жоқ.",
+  "assignSuccess": "Бағдарлама тағайындалды",
+  "assignFailed": "Тағайындау расталмады. Желіні және байланыс күйін тексеріп, қайталаңыз.",
+  "assignedBy": "Тағайындаған: {name}",
+  "assignedOn": "Тағайындалған күні: {date}",
+  "programReadOnly": "Жаттықтырушы бағдарламасын көруге және жаттығуды бастауға болады.",
+  "programUnavailable": "Бағдарлама қолжетімсіз: жойылған немесе қол жеткізу жабылған.",
+  "dataLoadFailed": "Деректер жүктелмеді. Желіні тексеріп, қайталаңыз.",
+  "retry": "Қайталау",
+  "workoutCoach": "Жаттықтырушы: {name}",
+  "workoutCoachUnknown": "Жаттықтырушы: аты сақталмаған",
+  "workoutSolo": "Жаттықтырушысыз",
+  "workoutPendingMark": "әлі жазылмаған",
+  "programMissingExercise": "Жаттығу қолжетімсіз. Бұл күнді әзірге бастау мүмкін емес.",
+  "@assignedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@assignedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@workoutCoach": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

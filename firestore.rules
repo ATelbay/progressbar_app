@@ -23,6 +23,14 @@ service cloud.firestore {
     function invitationPath(code) {
       return /databases/$(database)/documents/invitations/$(code);
     }
+    function assignedProgram(coachId, programId) {
+      let path = /databases/$(database)/documents/users/$(request.auth.uid)/assignments/$(coachId + '_' + programId);
+      return request.auth != null
+        && linkStatus(coachId, request.auth.uid) in ['active', 'readOnly']
+        && exists(path)
+        && get(path).data.coachId == coachId
+        && get(path).data.programId == programId;
+    }
     // The signed-in user accepts invitation `inviteCode` and so becomes the
     // other side of the link. The invitation is used up in the same batch.
     function acceptsInvitation(coachId, traineeId) {
@@ -105,7 +113,8 @@ service cloud.firestore {
       // Programs the user wrote. Coaches' programs become readable to their
       // trainees together with coach–trainee links.
       match /programs/{programId} {
-        allow read, delete: if isOwner(userId);
+        allow get: if isOwner(userId) || assignedProgram(userId, programId);
+        allow list, delete: if isOwner(userId);
         allow create, update: if isOwner(userId)
           && request.resource.data.authorId == userId
           && request.resource.data.name is string
@@ -114,13 +123,30 @@ service cloud.firestore {
 
       // The user's own exercises and their edits of built-in ones.
       match /exercises/{exerciseId} {
-        allow read, delete: if isOwner(userId);
+        allow read: if isOwner(userId) || (request.auth != null
+          && linkStatus(userId, request.auth.uid) in ['active', 'readOnly']);
+        allow delete: if isOwner(userId);
         allow create, update: if isOwner(userId)
           && request.resource.data.id is string
           && request.resource.data.names is map
           && request.resource.data.muscleGroup is string
           && request.resource.data.measure in ['reps', 'time']
           && request.resource.data.usesBodyWeight is bool;
+      }
+
+      match /assignments/{assignmentId} {
+        allow read: if isOwner(userId) || (request.auth != null
+          && resource.data.coachId == request.auth.uid
+          && linkStatus(request.auth.uid, userId) in ['active', 'readOnly']);
+        allow create, update: if request.auth != null
+          && request.resource.data.keys().hasOnly(['coachId', 'traineeId', 'programId', 'assignedAt'])
+          && request.resource.data.coachId == request.auth.uid
+          && request.resource.data.traineeId == userId
+          && request.resource.data.programId is string
+          && assignmentId == request.auth.uid + '_' + request.resource.data.programId
+          && request.resource.data.assignedAt == request.time
+          && linkStatus(request.auth.uid, userId) == 'active'
+          && exists(/databases/$(database)/documents/users/$(request.auth.uid)/programs/$(request.resource.data.programId));
       }
 
       // One workout in progress at a time. state/activeWorkout names it; the
@@ -169,6 +195,8 @@ service cloud.firestore {
           && validWorkout()
           && request.resource.data.get('supervisorCoachId', null)
             == resource.data.get('supervisorCoachId', null)
+          && request.resource.data.get('supervisorCoachName', null)
+            == resource.data.get('supervisorCoachName', null)
           && request.resource.data.startedAt == resource.data.startedAt
           && (
             (request.resource.data.status == 'inProgress'

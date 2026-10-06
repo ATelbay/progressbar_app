@@ -15,6 +15,7 @@ import '../auth/auth_controller.dart';
 import '../format.dart';
 import '../people/people_providers.dart';
 import '../program/program_providers.dart';
+import '../program/assignment_providers.dart';
 import '../workout/workout_providers.dart';
 import '../workout/workout_screen.dart';
 
@@ -35,6 +36,7 @@ class HomeScreen extends ConsumerWidget {
       catalog: const {},
       languageCode: Localizations.localeOf(context).languageCode,
       supervisorCoachId: ref.read(activeCoachProvider)?.coachId,
+      supervisorCoachName: ref.read(activeCoachProvider)?.coachName,
       bodyWeightKg: ref.read(profileProvider).value?.bodyWeightKg,
     );
     try {
@@ -58,7 +60,14 @@ class HomeScreen extends ConsumerWidget {
     // network already knows whether a workout is in progress.
     final active = ref.watch(activeWorkoutProvider).value;
     final programs = ref.watch(ownProgramsProvider).value ?? const <Program>[];
-    final empty = active == null && programs.isEmpty;
+    final assigned = ref.watch(availableAssignmentsProvider);
+    final assignments = assigned.value ?? <Assignment>[];
+    final empty =
+        active == null &&
+        programs.isEmpty &&
+        assignments.isEmpty &&
+        !assigned.isLoading &&
+        !assigned.hasError;
 
     void newProgram() => context.push(Routes.programBuilder);
     return Scaffold(
@@ -77,7 +86,20 @@ class HomeScreen extends ConsumerWidget {
                       : ListView(
                           children: [
                             if (active != null) _ActiveWorkout(active),
-                            if (programs.isNotEmpty) ...[
+                            if (assigned.isLoading)
+                              const Center(child: CircularProgressIndicator()),
+                            if (assigned.hasError) ...[
+                              Text(l10n.dataLoadFailed),
+                              TextButton(
+                                onPressed: () {
+                                  ref.invalidate(ownAssignmentsProvider);
+                                  ref.invalidate(myCoachesProvider);
+                                },
+                                child: Text(l10n.retry),
+                              ),
+                            ],
+                            if (programs.isNotEmpty ||
+                                assignments.isNotEmpty) ...[
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                   vertical: PbSpace.s3,
@@ -89,6 +111,8 @@ class HomeScreen extends ConsumerWidget {
                                   ),
                                 ),
                               ),
+                              for (final assignment in assignments)
+                                _AssignedCard(assignment),
                               for (final program in programs)
                                 Padding(
                                   padding: const EdgeInsets.only(
@@ -177,16 +201,21 @@ class _ActiveWorkout extends StatelessWidget {
 }
 
 class _ProgramCard extends StatelessWidget {
-  const _ProgramCard(this.program);
+  const _ProgramCard(this.program, {this.coachName});
 
   final Program program;
+  final String? coachName;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final c = context.pb;
     return GlassCard(
-      onTap: () => context.push('${Routes.programBuilder}/${program.id}'),
+      onTap: () => context.push(
+        coachName == null
+            ? '${Routes.programBuilder}/${program.id}'
+            : '${Routes.assignedProgram}/${program.authorId}/${program.id}',
+      ),
       child: Row(
         spacing: PbSpace.s3,
         children: [
@@ -199,7 +228,9 @@ class _ProgramCard extends StatelessWidget {
                   style: PbText.bodyStrong.copyWith(color: c.ink),
                 ),
                 Text(
-                  l10n.homeOwnProgram,
+                  coachName == null
+                      ? l10n.homeOwnProgram
+                      : l10n.assignedBy(coachName!),
                   style: PbText.caption.copyWith(color: c.inkMuted),
                 ),
               ],
@@ -236,6 +267,45 @@ class _EmptyHome extends StatelessWidget {
             Text(
               l10n.homeEmptyText,
               style: PbText.body.copyWith(color: c.inkMuted),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AssignedCard extends ConsumerWidget {
+  const _AssignedCard(this.assignment);
+  final Assignment assignment;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
+    final key = (authorId: assignment.coachId, programId: assignment.programId);
+    final source = ref.watch(sharedProgramProvider(key));
+    final name =
+        ref
+            .watch(myCoachesProvider)
+            .value
+            ?.where((link) => link.coachId == assignment.coachId)
+            .firstOrNull
+            ?.coachName ??
+        '';
+    return Padding(
+      padding: const EdgeInsets.only(bottom: PbSpace.s2),
+      child: source.when(
+        skipLoadingOnReload: false,
+        data: (program) => program == null
+            ? Text(l.programUnavailable)
+            : _ProgramCard(program, coachName: name),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (_, _) => Column(
+          children: [
+            Text(l.programUnavailable),
+            TextButton(
+              onPressed: () => ref.invalidate(sharedProgramProvider(key)),
+              child: Text(l.retry),
             ),
           ],
         ),

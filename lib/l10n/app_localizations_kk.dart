@@ -710,4 +710,86 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get coachKeep => 'Ештеңе өзгертпеу';
+
+  @override
+  String get traineeMine => 'Менің';
+
+  @override
+  String get traineeAll => 'Барлығы';
+
+  @override
+  String get traineeReadOnly =>
+      'Сіз енді белсенді жаттықтырушы емессіз. Жаттығулар көрінеді, бағдарлама тағайындау мүмкін емес.';
+
+  @override
+  String get traineeUnavailable => 'Шәкіртке қол жеткізу жабық.';
+
+  @override
+  String get traineeEmpty => 'Бұл қойындыда әлі жаттығу жоқ.';
+
+  @override
+  String get assignedPrograms => 'Тағайындалған бағдарламалар';
+
+  @override
+  String get assignProgram => 'Бағдарлама тағайындау';
+
+  @override
+  String get assignTrainee => 'Шәкіртке тағайындау';
+
+  @override
+  String get assignEmptyPrograms => 'Алдымен өз бағдарламаңызды жасаңыз.';
+
+  @override
+  String get assignEmptyTrainees =>
+      'Әзірге бағдарлама тағайындай алатын шәкірттер жоқ.';
+
+  @override
+  String get assignSuccess => 'Бағдарлама тағайындалды';
+
+  @override
+  String get assignFailed =>
+      'Тағайындау расталмады. Желіні және байланыс күйін тексеріп, қайталаңыз.';
+
+  @override
+  String assignedBy(String name) {
+    return 'Тағайындаған: $name';
+  }
+
+  @override
+  String assignedOn(String date) {
+    return 'Тағайындалған күні: $date';
+  }
+
+  @override
+  String get programReadOnly =>
+      'Жаттықтырушы бағдарламасын көруге және жаттығуды бастауға болады.';
+
+  @override
+  String get programUnavailable =>
+      'Бағдарлама қолжетімсіз: жойылған немесе қол жеткізу жабылған.';
+
+  @override
+  String get dataLoadFailed =>
+      'Деректер жүктелмеді. Желіні тексеріп, қайталаңыз.';
+
+  @override
+  String get retry => 'Қайталау';
+
+  @override
+  String workoutCoach(String name) {
+    return 'Жаттықтырушы: $name';
+  }
+
+  @override
+  String get workoutCoachUnknown => 'Жаттықтырушы: аты сақталмаған';
+
+  @override
+  String get workoutSolo => 'Жаттықтырушысыз';
+
+  @override
+  String get workoutPendingMark => 'әлі жазылмаған';
+
+  @override
+  String get programMissingExercise =>
+      'Жаттығу қолжетімсіз. Бұл күнді әзірге бастау мүмкін емес.';
 }

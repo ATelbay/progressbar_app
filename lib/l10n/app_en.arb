@@ -407,5 +407,49 @@
       }
     }
   },
-  "coachKeep": "Change nothing"
+  "coachKeep": "Change nothing",
+  "traineeMine": "Mine",
+  "traineeAll": "All",
+  "traineeReadOnly": "You are no longer the active coach. You can see workouts but cannot assign programs.",
+  "traineeUnavailable": "Access to this trainee is closed.",
+  "traineeEmpty": "No workouts in this tab yet.",
+  "assignedPrograms": "Assigned programs",
+  "assignProgram": "Assign program",
+  "assignTrainee": "Assign to trainee",
+  "assignEmptyPrograms": "Create your own program first.",
+  "assignEmptyTrainees": "No trainees you can assign a program to yet.",
+  "assignSuccess": "Program assigned",
+  "assignFailed": "Could not confirm the assignment. Check your connection and coach status, then try again.",
+  "assignedBy": "Assigned by {name}",
+  "assignedOn": "Assigned {date}",
+  "programReadOnly": "Coach program — you can view it and start a workout.",
+  "programUnavailable": "Program unavailable: it was deleted or access was closed.",
+  "dataLoadFailed": "Could not load data. Check your connection and try again.",
+  "retry": "Retry",
+  "workoutCoach": "Coach: {name}",
+  "workoutCoachUnknown": "Coach: name not recorded",
+  "workoutSolo": "Without a coach",
+  "workoutPendingMark": "not recorded yet",
+  "programMissingExercise": "An exercise is unavailable. This day cannot be started yet.",
+  "@assignedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@assignedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@workoutCoach": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -1310,6 +1310,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change nothing'**
   String get coachKeep;
+
+  /// No description provided for @traineeMine.
+  ///
+  /// In en, this message translates to:
+  /// **'Mine'**
+  String get traineeMine;
+
+  /// No description provided for @traineeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get traineeAll;
+
+  /// No description provided for @traineeReadOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'You are no longer the active coach. You can see workouts but cannot assign programs.'**
+  String get traineeReadOnly;
+
+  /// No description provided for @traineeUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Access to this trainee is closed.'**
+  String get traineeUnavailable;
+
+  /// No description provided for @traineeEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No workouts in this tab yet.'**
+  String get traineeEmpty;
+
+  /// No description provided for @assignedPrograms.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned programs'**
+  String get assignedPrograms;
+
+  /// No description provided for @assignProgram.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign program'**
+  String get assignProgram;
+
+  /// No description provided for @assignTrainee.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign to trainee'**
+  String get assignTrainee;
+
+  /// No description provided for @assignEmptyPrograms.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your own program first.'**
+  String get assignEmptyPrograms;
+
+  /// No description provided for @assignEmptyTrainees.
+  ///
+  /// In en, this message translates to:
+  /// **'No trainees you can assign a program to yet.'**
+  String get assignEmptyTrainees;
+
+  /// No description provided for @assignSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Program assigned'**
+  String get assignSuccess;
+
+  /// No description provided for @assignFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not confirm the assignment. Check your connection and coach status, then try again.'**
+  String get assignFailed;
+
+  /// No description provided for @assignedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned by {name}'**
+  String assignedBy(String name);
+
+  /// No description provided for @assignedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned {date}'**
+  String assignedOn(String date);
+
+  /// No description provided for @programReadOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Coach program — you can view it and start a workout.'**
+  String get programReadOnly;
+
+  /// No description provided for @programUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Program unavailable: it was deleted or access was closed.'**
+  String get programUnavailable;
+
+  /// No description provided for @dataLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load data. Check your connection and try again.'**
+  String get dataLoadFailed;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @workoutCoach.
+  ///
+  /// In en, this message translates to:
+  /// **'Coach: {name}'**
+  String workoutCoach(String name);
+
+  /// No description provided for @workoutCoachUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Coach: name not recorded'**
+  String get workoutCoachUnknown;
+
+  /// No description provided for @workoutSolo.
+  ///
+  /// In en, this message translates to:
+  /// **'Without a coach'**
+  String get workoutSolo;
+
+  /// No description provided for @workoutPendingMark.
+  ///
+  /// In en, this message translates to:
+  /// **'not recorded yet'**
+  String get workoutPendingMark;
+
+  /// No description provided for @programMissingExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'An exercise is unavailable. This day cannot be started yet.'**
+  String get programMissingExercise;
 }
 
 class _AppLocalizationsDelegate

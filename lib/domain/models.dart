@@ -281,6 +281,7 @@ class Workout {
     required this.startedAt,
     required this.exercises,
     this.supervisorCoachId,
+    this.supervisorCoachName,
     this.programId,
     this.programName,
     this.dayName,
@@ -298,6 +299,7 @@ class Workout {
   /// The trainee's active coach when the workout started, if any. A coach sees
   /// a workout as «theirs» by this field.
   final String? supervisorCoachId;
+  final String? supervisorCoachName;
 
   /// Null for a workout without a program.
   final String? programId;
@@ -328,6 +330,7 @@ class Workout {
     id: id,
     traineeId: traineeId,
     supervisorCoachId: supervisorCoachId,
+    supervisorCoachName: supervisorCoachName,
     programId: programId,
     programName: programName,
     dayName: dayName,

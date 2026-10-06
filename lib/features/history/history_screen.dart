@@ -28,6 +28,7 @@ List<Widget> verdictChips(BuildContext context, Workout workout) {
   final c = context.pb;
   final verdict = planVerdict(workout);
   return [
+    if (!workout.isCompleted) PbChip(l10n.homeActiveLabel),
     if (!hasPlan(workout))
       PbChip(l10n.historyExercises(recordedCount(workout)))
     else if (verdict.below == 0 && verdict.skipped == 0)
@@ -43,10 +44,16 @@ List<Widget> verdictChips(BuildContext context, Workout workout) {
 /// One exercise as «name, plan under it, fact on the right». With [action]
 /// the name gets its own line with the action next to it.
 class PlanFactRow extends StatelessWidget {
-  const PlanFactRow(this.exercise, {super.key, this.action});
+  const PlanFactRow(
+    this.exercise, {
+    super.key,
+    this.action,
+    this.completed = true,
+  });
 
   final WorkoutExercise exercise;
   final Widget? action;
+  final bool completed;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +80,7 @@ class PlanFactRow extends StatelessWidget {
     final result = fact != null
         ? NumberText(line(fact), style: PbText.numMd, beside: true)
         : Text(
-            l10n.historySkippedMark,
+            completed ? l10n.historySkippedMark : l10n.workoutPendingMark,
             style: PbText.caption.copyWith(color: c.warning),
           );
     if (action case final action?) {
@@ -205,8 +212,8 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   }
 }
 
-class _Heading extends StatelessWidget {
-  const _Heading(this.workout);
+class WorkoutHeading extends StatelessWidget {
+  const WorkoutHeading(this.workout, {super.key});
 
   final Workout workout;
 
@@ -223,6 +230,14 @@ class _Heading extends StatelessWidget {
         ),
         Text(
           workout.programName ?? l10n.historyNoProgram,
+          style: PbText.caption.copyWith(color: c.inkMuted),
+        ),
+        Text(
+          workout.supervisorCoachId == null
+              ? l10n.workoutSolo
+              : workout.supervisorCoachName == null
+              ? l10n.workoutCoachUnknown
+              : l10n.workoutCoach(workout.supervisorCoachName!),
           style: PbText.caption.copyWith(color: c.inkMuted),
         ),
       ],
@@ -242,7 +257,7 @@ class _WorkoutCard extends StatelessWidget {
     child: Row(
       spacing: PbSpace.s3,
       children: [
-        Expanded(child: _Heading(workout)),
+        Expanded(child: WorkoutHeading(workout)),
         verdictChips(context, workout).first,
       ],
     ),
@@ -266,7 +281,7 @@ class _OpenWorkout extends StatelessWidget {
           Row(
             spacing: PbSpace.s3,
             children: [
-              Expanded(child: _Heading(workout)),
+              Expanded(child: WorkoutHeading(workout)),
               StepButton(
                 icon: Icons.edit_outlined,
                 label: l10n.historyEdit,

@@ -710,4 +710,86 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get coachKeep => 'Change nothing';
+
+  @override
+  String get traineeMine => 'Mine';
+
+  @override
+  String get traineeAll => 'All';
+
+  @override
+  String get traineeReadOnly =>
+      'You are no longer the active coach. You can see workouts but cannot assign programs.';
+
+  @override
+  String get traineeUnavailable => 'Access to this trainee is closed.';
+
+  @override
+  String get traineeEmpty => 'No workouts in this tab yet.';
+
+  @override
+  String get assignedPrograms => 'Assigned programs';
+
+  @override
+  String get assignProgram => 'Assign program';
+
+  @override
+  String get assignTrainee => 'Assign to trainee';
+
+  @override
+  String get assignEmptyPrograms => 'Create your own program first.';
+
+  @override
+  String get assignEmptyTrainees =>
+      'No trainees you can assign a program to yet.';
+
+  @override
+  String get assignSuccess => 'Program assigned';
+
+  @override
+  String get assignFailed =>
+      'Could not confirm the assignment. Check your connection and coach status, then try again.';
+
+  @override
+  String assignedBy(String name) {
+    return 'Assigned by $name';
+  }
+
+  @override
+  String assignedOn(String date) {
+    return 'Assigned $date';
+  }
+
+  @override
+  String get programReadOnly =>
+      'Coach program — you can view it and start a workout.';
+
+  @override
+  String get programUnavailable =>
+      'Program unavailable: it was deleted or access was closed.';
+
+  @override
+  String get dataLoadFailed =>
+      'Could not load data. Check your connection and try again.';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String workoutCoach(String name) {
+    return 'Coach: $name';
+  }
+
+  @override
+  String get workoutCoachUnknown => 'Coach: name not recorded';
+
+  @override
+  String get workoutSolo => 'Without a coach';
+
+  @override
+  String get workoutPendingMark => 'not recorded yet';
+
+  @override
+  String get programMissingExercise =>
+      'An exercise is unavailable. This day cannot be started yet.';
 }
