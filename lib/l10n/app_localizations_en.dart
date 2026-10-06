@@ -402,4 +402,79 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get builderActiveExists => 'Finish the workout in progress first.';
+
+  @override
+  String get historyNoProgram => 'No program';
+
+  @override
+  String historyPlanPrefix(String plan) {
+    return 'plan $plan';
+  }
+
+  @override
+  String historyBelow(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count exercises below plan',
+      one: '$count exercise below plan',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String historySkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count skipped',
+      one: '$count skipped',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String historyExercises(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count exercises',
+      one: '$count exercise',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get historyEdited => 'edited after completion';
+
+  @override
+  String get historySkippedMark => 'skipped';
+
+  @override
+  String get historyEdit => 'Edit workout';
+
+  @override
+  String historyEditExercise(String name) {
+    return 'Edit: $name';
+  }
+
+  @override
+  String get historyEmptyTitle => 'No workouts yet';
+
+  @override
+  String get historyEmptyText =>
+      'Every completed workout will appear here: what was planned and what was done.';
+
+  @override
+  String get historyToPrograms => 'To programs';
+
+  @override
+  String get editNotice =>
+      'This workout is completed. After a change a coach will see it marked «edited after completion».';
+
+  @override
+  String get editSave => 'Save changes';
+
+  @override
+  String get editDiscard => 'Don\'t save';
 }

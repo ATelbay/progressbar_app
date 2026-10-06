@@ -403,4 +403,85 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get builderActiveExists => 'Сначала завершите идущую тренировку.';
+
+  @override
+  String get historyNoProgram => 'Без программы';
+
+  @override
+  String historyPlanPrefix(String plan) {
+    return 'план $plan';
+  }
+
+  @override
+  String historyBelow(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count упражнений ниже плана',
+      many: '$count упражнений ниже плана',
+      few: '$count упражнения ниже плана',
+      one: '$count упражнение ниже плана',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String historySkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count пропущено',
+      many: '$count пропущено',
+      few: '$count пропущено',
+      one: '$count пропущено',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String historyExercises(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count упражнений',
+      many: '$count упражнений',
+      few: '$count упражнения',
+      one: '$count упражнение',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get historyEdited => 'изменено после завершения';
+
+  @override
+  String get historySkippedMark => 'пропущено';
+
+  @override
+  String get historyEdit => 'Исправить тренировку';
+
+  @override
+  String historyEditExercise(String name) {
+    return 'Исправить: $name';
+  }
+
+  @override
+  String get historyEmptyTitle => 'Тренировок ещё не было';
+
+  @override
+  String get historyEmptyText =>
+      'Здесь появится каждая завершённая тренировка: что было в плане и что получилось.';
+
+  @override
+  String get historyToPrograms => 'К программам';
+
+  @override
+  String get editNotice =>
+      'Тренировка завершена. После правки тренер увидит пометку «изменено после завершения».';
+
+  @override
+  String get editSave => 'Сохранить изменения';
+
+  @override
+  String get editDiscard => 'Не сохранять';
 }

@@ -119,5 +119,20 @@
   "builderBodyWeight": "Собственный вес",
   "builderTimed": "На время",
   "builderEmptyDay": "В этом дне пока нет упражнений.",
-  "builderActiveExists": "Сначала завершите идущую тренировку."
+  "builderActiveExists": "Сначала завершите идущую тренировку.",
+  "historyNoProgram": "Без программы",
+  "historyPlanPrefix": "план {plan}",
+  "historyBelow": "{count, plural, one{{count} упражнение ниже плана} few{{count} упражнения ниже плана} many{{count} упражнений ниже плана} other{{count} упражнений ниже плана}}",
+  "historySkipped": "{count, plural, one{{count} пропущено} few{{count} пропущено} many{{count} пропущено} other{{count} пропущено}}",
+  "historyExercises": "{count, plural, one{{count} упражнение} few{{count} упражнения} many{{count} упражнений} other{{count} упражнений}}",
+  "historyEdited": "изменено после завершения",
+  "historySkippedMark": "пропущено",
+  "historyEdit": "Исправить тренировку",
+  "historyEditExercise": "Исправить: {name}",
+  "historyEmptyTitle": "Тренировок ещё не было",
+  "historyEmptyText": "Здесь появится каждая завершённая тренировка: что было в плане и что получилось.",
+  "historyToPrograms": "К программам",
+  "editNotice": "Тренировка завершена. После правки тренер увидит пометку «изменено после завершения».",
+  "editSave": "Сохранить изменения",
+  "editDiscard": "Не сохранять"
 }

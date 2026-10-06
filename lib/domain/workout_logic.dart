@@ -481,3 +481,17 @@ double? parseWeight(String text) {
   final kg = double.tryParse(text.trim().replaceAll(',', '.'));
   return kg != null && isValidWeight(kg) ? kg : null;
 }
+
+/// Whether the workout was started from a program day.
+bool hasPlan(Workout workout) =>
+    workout.exercises.any((e) => e.sets.any((s) => !s.isExtra));
+
+/// How a workout went against its plan: exercises that fell short and
+/// exercises left without any result.
+({int below, int skipped}) planVerdict(Workout workout) {
+  final kinds = workout.exercises.map(compareExercise);
+  return (
+    below: kinds.where((k) => k == DeviationKind.below).length,
+    skipped: kinds.where((k) => k == DeviationKind.missing).length,
+  );
+}

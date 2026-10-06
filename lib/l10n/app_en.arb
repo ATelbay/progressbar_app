@@ -223,5 +223,55 @@
   "builderBodyWeight": "Body weight",
   "builderTimed": "Timed",
   "builderEmptyDay": "No exercises in this day yet.",
-  "builderActiveExists": "Finish the workout in progress first."
+  "builderActiveExists": "Finish the workout in progress first.",
+  "historyNoProgram": "No program",
+  "historyPlanPrefix": "plan {plan}",
+  "@historyPlanPrefix": {
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      }
+    }
+  },
+  "historyBelow": "{count, plural, one{{count} exercise below plan} other{{count} exercises below plan}}",
+  "@historyBelow": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "historySkipped": "{count, plural, one{{count} skipped} other{{count} skipped}}",
+  "@historySkipped": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "historyExercises": "{count, plural, one{{count} exercise} other{{count} exercises}}",
+  "@historyExercises": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "historyEdited": "edited after completion",
+  "historySkippedMark": "skipped",
+  "historyEdit": "Edit workout",
+  "historyEditExercise": "Edit: {name}",
+  "@historyEditExercise": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "historyEmptyTitle": "No workouts yet",
+  "historyEmptyText": "Every completed workout will appear here: what was planned and what was done.",
+  "historyToPrograms": "To programs",
+  "editNotice": "This workout is completed. After a change a coach will see it marked «edited after completion».",
+  "editSave": "Save changes",
+  "editDiscard": "Don't save"
 }

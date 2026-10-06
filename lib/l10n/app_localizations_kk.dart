@@ -405,4 +405,76 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get builderActiveExists => 'Алдымен жүріп жатқан жаттығуды аяқтаңыз.';
+
+  @override
+  String get historyNoProgram => 'Бағдарламасыз';
+
+  @override
+  String historyPlanPrefix(String plan) {
+    return 'жоспар $plan';
+  }
+
+  @override
+  String historyBelow(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count жаттығу жоспардан төмен',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String historySkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count өткізілді',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String historyExercises(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count жаттығу',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get historyEdited => 'аяқталғаннан кейін өзгертілген';
+
+  @override
+  String get historySkippedMark => 'өткізілді';
+
+  @override
+  String get historyEdit => 'Жаттығуды түзету';
+
+  @override
+  String historyEditExercise(String name) {
+    return 'Түзету: $name';
+  }
+
+  @override
+  String get historyEmptyTitle => 'Әзірге жаттығу болған жоқ';
+
+  @override
+  String get historyEmptyText =>
+      'Мұнда әр аяқталған жаттығу көрінеді: жоспарда не болды және не орындалды.';
+
+  @override
+  String get historyToPrograms => 'Бағдарламаларға';
+
+  @override
+  String get editNotice =>
+      'Жаттығу аяқталған. Түзетуден кейін жаттықтырушы «аяқталғаннан кейін өзгертілген» белгісін көреді.';
+
+  @override
+  String get editSave => 'Өзгерістерді сақтау';
+
+  @override
+  String get editDiscard => 'Сақтамау';
 }

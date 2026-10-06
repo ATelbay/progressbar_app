@@ -8,6 +8,7 @@ import 'features/auth/profile_setup_screen.dart';
 import 'features/auth/sign_in_screen.dart';
 import 'features/exercises/exercise_picker_screen.dart';
 import 'features/history/history_screen.dart';
+import 'features/history/workout_edit_screen.dart';
 import 'features/home/home_screen.dart';
 import 'features/people/people_screen.dart';
 import 'features/people/trainee_screen.dart';
@@ -31,6 +32,7 @@ abstract final class Routes {
   static const workout = '/workout';
   static const trainee = '/trainee';
   static const exercisePicker = '/exercises';
+  static const workoutEdit = '/workout-edit';
 }
 
 final _rootKey = GlobalKey<NavigatorState>();
@@ -100,6 +102,12 @@ final routerProvider = Provider<GoRouter>((ref) {
             ProgramBuilderScreen(programId: state.pathParameters['id']),
       ),
       overlay(Routes.workout, const WorkoutScreen()),
+      GoRoute(
+        path: '${Routes.workoutEdit}/:id',
+        parentNavigatorKey: _rootKey,
+        builder: (_, state) =>
+            WorkoutEditScreen(workoutId: state.pathParameters['id']!),
+      ),
       overlay(Routes.trainee, const TraineeScreen()),
       overlay(Routes.exercisePicker, const ExercisePickerScreen()),
     ],

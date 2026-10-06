@@ -651,4 +651,45 @@ void main() {
       expect(parseWeight('1000'), isNull);
     });
   });
+
+  test('history verdict counts short and skipped exercises', () {
+    var w = start();
+    expect(hasPlan(w), isTrue);
+    expect(planVerdict(w), (below: 0, skipped: 2));
+    w = recordSummary(
+      w,
+      w.exercises.first.id,
+      setCount: 2,
+      fact: plan60x8,
+      newId: counter(),
+      now: monday,
+    );
+    expect(planVerdict(w), (below: 1, skipped: 1));
+    w = recordSummary(
+      w,
+      w.exercises.first.id,
+      setCount: 3,
+      fact: plan60x8,
+      newId: counter(),
+      now: monday,
+    );
+    w = recordSummary(
+      w,
+      w.exercises.last.id,
+      setCount: 1,
+      fact: const SetValues(seconds: 70),
+      newId: counter(),
+      now: monday,
+    );
+    expect(planVerdict(w), (below: 0, skipped: 0));
+    final free = startWorkout(
+      id: 'f',
+      traineeId: 'me',
+      now: monday,
+      newId: counter(),
+      catalog: catalog,
+      languageCode: 'ru',
+    );
+    expect(hasPlan(free), isFalse);
+  });
 }

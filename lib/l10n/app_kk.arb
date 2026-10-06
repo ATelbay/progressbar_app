@@ -119,5 +119,20 @@
   "builderBodyWeight": "Өз салмағы",
   "builderTimed": "Уақытқа",
   "builderEmptyDay": "Бұл күнде әзірге жаттығу жоқ.",
-  "builderActiveExists": "Алдымен жүріп жатқан жаттығуды аяқтаңыз."
+  "builderActiveExists": "Алдымен жүріп жатқан жаттығуды аяқтаңыз.",
+  "historyNoProgram": "Бағдарламасыз",
+  "historyPlanPrefix": "жоспар {plan}",
+  "historyBelow": "{count, plural, other{{count} жаттығу жоспардан төмен}}",
+  "historySkipped": "{count, plural, other{{count} өткізілді}}",
+  "historyExercises": "{count, plural, other{{count} жаттығу}}",
+  "historyEdited": "аяқталғаннан кейін өзгертілген",
+  "historySkippedMark": "өткізілді",
+  "historyEdit": "Жаттығуды түзету",
+  "historyEditExercise": "Түзету: {name}",
+  "historyEmptyTitle": "Әзірге жаттығу болған жоқ",
+  "historyEmptyText": "Мұнда әр аяқталған жаттығу көрінеді: жоспарда не болды және не орындалды.",
+  "historyToPrograms": "Бағдарламаларға",
+  "editNotice": "Жаттығу аяқталған. Түзетуден кейін жаттықтырушы «аяқталғаннан кейін өзгертілген» белгісін көреді.",
+  "editSave": "Өзгерістерді сақтау",
+  "editDiscard": "Сақтамау"
 }

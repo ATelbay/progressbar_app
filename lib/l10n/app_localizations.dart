@@ -819,6 +819,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Finish the workout in progress first.'**
   String get builderActiveExists;
+
+  /// No description provided for @historyNoProgram.
+  ///
+  /// In en, this message translates to:
+  /// **'No program'**
+  String get historyNoProgram;
+
+  /// No description provided for @historyPlanPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'plan {plan}'**
+  String historyPlanPrefix(String plan);
+
+  /// No description provided for @historyBelow.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{{count} exercise below plan} other{{count} exercises below plan}}'**
+  String historyBelow(int count);
+
+  /// No description provided for @historySkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{{count} skipped} other{{count} skipped}}'**
+  String historySkipped(int count);
+
+  /// No description provided for @historyExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{{count} exercise} other{{count} exercises}}'**
+  String historyExercises(int count);
+
+  /// No description provided for @historyEdited.
+  ///
+  /// In en, this message translates to:
+  /// **'edited after completion'**
+  String get historyEdited;
+
+  /// No description provided for @historySkippedMark.
+  ///
+  /// In en, this message translates to:
+  /// **'skipped'**
+  String get historySkippedMark;
+
+  /// No description provided for @historyEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit workout'**
+  String get historyEdit;
+
+  /// No description provided for @historyEditExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit: {name}'**
+  String historyEditExercise(String name);
+
+  /// No description provided for @historyEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No workouts yet'**
+  String get historyEmptyTitle;
+
+  /// No description provided for @historyEmptyText.
+  ///
+  /// In en, this message translates to:
+  /// **'Every completed workout will appear here: what was planned and what was done.'**
+  String get historyEmptyText;
+
+  /// No description provided for @historyToPrograms.
+  ///
+  /// In en, this message translates to:
+  /// **'To programs'**
+  String get historyToPrograms;
+
+  /// No description provided for @editNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'This workout is completed. After a change a coach will see it marked «edited after completion».'**
+  String get editNotice;
+
+  /// No description provided for @editSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get editSave;
+
+  /// No description provided for @editDiscard.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t save'**
+  String get editDiscard;
 }
 
 class _AppLocalizationsDelegate

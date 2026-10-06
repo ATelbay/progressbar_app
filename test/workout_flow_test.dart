@@ -234,4 +234,56 @@ void main() {
     expect(find.text('2 days'), findsOneWidget);
     expect(find.text('Workout in progress'), findsOneWidget);
   });
+
+  testWidgets('a finished workout appears in history and can be corrected', (
+    tester,
+  ) async {
+    await startWithBenchPress(tester);
+    await tap(tester, find.text('Record'));
+    await tap(tester, find.widgetWithText(FilledButton, 'Finish'));
+    await tap(tester, find.widgetWithText(FilledButton, 'Finish').last);
+
+    await tap(tester, find.text('History'));
+    expect(find.text('No program'), findsOneWidget);
+    expect(find.text('1 exercise'), findsOneWidget);
+    expect(find.text('3 × 10 × 0 kg', findRichText: true), findsOneWidget);
+    expect(find.text('edited after completion'), findsNothing);
+
+    await tap(tester, find.byTooltip('Edit workout'));
+    expect(find.textContaining('This workout is completed'), findsOneWidget);
+    // Nothing changed yet, so there is nothing to save.
+    expect(
+      tester
+          .widget<FilledButton>(
+            find.widgetWithText(FilledButton, 'Save changes'),
+          )
+          .onPressed,
+      isNull,
+    );
+    await tap(tester, find.byIcon(Icons.edit_outlined));
+    await tap(tester, find.byTooltip('More: Weight'));
+    await tap(tester, find.byTooltip('Less: Sets'));
+    await tap(tester, find.text('Record'));
+    expect(find.text('2 × 10 × 2.5 kg', findRichText: true), findsOneWidget);
+    // Not stored until saved.
+    expect((await onlyWorkout())['editedAt'], isNull);
+
+    await tap(tester, find.text('Save changes'));
+    expect(find.text('edited after completion'), findsOneWidget);
+    expect(find.text('2 × 10 × 2.5 kg', findRichText: true), findsOneWidget);
+    final stored = await onlyWorkout();
+    expect(stored['editedAt'], isNotNull);
+    expect(stored['status'], 'completed');
+    expect((stored['exercises'][0]['sets'] as List).length, 2);
+  });
+
+  testWidgets('history without workouts leads back to programs', (
+    tester,
+  ) async {
+    await openApp(tester);
+    await tap(tester, find.text('History'));
+    expect(find.text('No workouts yet'), findsOneWidget);
+    await tap(tester, find.text('To programs'));
+    expect(find.text('The bar is empty for now'), findsOneWidget);
+  });
 }
