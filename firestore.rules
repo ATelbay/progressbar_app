@@ -8,6 +8,96 @@ service cloud.firestore {
       return request.auth != null && request.auth.uid == userId;
     }
 
+    // --- Coach and trainee -------------------------------------------------
+    // links/{coachId}_{traineeId} joins two people; its status is active,
+    // readOnly or removed. A link appears only by accepting an invitation,
+    // and afterwards only the trainee changes it.
+    function linkPath(coachId, traineeId) {
+      return /databases/$(database)/documents/links/$(coachId + '_' + traineeId);
+    }
+    function linkStatus(coachId, traineeId) {
+      return exists(linkPath(coachId, traineeId))
+        ? get(linkPath(coachId, traineeId)).data.status
+        : 'none';
+    }
+    function invitationPath(code) {
+      return /databases/$(database)/documents/invitations/$(code);
+    }
+    // The signed-in user accepts invitation `inviteCode` and so becomes the
+    // other side of the link. The invitation is used up in the same batch.
+    function acceptsInvitation(coachId, traineeId) {
+      let link = request.resource.data;
+      let invitation = get(invitationPath(link.inviteCode)).data;
+      return link.coachId == coachId
+        && link.traineeId == traineeId
+        && coachId != traineeId
+        && link.status == 'active'
+        && link.coachName is string
+        && link.traineeName is string
+        && link.keys().hasOnly(['coachId', 'traineeId', 'status', 'coachName',
+          'traineeName', 'inviteCode', 'createdAt', 'updatedAt'])
+        && invitation.expiresAt > request.time
+        && ((invitation.inviterRole == 'coach'
+            && invitation.inviterId == coachId
+            && request.auth.uid == traineeId
+            && link.coachName == invitation.inviterName)
+          || (invitation.inviterRole == 'trainee'
+            && invitation.inviterId == traineeId
+            && request.auth.uid == coachId
+            && link.traineeName == invitation.inviterName))
+        && !existsAfter(invitationPath(link.inviteCode));
+    }
+
+    match /links/{linkId} {
+      allow read: if request.auth != null
+        && (resource.data.coachId == request.auth.uid
+          || resource.data.traineeId == request.auth.uid);
+      allow create: if request.auth != null
+        && linkId == request.resource.data.coachId + '_' + request.resource.data.traineeId
+        && acceptsInvitation(request.resource.data.coachId, request.resource.data.traineeId);
+      allow update: if request.auth != null
+        && (
+          // A new invitation between the same two people renews the link.
+          acceptsInvitation(resource.data.coachId, resource.data.traineeId)
+          // The trainee turns a coach read-only or removes them.
+          || (request.auth.uid == resource.data.traineeId
+            && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['status', 'updatedAt'])
+            && request.resource.data.status in ['readOnly', 'removed'])
+        );
+    }
+
+    // invitations/{code}: a one-time code, valid for at most 7 days. Anyone
+    // signed in may look a code up, but not list other people's codes.
+    match /invitations/{code} {
+      allow get: if request.auth != null;
+      allow list: if request.auth != null
+        && resource.data.inviterId == request.auth.uid;
+      allow create: if request.auth != null
+        && code.matches('^[2-9A-HJ-NP-Z]{6}$')
+        && request.resource.data.keys().hasOnly(['inviterId', 'inviterName',
+          'inviterRole', 'createdAt', 'expiresAt'])
+        && request.resource.data.inviterId == request.auth.uid
+        && request.resource.data.inviterName is string
+        && request.resource.data.inviterName.size() <= 100
+        && request.resource.data.inviterRole in ['coach', 'trainee']
+        && request.resource.data.expiresAt is timestamp
+        && request.resource.data.expiresAt > request.time
+        && request.resource.data.expiresAt <= request.time + duration.value(8, 'd');
+      // The author withdraws it, or the one accepting uses it up: then the
+      // link written in this same batch names this code and did not before.
+      allow delete: if request.auth != null
+        && (resource.data.inviterId == request.auth.uid
+          || usedUpBy(code, resource.data.inviterId, request.auth.uid)
+          || usedUpBy(code, request.auth.uid, resource.data.inviterId));
+    }
+    function usedUpBy(code, coachId, traineeId) {
+      return existsAfter(linkPath(coachId, traineeId))
+        && getAfter(linkPath(coachId, traineeId)).data.inviteCode == code
+        && (!exists(linkPath(coachId, traineeId))
+          || get(linkPath(coachId, traineeId)).data.get('inviteCode', '') != code);
+    }
+
     match /users/{userId} {
       // A signed-in user reads and writes only their own profile.
       allow read, write: if isOwner(userId);
@@ -53,24 +143,32 @@ service cloud.firestore {
         return existsAfter(workoutPath(workoutId))
           && getAfter(workoutPath(workoutId)).data.status == 'inProgress';
       }
-      // No coach–trainee links exist yet, so a workout cannot name a coach.
       function validWorkout() {
         return request.resource.data.traineeId == userId
-          && request.resource.data.get('supervisorCoachId', null) == null
           && request.resource.data.status in ['inProgress', 'completed']
           && request.resource.data.startedAt is timestamp
           && request.resource.data.exercises is list;
       }
 
       match /workouts/{workoutId} {
-        allow read: if isOwner(userId);
+        // A coach sees every workout of a trainee while the link is active
+        // or read-only; a removed coach sees none.
+        allow read: if isOwner(userId)
+          || (request.auth != null
+            && linkStatus(request.auth.uid, userId) in ['active', 'readOnly']);
+        // A workout may name only the trainee's active coach as supervisor,
+        // and the name never changes afterwards.
         allow create: if isOwner(userId)
           && validWorkout()
+          && (request.resource.data.get('supervisorCoachId', null) == null
+            || linkStatus(request.resource.data.supervisorCoachId, userId) == 'active')
           && request.resource.data.status == 'inProgress'
           && activeAfter(workoutId);
         // A completed workout may be corrected but never reopened.
         allow update: if isOwner(userId)
           && validWorkout()
+          && request.resource.data.get('supervisorCoachId', null)
+            == resource.data.get('supervisorCoachId', null)
           && request.resource.data.startedAt == resource.data.startedAt
           && (
             (request.resource.data.status == 'inProgress'

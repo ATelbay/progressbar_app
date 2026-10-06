@@ -17,6 +17,7 @@ import '../../widgets/step_button.dart';
 import '../auth/auth_controller.dart';
 import '../exercises/personal_exercises_provider.dart';
 import '../format.dart';
+import '../people/people_providers.dart';
 import '../workout/number_field.dart';
 import '../workout/workout_providers.dart';
 import 'program_providers.dart';
@@ -165,6 +166,7 @@ class _ProgramBuilderScreenState extends ConsumerState<ProgramBuilderScreen> {
       languageCode: Localizations.localeOf(context).languageCode,
       program: program,
       day: day,
+      supervisorCoachId: ref.read(activeCoachProvider)?.coachId,
       bodyWeightKg: ref.read(profileProvider).value?.bodyWeightKg,
     );
     try {

@@ -578,4 +578,147 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get exerciseMine => 'своё';
+
+  @override
+  String get peopleMyCoaches => 'Мои тренеры';
+
+  @override
+  String get peopleMyTrainees => 'Мои подопечные';
+
+  @override
+  String get peopleCoachActive => 'Назначает программы';
+
+  @override
+  String get peopleCoachReadOnly => 'Видит тренировки, не назначает';
+
+  @override
+  String get chipActive => 'активный';
+
+  @override
+  String get chipReadOnly => 'просмотр';
+
+  @override
+  String get peopleTraineeActive => 'Вы активный тренер';
+
+  @override
+  String get peopleTraineeReadOnly => 'Только просмотр';
+
+  @override
+  String get peopleInvite => 'Пригласить';
+
+  @override
+  String get peopleEnterCode => 'Ввести код приглашения';
+
+  @override
+  String get peopleEmpty =>
+      'Здесь пока никого. Пригласите тренера или подопечного либо введите код, который вам дали.';
+
+  @override
+  String get inviteRoleQuestion =>
+      'Кем вы будете для человека, которого приглашаете?';
+
+  @override
+  String get inviteAsCoach => 'Я тренер';
+
+  @override
+  String get inviteAsCoachHint =>
+      'Буду составлять ему программы и видеть его тренировки.';
+
+  @override
+  String get inviteAsTrainee => 'Я подопечный';
+
+  @override
+  String get inviteAsTraineeHint =>
+      'Он будет составлять мне программы и видеть мои тренировки.';
+
+  @override
+  String get inviteCreate => 'Создать приглашение';
+
+  @override
+  String get inviteTitle => 'Приглашение';
+
+  @override
+  String get inviteShowCoach =>
+      'Вы приглашаете как тренер. Продиктуйте или отправьте этот код.';
+
+  @override
+  String get inviteShowTrainee =>
+      'Вы приглашаете как подопечный. Продиктуйте или отправьте этот код.';
+
+  @override
+  String get inviteValid => 'Код действует один раз и 7 дней.';
+
+  @override
+  String get inviteCopy => 'Скопировать код';
+
+  @override
+  String get inviteCopied => 'Код скопирован';
+
+  @override
+  String get inviteCodeLabel => 'Код приглашения';
+
+  @override
+  String get inviteFind => 'Найти';
+
+  @override
+  String get inviteFromCoach => 'приглашает вас как тренер';
+
+  @override
+  String get inviteFromTrainee => 'приглашает вас как подопечный';
+
+  @override
+  String inviteCoachWill(String name) {
+    return '$name сможет назначать вам программы и видеть ваши тренировки.';
+  }
+
+  @override
+  String inviteTraineeWill(String name) {
+    return 'Вы сможете назначать программы и видеть тренировки: $name.';
+  }
+
+  @override
+  String inviteCurrentCoach(String name) {
+    return 'Сейчас ваш активный тренер — $name. У него останется доступ на просмотр.';
+  }
+
+  @override
+  String get inviteAccept => 'Принять';
+
+  @override
+  String get inviteAcceptActive => 'Принять и сделать активным';
+
+  @override
+  String get inviteDecline => 'Отклонить';
+
+  @override
+  String get inviteNotFound =>
+      'Такого приглашения нет. Проверьте код: возможно, его уже использовали или срок истёк.';
+
+  @override
+  String get inviteOwn => 'Это ваше собственное приглашение.';
+
+  @override
+  String get inviteFailed =>
+      'Не получилось. Проверьте связь и попробуйте ещё раз.';
+
+  @override
+  String coachSheetTitle(String name) {
+    return '$name, тренер';
+  }
+
+  @override
+  String get coachDeactivate => 'Деактивировать';
+
+  @override
+  String coachDeactivateHint(String name) {
+    return '$name продолжит видеть ваши тренировки, но не сможет назначать программы.';
+  }
+
+  @override
+  String coachRemoveHint(String name) {
+    return '$name потеряет доступ полностью. Ваши тренировки останутся у вас.';
+  }
+
+  @override
+  String get coachKeep => 'Ничего не менять';
 }

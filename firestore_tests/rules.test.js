@@ -14,6 +14,8 @@ import {
   getDoc,
   getDocs,
   collection,
+  query,
+  where,
   setDoc,
   Timestamp,
   writeBatch,
@@ -165,7 +167,6 @@ test('cancelling removes the workout and the pointer together', async () => {
 test('workout fields that must not change are protected', async () => {
   const db = dbOf('athlete');
   await assertFails(start(db, 'w1', workout({ traineeId: 'other' })));
-  await assertFails(start(db, 'w1', workout({ supervisorCoachId: 'coach' })));
   await assertFails(start(db, 'w1', workout({ status: 'cancelled' })));
   await assertFails(start(db, 'w1', workout({ startedAt: 'yesterday' })));
   await assertSucceeds(start(db, 'w1'));
@@ -186,4 +187,174 @@ test('queued offline writes are accepted in the order they were made', async () 
     writeBatch(db).delete(workoutRef(db, 'w2')).set(pointerRef(db), { workoutId: null }).commit(),
   );
   await assertSucceeds(start(db, 'w3'));
+});
+
+// --- Coach and trainee ------------------------------------------------------
+
+const soon = () => Timestamp.fromDate(new Date(Date.now() + 7 * 24 * 3600 * 1000));
+const invitation = (inviterId, inviterRole, overrides = {}) => ({
+  inviterId,
+  inviterName: inviterId,
+  inviterRole,
+  createdAt: Timestamp.now(),
+  expiresAt: soon(),
+  ...overrides,
+});
+const link = (coachId, traineeId, inviteCode, overrides = {}) => ({
+  coachId,
+  traineeId,
+  status: 'active',
+  coachName: coachId,
+  traineeName: traineeId,
+  inviteCode,
+  createdAt: Timestamp.now(),
+  ...overrides,
+});
+const invite = (uid, role, code = 'K7M42Q', overrides = {}) =>
+  setDoc(doc(dbOf(uid), `invitations/${code}`), invitation(uid, role, overrides));
+// The acceptor writes the link and uses the invitation up in one batch.
+const accept = (uid, coachId, traineeId, code = 'K7M42Q', overrides = {}) => {
+  const db = dbOf(uid);
+  return writeBatch(db)
+    .set(doc(db, `links/${coachId}_${traineeId}`), link(coachId, traineeId, code, overrides))
+    .delete(doc(db, `invitations/${code}`))
+    .commit();
+};
+const setStatus = (uid, coachId, traineeId, status) =>
+  setDoc(doc(dbOf(uid), `links/${coachId}_${traineeId}`), { status }, { merge: true });
+
+test('an invitation is created by its author and looked up by code', async () => {
+  await assertSucceeds(invite('coach', 'coach'));
+  await assertSucceeds(getDoc(doc(dbOf('athlete'), 'invitations/K7M42Q')));
+  await assertFails(getDoc(doc(dbOf(null), 'invitations/K7M42Q')));
+  // Codes cannot be browsed, and a taken code cannot be overwritten.
+  await assertFails(getDocs(collection(dbOf('athlete'), 'invitations')));
+  await assertFails(invite('athlete', 'coach'));
+  await assertFails(invite('coach', 'coach', 'k7m42q'));
+  await assertFails(invite('coach', 'coach', 'K7M40Q'));
+  await assertFails(invite('coach', 'boss', 'AAAAAA'));
+  await assertFails(
+    setDoc(doc(dbOf('coach'), 'invitations/AAAAAA'), invitation('other', 'coach')),
+  );
+  await assertFails(
+    invite('coach', 'coach', 'AAAAAA', {
+      expiresAt: Timestamp.fromDate(new Date(Date.now() + 30 * 24 * 3600 * 1000)),
+    }),
+  );
+  await assertFails(deleteDoc(doc(dbOf('athlete'), 'invitations/K7M42Q')));
+  await assertSucceeds(deleteDoc(doc(dbOf('coach'), 'invitations/K7M42Q')));
+});
+
+test('a link appears only by accepting an invitation, in either role', async () => {
+  // No invitation, no link.
+  await assertFails(
+    setDoc(doc(dbOf('athlete'), 'links/coach_athlete'), link('coach', 'athlete', 'K7M42Q')),
+  );
+  await assertSucceeds(invite('coach', 'coach'));
+  // The invitation must be used up, the roles must be the invited ones, and
+  // only the two people involved take part.
+  await assertFails(
+    setDoc(doc(dbOf('athlete'), 'links/coach_athlete'), link('coach', 'athlete', 'K7M42Q')),
+  );
+  await assertFails(accept('athlete', 'athlete', 'coach'));
+  await assertFails(accept('other', 'coach', 'athlete'));
+  await assertFails(accept('coach', 'coach', 'athlete'));
+  await assertFails(accept('athlete', 'coach', 'athlete', 'K7M42Q', { status: 'readOnly' }));
+  await assertFails(accept('athlete', 'coach', 'athlete', 'K7M42Q', { coachName: 'Someone' }));
+  await assertSucceeds(accept('athlete', 'coach', 'athlete'));
+  // Used once.
+  await assertFails(accept('other', 'coach', 'other'));
+
+  // The trainee invites, the coach accepts.
+  await assertSucceeds(invite('athlete', 'trainee', 'BBBBBB'));
+  await assertFails(accept('coach2', 'athlete', 'coach2', 'BBBBBB'));
+  await assertSucceeds(accept('coach2', 'coach2', 'athlete', 'BBBBBB'));
+
+  await assertSucceeds(getDoc(doc(dbOf('coach'), 'links/coach_athlete')));
+  await assertSucceeds(getDoc(doc(dbOf('athlete'), 'links/coach_athlete')));
+  await assertFails(getDoc(doc(dbOf('coach2'), 'links/coach_athlete')));
+
+  // Each side lists its own links, as the app does, and nobody else's.
+  const linksOf = (uid, field, value) =>
+    getDocs(query(collection(dbOf(uid), 'links'), where(field, '==', value)));
+  await assertSucceeds(linksOf('athlete', 'traineeId', 'athlete'));
+  await assertSucceeds(linksOf('coach2', 'coachId', 'coach2'));
+  await assertFails(linksOf('other', 'traineeId', 'athlete'));
+  await assertFails(linksOf('coach', 'coachId', 'coach2'));
+  await assertFails(getDocs(collection(dbOf('athlete'), 'links')));
+});
+
+test('an expired or own invitation makes no link', async () => {
+  await env.withSecurityRulesDisabled((context) =>
+    setDoc(
+      doc(context.firestore(), 'invitations/CCCCCC'),
+      invitation('coach', 'coach', { expiresAt: Timestamp.fromDate(new Date(Date.now() - 1000)) }),
+    ),
+  );
+  await assertFails(accept('athlete', 'coach', 'athlete', 'CCCCCC'));
+  await assertSucceeds(invite('coach', 'coach', 'DDDDDD'));
+  await assertFails(accept('coach', 'coach', 'coach', 'DDDDDD'));
+});
+
+test('only the trainee changes a link, and only downwards', async () => {
+  await assertSucceeds(invite('coach', 'coach'));
+  await assertSucceeds(accept('athlete', 'coach', 'athlete'));
+  await assertFails(setStatus('coach', 'coach', 'athlete', 'removed'));
+  await assertFails(setStatus('other', 'coach', 'athlete', 'removed'));
+  await assertSucceeds(setStatus('athlete', 'coach', 'athlete', 'readOnly'));
+  // Back to active only through a new invitation.
+  await assertFails(setStatus('athlete', 'coach', 'athlete', 'active'));
+  await assertFails(
+    setDoc(doc(dbOf('athlete'), 'links/coach_athlete'), { coachName: 'X' }, { merge: true }),
+  );
+  await assertSucceeds(setStatus('athlete', 'coach', 'athlete', 'removed'));
+  await assertFails(deleteDoc(doc(dbOf('athlete'), 'links/coach_athlete')));
+
+  await assertSucceeds(invite('coach', 'coach', 'EEEEEE'));
+  await assertSucceeds(accept('athlete', 'coach', 'athlete', 'EEEEEE'));
+});
+
+test('a coach sees a trainee\'s workouts until removed', async () => {
+  await assertSucceeds(invite('coach', 'coach'));
+  await assertSucceeds(accept('athlete', 'coach', 'athlete'));
+  const own = dbOf('athlete');
+  await assertSucceeds(start(own, 'w1', workout({ supervisorCoachId: 'coach' })));
+
+  const coach = dbOf('coach');
+  await assertSucceeds(getDoc(workoutRef(coach, 'w1')));
+  await assertSucceeds(getDocs(collection(coach, 'users/athlete/workouts')));
+  // Seeing is all: no writing, and nothing else of the trainee's.
+  await assertFails(setDoc(workoutRef(coach, 'w1'), workout({ supervisorCoachId: 'coach' })));
+  await assertFails(deleteDoc(workoutRef(coach, 'w1')));
+  await assertFails(getDoc(doc(coach, 'users/athlete')));
+  await assertFails(getDocs(collection(coach, 'users/athlete/programs')));
+  await assertFails(getDoc(pointerRef(coach)));
+  // The trainee does not see the coach's workouts.
+  await assertFails(getDocs(collection(own, 'users/coach/workouts')));
+
+  await assertSucceeds(setStatus('athlete', 'coach', 'athlete', 'readOnly'));
+  await assertSucceeds(getDocs(collection(coach, 'users/athlete/workouts')));
+  await assertSucceeds(setStatus('athlete', 'coach', 'athlete', 'removed'));
+  await assertFails(getDoc(workoutRef(coach, 'w1')));
+  await assertFails(getDocs(collection(coach, 'users/athlete/workouts')));
+});
+
+test('a workout names only the active coach, once', async () => {
+  const own = dbOf('athlete');
+  await assertFails(start(own, 'w1', workout({ supervisorCoachId: 'coach' })));
+  await assertSucceeds(invite('coach', 'coach'));
+  await assertSucceeds(accept('athlete', 'coach', 'athlete'));
+  await assertSucceeds(start(own, 'w1', workout({ supervisorCoachId: 'coach' })));
+  await assertFails(setDoc(workoutRef(own, 'w1'), workout({ supervisorCoachId: null })));
+  await assertFails(setDoc(workoutRef(own, 'w1'), workout({ supervisorCoachId: 'other' })));
+  // History keeps its supervisor even after the coach is removed.
+  await assertSucceeds(setStatus('athlete', 'coach', 'athlete', 'removed'));
+  await assertSucceeds(
+    writeBatch(own)
+      .set(workoutRef(own, 'w1'), completed({ supervisorCoachId: 'coach' }))
+      .set(pointerRef(own), { workoutId: null })
+      .commit(),
+  );
+  await assertFails(start(own, 'w2', workout({ supervisorCoachId: 'coach' })));
+  await assertSucceeds(start(own, 'w2'));
 });

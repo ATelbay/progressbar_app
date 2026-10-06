@@ -324,5 +324,88 @@
   "exerciseRestore": "Restore the original",
   "exerciseSave": "Save",
   "exerciseEdited": "edited",
-  "exerciseMine": "yours"
+  "exerciseMine": "yours",
+  "peopleMyCoaches": "My coaches",
+  "peopleMyTrainees": "My trainees",
+  "peopleCoachActive": "Assigns programs",
+  "peopleCoachReadOnly": "Sees workouts, does not assign",
+  "chipActive": "active",
+  "chipReadOnly": "view only",
+  "peopleTraineeActive": "You are the active coach",
+  "peopleTraineeReadOnly": "View only",
+  "peopleInvite": "Invite",
+  "peopleEnterCode": "Enter an invitation code",
+  "peopleEmpty": "No one here yet. Invite a coach or a trainee, or enter the code you were given.",
+  "inviteRoleQuestion": "Who will you be for the person you invite?",
+  "inviteAsCoach": "I am the coach",
+  "inviteAsCoachHint": "I will write their programs and see their workouts.",
+  "inviteAsTrainee": "I am the trainee",
+  "inviteAsTraineeHint": "They will write my programs and see my workouts.",
+  "inviteCreate": "Create invitation",
+  "inviteTitle": "Invitation",
+  "inviteShowCoach": "You invite as a coach. Say or send this code.",
+  "inviteShowTrainee": "You invite as a trainee. Say or send this code.",
+  "inviteValid": "The code works once and for 7 days.",
+  "inviteCopy": "Copy code",
+  "inviteCopied": "Code copied",
+  "inviteCodeLabel": "Invitation code",
+  "inviteFind": "Find",
+  "inviteFromCoach": "invites you as a coach",
+  "inviteFromTrainee": "invites you as a trainee",
+  "inviteCoachWill": "{name} will be able to assign you programs and see your workouts.",
+  "@inviteCoachWill": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteTraineeWill": "You will be able to assign programs to {name} and see their workouts.",
+  "@inviteTraineeWill": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteCurrentCoach": "Your active coach now is {name}. They will keep view-only access.",
+  "@inviteCurrentCoach": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteAccept": "Accept",
+  "inviteAcceptActive": "Accept and make active",
+  "inviteDecline": "Decline",
+  "inviteNotFound": "No such invitation. Check the code: it may have been used already or expired.",
+  "inviteOwn": "This is your own invitation.",
+  "inviteFailed": "That did not work. Check the connection and try again.",
+  "coachSheetTitle": "{name}, coach",
+  "@coachSheetTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "coachDeactivate": "Deactivate",
+  "coachDeactivateHint": "{name} will keep seeing your workouts but will not be able to assign programs.",
+  "@coachDeactivateHint": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "coachRemoveHint": "{name} will lose access completely. Your workouts stay with you.",
+  "@coachRemoveHint": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "coachKeep": "Change nothing"
 }

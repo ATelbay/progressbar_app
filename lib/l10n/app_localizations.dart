@@ -1064,6 +1064,252 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'yours'**
   String get exerciseMine;
+
+  /// No description provided for @peopleMyCoaches.
+  ///
+  /// In en, this message translates to:
+  /// **'My coaches'**
+  String get peopleMyCoaches;
+
+  /// No description provided for @peopleMyTrainees.
+  ///
+  /// In en, this message translates to:
+  /// **'My trainees'**
+  String get peopleMyTrainees;
+
+  /// No description provided for @peopleCoachActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigns programs'**
+  String get peopleCoachActive;
+
+  /// No description provided for @peopleCoachReadOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Sees workouts, does not assign'**
+  String get peopleCoachReadOnly;
+
+  /// No description provided for @chipActive.
+  ///
+  /// In en, this message translates to:
+  /// **'active'**
+  String get chipActive;
+
+  /// No description provided for @chipReadOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'view only'**
+  String get chipReadOnly;
+
+  /// No description provided for @peopleTraineeActive.
+  ///
+  /// In en, this message translates to:
+  /// **'You are the active coach'**
+  String get peopleTraineeActive;
+
+  /// No description provided for @peopleTraineeReadOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'View only'**
+  String get peopleTraineeReadOnly;
+
+  /// No description provided for @peopleInvite.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite'**
+  String get peopleInvite;
+
+  /// No description provided for @peopleEnterCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an invitation code'**
+  String get peopleEnterCode;
+
+  /// No description provided for @peopleEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No one here yet. Invite a coach or a trainee, or enter the code you were given.'**
+  String get peopleEmpty;
+
+  /// No description provided for @inviteRoleQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Who will you be for the person you invite?'**
+  String get inviteRoleQuestion;
+
+  /// No description provided for @inviteAsCoach.
+  ///
+  /// In en, this message translates to:
+  /// **'I am the coach'**
+  String get inviteAsCoach;
+
+  /// No description provided for @inviteAsCoachHint.
+  ///
+  /// In en, this message translates to:
+  /// **'I will write their programs and see their workouts.'**
+  String get inviteAsCoachHint;
+
+  /// No description provided for @inviteAsTrainee.
+  ///
+  /// In en, this message translates to:
+  /// **'I am the trainee'**
+  String get inviteAsTrainee;
+
+  /// No description provided for @inviteAsTraineeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'They will write my programs and see my workouts.'**
+  String get inviteAsTraineeHint;
+
+  /// No description provided for @inviteCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create invitation'**
+  String get inviteCreate;
+
+  /// No description provided for @inviteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation'**
+  String get inviteTitle;
+
+  /// No description provided for @inviteShowCoach.
+  ///
+  /// In en, this message translates to:
+  /// **'You invite as a coach. Say or send this code.'**
+  String get inviteShowCoach;
+
+  /// No description provided for @inviteShowTrainee.
+  ///
+  /// In en, this message translates to:
+  /// **'You invite as a trainee. Say or send this code.'**
+  String get inviteShowTrainee;
+
+  /// No description provided for @inviteValid.
+  ///
+  /// In en, this message translates to:
+  /// **'The code works once and for 7 days.'**
+  String get inviteValid;
+
+  /// No description provided for @inviteCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy code'**
+  String get inviteCopy;
+
+  /// No description provided for @inviteCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Code copied'**
+  String get inviteCopied;
+
+  /// No description provided for @inviteCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation code'**
+  String get inviteCodeLabel;
+
+  /// No description provided for @inviteFind.
+  ///
+  /// In en, this message translates to:
+  /// **'Find'**
+  String get inviteFind;
+
+  /// No description provided for @inviteFromCoach.
+  ///
+  /// In en, this message translates to:
+  /// **'invites you as a coach'**
+  String get inviteFromCoach;
+
+  /// No description provided for @inviteFromTrainee.
+  ///
+  /// In en, this message translates to:
+  /// **'invites you as a trainee'**
+  String get inviteFromTrainee;
+
+  /// No description provided for @inviteCoachWill.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} will be able to assign you programs and see your workouts.'**
+  String inviteCoachWill(String name);
+
+  /// No description provided for @inviteTraineeWill.
+  ///
+  /// In en, this message translates to:
+  /// **'You will be able to assign programs to {name} and see their workouts.'**
+  String inviteTraineeWill(String name);
+
+  /// No description provided for @inviteCurrentCoach.
+  ///
+  /// In en, this message translates to:
+  /// **'Your active coach now is {name}. They will keep view-only access.'**
+  String inviteCurrentCoach(String name);
+
+  /// No description provided for @inviteAccept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get inviteAccept;
+
+  /// No description provided for @inviteAcceptActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept and make active'**
+  String get inviteAcceptActive;
+
+  /// No description provided for @inviteDecline.
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get inviteDecline;
+
+  /// No description provided for @inviteNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No such invitation. Check the code: it may have been used already or expired.'**
+  String get inviteNotFound;
+
+  /// No description provided for @inviteOwn.
+  ///
+  /// In en, this message translates to:
+  /// **'This is your own invitation.'**
+  String get inviteOwn;
+
+  /// No description provided for @inviteFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'That did not work. Check the connection and try again.'**
+  String get inviteFailed;
+
+  /// No description provided for @coachSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, coach'**
+  String coachSheetTitle(String name);
+
+  /// No description provided for @coachDeactivate.
+  ///
+  /// In en, this message translates to:
+  /// **'Deactivate'**
+  String get coachDeactivate;
+
+  /// No description provided for @coachDeactivateHint.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} will keep seeing your workouts but will not be able to assign programs.'**
+  String coachDeactivateHint(String name);
+
+  /// No description provided for @coachRemoveHint.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} will lose access completely. Your workouts stay with you.'**
+  String coachRemoveHint(String name);
+
+  /// No description provided for @coachKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Change nothing'**
+  String get coachKeep;
 }
 
 class _AppLocalizationsDelegate

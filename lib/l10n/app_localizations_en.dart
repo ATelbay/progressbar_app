@@ -569,4 +569,145 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exerciseMine => 'yours';
+
+  @override
+  String get peopleMyCoaches => 'My coaches';
+
+  @override
+  String get peopleMyTrainees => 'My trainees';
+
+  @override
+  String get peopleCoachActive => 'Assigns programs';
+
+  @override
+  String get peopleCoachReadOnly => 'Sees workouts, does not assign';
+
+  @override
+  String get chipActive => 'active';
+
+  @override
+  String get chipReadOnly => 'view only';
+
+  @override
+  String get peopleTraineeActive => 'You are the active coach';
+
+  @override
+  String get peopleTraineeReadOnly => 'View only';
+
+  @override
+  String get peopleInvite => 'Invite';
+
+  @override
+  String get peopleEnterCode => 'Enter an invitation code';
+
+  @override
+  String get peopleEmpty =>
+      'No one here yet. Invite a coach or a trainee, or enter the code you were given.';
+
+  @override
+  String get inviteRoleQuestion => 'Who will you be for the person you invite?';
+
+  @override
+  String get inviteAsCoach => 'I am the coach';
+
+  @override
+  String get inviteAsCoachHint =>
+      'I will write their programs and see their workouts.';
+
+  @override
+  String get inviteAsTrainee => 'I am the trainee';
+
+  @override
+  String get inviteAsTraineeHint =>
+      'They will write my programs and see my workouts.';
+
+  @override
+  String get inviteCreate => 'Create invitation';
+
+  @override
+  String get inviteTitle => 'Invitation';
+
+  @override
+  String get inviteShowCoach => 'You invite as a coach. Say or send this code.';
+
+  @override
+  String get inviteShowTrainee =>
+      'You invite as a trainee. Say or send this code.';
+
+  @override
+  String get inviteValid => 'The code works once and for 7 days.';
+
+  @override
+  String get inviteCopy => 'Copy code';
+
+  @override
+  String get inviteCopied => 'Code copied';
+
+  @override
+  String get inviteCodeLabel => 'Invitation code';
+
+  @override
+  String get inviteFind => 'Find';
+
+  @override
+  String get inviteFromCoach => 'invites you as a coach';
+
+  @override
+  String get inviteFromTrainee => 'invites you as a trainee';
+
+  @override
+  String inviteCoachWill(String name) {
+    return '$name will be able to assign you programs and see your workouts.';
+  }
+
+  @override
+  String inviteTraineeWill(String name) {
+    return 'You will be able to assign programs to $name and see their workouts.';
+  }
+
+  @override
+  String inviteCurrentCoach(String name) {
+    return 'Your active coach now is $name. They will keep view-only access.';
+  }
+
+  @override
+  String get inviteAccept => 'Accept';
+
+  @override
+  String get inviteAcceptActive => 'Accept and make active';
+
+  @override
+  String get inviteDecline => 'Decline';
+
+  @override
+  String get inviteNotFound =>
+      'No such invitation. Check the code: it may have been used already or expired.';
+
+  @override
+  String get inviteOwn => 'This is your own invitation.';
+
+  @override
+  String get inviteFailed =>
+      'That did not work. Check the connection and try again.';
+
+  @override
+  String coachSheetTitle(String name) {
+    return '$name, coach';
+  }
+
+  @override
+  String get coachDeactivate => 'Deactivate';
+
+  @override
+  String coachDeactivateHint(String name) {
+    return '$name will keep seeing your workouts but will not be able to assign programs.';
+  }
+
+  @override
+  String coachRemoveHint(String name) {
+    return '$name will lose access completely. Your workouts stay with you.';
+  }
+
+  @override
+  String get coachKeep => 'Change nothing';
 }

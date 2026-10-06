@@ -13,6 +13,7 @@ import '../../widgets/glass_panel.dart';
 import '../../widgets/glow_background.dart';
 import '../auth/auth_controller.dart';
 import '../format.dart';
+import '../people/people_providers.dart';
 import '../program/program_providers.dart';
 import '../workout/workout_providers.dart';
 import '../workout/workout_screen.dart';
@@ -33,6 +34,7 @@ class HomeScreen extends ConsumerWidget {
       newId: newId,
       catalog: const {},
       languageCode: Localizations.localeOf(context).languageCode,
+      supervisorCoachId: ref.read(activeCoachProvider)?.coachId,
       bodyWeightKg: ref.read(profileProvider).value?.bodyWeightKg,
     );
     try {

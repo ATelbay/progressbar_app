@@ -175,13 +175,22 @@ class CoachLink {
     required this.traineeId,
     required this.status,
     required this.createdAt,
+    this.coachName = '',
+    this.traineeName = '',
   });
 
   final String id;
   final String coachId;
   final String traineeId;
   final LinkStatus status;
+
+  /// When the link was made or renewed by an invitation.
   final DateTime createdAt;
+
+  /// Names as they were when the link was made: profiles are private, so each
+  /// side sees the other only through these.
+  final String coachName;
+  final String traineeName;
 }
 
 class Invitation {
@@ -190,10 +199,16 @@ class Invitation {
     required this.inviterId,
     required this.inviterRole,
     required this.createdAt,
+    this.inviterName = '',
+    this.expiresAt,
   });
 
   final String code;
   final String inviterId;
+  final String inviterName;
+
+  /// After this moment the code no longer works.
+  final DateTime? expiresAt;
 
   /// The role the inviter takes; the person who accepts takes the other one.
   final LinkRole inviterRole;

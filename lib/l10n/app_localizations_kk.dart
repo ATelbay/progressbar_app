@@ -568,4 +568,146 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get exerciseMine => 'өзіңіздікі';
+
+  @override
+  String get peopleMyCoaches => 'Менің жаттықтырушыларым';
+
+  @override
+  String get peopleMyTrainees => 'Менің шәкірттерім';
+
+  @override
+  String get peopleCoachActive => 'Бағдарлама тағайындайды';
+
+  @override
+  String get peopleCoachReadOnly => 'Жаттығуларды көреді, тағайындамайды';
+
+  @override
+  String get chipActive => 'белсенді';
+
+  @override
+  String get chipReadOnly => 'қарау';
+
+  @override
+  String get peopleTraineeActive => 'Сіз белсенді жаттықтырушысыз';
+
+  @override
+  String get peopleTraineeReadOnly => 'Тек қарау';
+
+  @override
+  String get peopleInvite => 'Шақыру';
+
+  @override
+  String get peopleEnterCode => 'Шақыру кодын енгізу';
+
+  @override
+  String get peopleEmpty =>
+      'Мұнда әзірге ешкім жоқ. Жаттықтырушыны не шәкіртті шақырыңыз немесе берілген кодты енгізіңіз.';
+
+  @override
+  String get inviteRoleQuestion => 'Шақыратын адамыңыз үшін кім боласыз?';
+
+  @override
+  String get inviteAsCoach => 'Мен жаттықтырушымын';
+
+  @override
+  String get inviteAsCoachHint =>
+      'Оған бағдарлама құрып, жаттығуларын көремін.';
+
+  @override
+  String get inviteAsTrainee => 'Мен шәкіртпін';
+
+  @override
+  String get inviteAsTraineeHint =>
+      'Ол маған бағдарлама құрып, жаттығуларымды көреді.';
+
+  @override
+  String get inviteCreate => 'Шақыру жасау';
+
+  @override
+  String get inviteTitle => 'Шақыру';
+
+  @override
+  String get inviteShowCoach =>
+      'Сіз жаттықтырушы ретінде шақырасыз. Осы кодты айтыңыз не жіберіңіз.';
+
+  @override
+  String get inviteShowTrainee =>
+      'Сіз шәкірт ретінде шақырасыз. Осы кодты айтыңыз не жіберіңіз.';
+
+  @override
+  String get inviteValid => 'Код бір рет және 7 күн жарамды.';
+
+  @override
+  String get inviteCopy => 'Кодты көшіру';
+
+  @override
+  String get inviteCopied => 'Код көшірілді';
+
+  @override
+  String get inviteCodeLabel => 'Шақыру коды';
+
+  @override
+  String get inviteFind => 'Табу';
+
+  @override
+  String get inviteFromCoach => 'сізді жаттықтырушы ретінде шақырады';
+
+  @override
+  String get inviteFromTrainee => 'сізді шәкірт ретінде шақырады';
+
+  @override
+  String inviteCoachWill(String name) {
+    return '$name сізге бағдарлама тағайындап, жаттығуларыңызды көре алады.';
+  }
+
+  @override
+  String inviteTraineeWill(String name) {
+    return 'Сіз бағдарлама тағайындап, жаттығуларын көре аласыз: $name.';
+  }
+
+  @override
+  String inviteCurrentCoach(String name) {
+    return 'Қазір белсенді жаттықтырушыңыз — $name. Оның қарау рұқсаты қалады.';
+  }
+
+  @override
+  String get inviteAccept => 'Қабылдау';
+
+  @override
+  String get inviteAcceptActive => 'Қабылдап, белсенді ету';
+
+  @override
+  String get inviteDecline => 'Бас тарту';
+
+  @override
+  String get inviteNotFound =>
+      'Мұндай шақыру жоқ. Кодты тексеріңіз: ол қолданылған не мерзімі өткен болуы мүмкін.';
+
+  @override
+  String get inviteOwn => 'Бұл өз шақыруыңыз.';
+
+  @override
+  String get inviteFailed =>
+      'Орындалмады. Байланысты тексеріп, қайталап көріңіз.';
+
+  @override
+  String coachSheetTitle(String name) {
+    return '$name, жаттықтырушы';
+  }
+
+  @override
+  String get coachDeactivate => 'Белсенділіктен шығару';
+
+  @override
+  String coachDeactivateHint(String name) {
+    return '$name жаттығуларыңызды көре береді, бірақ бағдарлама тағайындай алмайды.';
+  }
+
+  @override
+  String coachRemoveHint(String name) {
+    return '$name рұқсатынан толық айырылады. Жаттығуларыңыз сізде қалады.';
+  }
+
+  @override
+  String get coachKeep => 'Ештеңе өзгертпеу';
 }

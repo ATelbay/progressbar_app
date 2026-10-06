@@ -10,6 +10,7 @@ import 'features/exercises/exercise_picker_screen.dart';
 import 'features/history/history_screen.dart';
 import 'features/history/workout_edit_screen.dart';
 import 'features/home/home_screen.dart';
+import 'features/people/invite_screens.dart';
 import 'features/people/people_screen.dart';
 import 'features/people/trainee_screen.dart';
 import 'features/profile/profile_screen.dart';
@@ -31,6 +32,8 @@ abstract final class Routes {
   static const programBuilder = '/program';
   static const workout = '/workout';
   static const trainee = '/trainee';
+  static const invite = '/invite';
+  static const inviteAccept = '/invite-accept';
   static const exercisePicker = '/exercises';
   static const exerciseCatalog = '/exercise-catalog';
   static const workoutEdit = '/workout-edit';
@@ -110,6 +113,8 @@ final routerProvider = Provider<GoRouter>((ref) {
             WorkoutEditScreen(workoutId: state.pathParameters['id']!),
       ),
       overlay(Routes.trainee, const TraineeScreen()),
+      overlay(Routes.invite, const InviteScreen()),
+      overlay(Routes.inviteAccept, const InviteAcceptScreen()),
       overlay(Routes.exercisePicker, const ExercisePickerScreen()),
       overlay(Routes.exerciseCatalog, const ExercisePickerScreen(manage: true)),
     ],

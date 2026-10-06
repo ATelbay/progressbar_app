@@ -6,6 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:progressbar_app/app.dart';
 import 'package:progressbar_app/data/exercise_catalog_repository.dart';
+import 'package:progressbar_app/data/link_repository.dart';
+import 'package:progressbar_app/domain/link_logic.dart';
 import 'package:progressbar_app/domain/models.dart';
 import 'package:progressbar_app/features/auth/auth_controller.dart';
 import 'package:progressbar_app/features/exercises/exercise_catalog_provider.dart';
@@ -387,5 +389,107 @@ void main() {
     expect(find.text('My bench'), findsNothing);
     stored = (await db.collection('users/user-1/exercises').get()).docs;
     expect(stored.single.data()['id'], startsWith('custom/'));
+  });
+
+  testWidgets('a coach is accepted by code, supervises, then is deactivated', (
+    tester,
+  ) async {
+    await openApp(tester);
+    final links = FirestoreLinkRepository(db);
+    late Invitation fromCoach;
+    await tester.runAsync(() async {
+      fromCoach = await links.createInvitation(
+        inviterId: 'sergey',
+        inviterName: 'Сергей',
+        role: LinkRole.coach,
+      );
+    });
+
+    await tap(tester, find.text('People'));
+    expect(find.textContaining('No one here yet'), findsOneWidget);
+    await tap(tester, find.text('Enter an invitation code'));
+    // A wrong code is explained, not accepted.
+    await tester.enterText(find.byType(TextField), 'ZZZ ZZZ');
+    await settle(tester);
+    await tap(tester, find.text('Find'));
+    expect(find.textContaining('No such invitation'), findsOneWidget);
+
+    await tester.enterText(
+      find.byType(TextField),
+      formatInviteCode(fromCoach.code).toLowerCase(),
+    );
+    await settle(tester);
+    await tap(tester, find.text('Find'));
+    expect(find.text('Сергей'), findsOneWidget);
+    expect(find.text('invites you as a coach'), findsOneWidget);
+    await tap(tester, find.text('Accept'));
+
+    expect(find.text('My coaches'), findsOneWidget);
+    expect(find.text('Сергей'), findsOneWidget);
+    expect(find.text('active'), findsOneWidget);
+    expect(
+      (await db.doc('links/sergey_user-1').get()).data()!['status'],
+      'active',
+    );
+    expect(
+      (await db.doc('invitations/${fromCoach.code}').get()).exists,
+      isFalse,
+    );
+
+    // A workout started now is recorded under this coach.
+    await tap(tester, find.text('Home'));
+    await tap(tester, find.text('Workout without a program'));
+    expect((await onlyWorkout())['supervisorCoachId'], 'sergey');
+    await tester.binding.handlePopRoute();
+    await settle(tester);
+
+    await tap(tester, find.text('People'));
+    await tap(tester, find.text('Сергей'));
+    expect(find.text('Сергей, coach'), findsOneWidget);
+    await tap(tester, find.text('Deactivate'));
+    expect(find.text('view only'), findsOneWidget);
+    expect(
+      (await db.doc('links/sergey_user-1').get()).data()!['status'],
+      'readOnly',
+    );
+
+    await tap(tester, find.text('Сергей'));
+    // A read-only coach can only be removed.
+    expect(find.text('Deactivate'), findsNothing);
+    await tap(tester, find.text('Delete'));
+    expect(find.text('Сергей'), findsNothing);
+    expect(
+      (await db.doc('links/sergey_user-1').get()).data()!['status'],
+      'removed',
+    );
+  });
+
+  testWidgets('an invitation is created in the chosen role', (tester) async {
+    await openApp(tester);
+    await tap(tester, find.text('People'));
+    await tap(tester, find.text('Invite'));
+    await tap(tester, find.text('I am the trainee'));
+    await tap(tester, find.text('Create invitation'));
+    expect(find.textContaining('You invite as a trainee'), findsOneWidget);
+
+    final stored = (await db.collection('invitations').get()).docs.single;
+    expect(stored.data()['inviterId'], 'user-1');
+    expect(stored.data()['inviterName'], 'Арман');
+    expect(stored.data()['inviterRole'], 'trainee');
+    expect(find.text(formatInviteCode(stored.id)), findsOneWidget);
+
+    // The other person accepts: they appear among the coaches.
+    await tester.runAsync(() async {
+      final links = FirestoreLinkRepository(db);
+      await links.accept(
+        (await links.findInvitation(stored.id))!,
+        acceptorId: 'madina',
+        acceptorName: 'Мадина',
+      );
+    });
+    await tester.binding.handlePopRoute();
+    await settle(tester);
+    expect(find.text('Мадина'), findsOneWidget);
+    expect(find.text('Assigns programs'), findsOneWidget);
   });
 }

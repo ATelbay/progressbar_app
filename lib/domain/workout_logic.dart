@@ -10,14 +10,19 @@ bool isValidWeight(double kg) =>
 bool isValidRpe(double rpe) =>
     rpe >= 1 && rpe <= 10 && (rpe * 2) == (rpe * 2).roundToDouble();
 
-/// The coach who supervises a workout started now: the trainee's active coach.
+/// The coach who supervises a workout started now: the trainee's active
+/// coach. Should two links be active at once, the newest one counts.
 String? activeCoachOf(String traineeId, Iterable<CoachLink> links) {
+  CoachLink? newest;
   for (final link in links) {
-    if (link.traineeId == traineeId && link.status == LinkStatus.active) {
-      return link.coachId;
+    if (link.traineeId != traineeId || link.status != LinkStatus.active) {
+      continue;
+    }
+    if (newest == null || link.createdAt.isAfter(newest.createdAt)) {
+      newest = link;
     }
   }
-  return null;
+  return newest?.coachId;
 }
 
 /// Whether [coachId] may see [workout]. An active or read-only coach sees every
