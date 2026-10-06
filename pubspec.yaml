@@ -68,6 +68,10 @@ flutter:
   uses-material-design: true
   generate: true
 
+  assets:
+    - assets/exercises/catalog.json
+    - assets/exercises/LICENSE.txt
+
   fonts:
     - family: Golos Text
       fonts:

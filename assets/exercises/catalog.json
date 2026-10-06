@@ -1,0 +1,1536 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "repository": "https://github.com/yuhonas/free-exercise-db",
+    "commit": "f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5",
+    "path": "dist/exercises.json",
+    "sha256": "5bb747e3fc658f095a60dcbf6d53c96627acdcc6ffb6fffde86f7e26995d40bf",
+    "license": "Unlicense"
+  },
+  "exercises": [
+    {
+      "id": "free-exercise-db/Barbell_Bench_Press_-_Medium_Grip",
+      "names": {
+        "en": "Barbell Bench Press - Medium Grip",
+        "ru": "Жим штанги лёжа",
+        "kk": "Жатып штанганы сығымдау"
+      },
+      "muscleGroup": "chest",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Barbell_Incline_Bench_Press_-_Medium_Grip",
+      "names": {
+        "en": "Barbell Incline Bench Press - Medium Grip",
+        "ru": "Жим штанги на наклонной скамье",
+        "kk": "Көлбеу орындықта штанганы сығымдау"
+      },
+      "muscleGroup": "chest",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Decline_Barbell_Bench_Press",
+      "names": {
+        "en": "Decline Barbell Bench Press",
+        "ru": "Жим штанги лёжа головой вниз",
+        "kk": "Басты төмен қаратып жатып штанганы сығымдау"
+      },
+      "muscleGroup": "chest",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Dumbbell_Bench_Press",
+      "names": {
+        "en": "Dumbbell Bench Press",
+        "ru": "Жим гантелей лёжа",
+        "kk": "Жатып гантельдерді сығымдау"
+      },
+      "muscleGroup": "chest",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Incline_Dumbbell_Press",
+      "names": {
+        "en": "Incline Dumbbell Press",
+        "ru": "Жим гантелей на наклонной скамье",
+        "kk": "Көлбеу орындықта гантельдерді сығымдау"
+      },
+      "muscleGroup": "chest",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Decline_Dumbbell_Bench_Press",
+      "names": {
+        "en": "Decline Dumbbell Bench Press",
+        "ru": "Жим гантелей лёжа головой вниз",
+        "kk": "Басты төмен қаратып жатып гантельдерді сығымдау"
+      },
+      "muscleGroup": "chest",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Dumbbell_Bench_Press_with_Neutral_Grip",
+      "names": {
+        "en": "Dumbbell Bench Press with Neutral Grip",
+        "ru": "Жим гантелей лёжа нейтральным хватом",
+        "kk": "Бейтарап ұстаумен жатып гантельдерді сығымдау"
+      },
+      "muscleGroup": "chest",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Dumbbell_Flyes",
+      "names": {
+        "en": "Dumbbell Flyes",
+        "ru": "Разведение гантелей лёжа",
+        "kk": "Жатып гантельдерді екі жаққа ашу"
+      },
+      "muscleGroup": "chest",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Incline_Dumbbell_Flyes",
+      "names": {
+        "en": "Incline Dumbbell Flyes",
+        "ru": "Разведение гантелей на наклонной скамье",
+        "kk": "Көлбеу орындықта гантельдерді екі жаққа ашу"
+      },
+      "muscleGroup": "chest",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Cable_Crossover",
+      "names": {
+        "en": "Cable Crossover",
+        "ru": "Сведение рук в кроссовере",
+        "kk": "Кроссоверде қолдарды біріктіру"
+      },
+      "muscleGroup": "chest",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Low_Cable_Crossover",
+      "names": {
+        "en": "Low Cable Crossover",
+        "ru": "Сведение рук в кроссовере снизу",
+        "kk": "Кроссоверде қолдарды төменнен біріктіру"
+      },
+      "muscleGroup": "chest",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Butterfly",
+      "names": {
+        "en": "Butterfly",
+        "ru": "Сведение рук в тренажёре «бабочка»",
+        "kk": "«Көбелек» тренажерінде қолдарды біріктіру"
+      },
+      "muscleGroup": "chest",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Machine_Bench_Press",
+      "names": {
+        "en": "Machine Bench Press",
+        "ru": "Жим от груди в тренажёре",
+        "kk": "Тренажерде кеудеден сығымдау"
+      },
+      "muscleGroup": "chest",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Smith_Machine_Bench_Press",
+      "names": {
+        "en": "Smith Machine Bench Press",
+        "ru": "Жим лёжа в Смите",
+        "kk": "Смит тренажерінде жатып сығымдау"
+      },
+      "muscleGroup": "chest",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Smith_Machine_Incline_Bench_Press",
+      "names": {
+        "en": "Smith Machine Incline Bench Press",
+        "ru": "Жим на наклонной скамье в Смите",
+        "kk": "Смит тренажерінде көлбеу орындықта сығымдау"
+      },
+      "muscleGroup": "chest",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Straight-Arm_Dumbbell_Pullover",
+      "names": {
+        "en": "Straight-Arm Dumbbell Pullover",
+        "ru": "Пуловер с гантелью",
+        "kk": "Гантельмен пуловер"
+      },
+      "muscleGroup": "chest",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Pushups",
+      "names": {
+        "en": "Pushups",
+        "ru": "Отжимания от пола",
+        "kk": "Еденнен итерілу"
+      },
+      "muscleGroup": "chest",
+      "equipment": "body only",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Incline_Push-Up",
+      "names": {
+        "en": "Incline Push-Up",
+        "ru": "Отжимания с руками на возвышении",
+        "kk": "Қолдарды биік тірекке қойып итерілу"
+      },
+      "muscleGroup": "chest",
+      "equipment": "body only",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Push-Ups_With_Feet_Elevated",
+      "names": {
+        "en": "Push-Ups With Feet Elevated",
+        "ru": "Отжимания с ногами на возвышении",
+        "kk": "Аяқтарды биік тірекке қойып итерілу"
+      },
+      "muscleGroup": "chest",
+      "equipment": "body only",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Dips_-_Chest_Version",
+      "names": {
+        "en": "Dips - Chest Version",
+        "ru": "Отжимания на брусьях с наклоном вперёд",
+        "kk": "Алға еңкейіп қоссырықта итерілу"
+      },
+      "muscleGroup": "chest",
+      "equipment": "other",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Pullups",
+      "names": {
+        "en": "Pullups",
+        "ru": "Подтягивания прямым хватом",
+        "kk": "Тік ұстаумен тартылу"
+      },
+      "muscleGroup": "lats",
+      "equipment": "body only",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Chin-Up",
+      "names": {
+        "en": "Chin-Up",
+        "ru": "Подтягивания обратным хватом",
+        "kk": "Кері ұстаумен тартылу"
+      },
+      "muscleGroup": "lats",
+      "equipment": "body only",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/V-Bar_Pullup",
+      "names": {
+        "en": "V-Bar Pullup",
+        "ru": "Подтягивания узким нейтральным хватом",
+        "kk": "Тар бейтарап ұстаумен тартылу"
+      },
+      "muscleGroup": "lats",
+      "equipment": "body only",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Wide-Grip_Lat_Pulldown",
+      "names": {
+        "en": "Wide-Grip Lat Pulldown",
+        "ru": "Тяга верхнего блока широким хватом",
+        "kk": "Жоғарғы блокты кең ұстаумен тарту"
+      },
+      "muscleGroup": "lats",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Close-Grip_Front_Lat_Pulldown",
+      "names": {
+        "en": "Close-Grip Front Lat Pulldown",
+        "ru": "Тяга верхнего блока узким хватом к груди",
+        "kk": "Жоғарғы блокты тар ұстаумен кеудеге тарту"
+      },
+      "muscleGroup": "lats",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Underhand_Cable_Pulldowns",
+      "names": {
+        "en": "Underhand Cable Pulldowns",
+        "ru": "Тяга верхнего блока обратным хватом",
+        "kk": "Жоғарғы блокты кері ұстаумен тарту"
+      },
+      "muscleGroup": "lats",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/One_Arm_Lat_Pulldown",
+      "names": {
+        "en": "One Arm Lat Pulldown",
+        "ru": "Тяга верхнего блока одной рукой",
+        "kk": "Жоғарғы блокты бір қолмен тарту"
+      },
+      "muscleGroup": "lats",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Seated_Cable_Rows",
+      "names": {
+        "en": "Seated Cable Rows",
+        "ru": "Тяга горизонтального блока сидя",
+        "kk": "Отырып көлденең блокты тарту"
+      },
+      "muscleGroup": "middle back",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Seated_One-arm_Cable_Pulley_Rows",
+      "names": {
+        "en": "Seated One-arm Cable Pulley Rows",
+        "ru": "Тяга горизонтального блока одной рукой",
+        "kk": "Көлденең блокты бір қолмен тарту"
+      },
+      "muscleGroup": "middle back",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Bent_Over_Barbell_Row",
+      "names": {
+        "en": "Bent Over Barbell Row",
+        "ru": "Тяга штанги в наклоне",
+        "kk": "Еңкейіп штанганы тарту"
+      },
+      "muscleGroup": "middle back",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Reverse_Grip_Bent-Over_Rows",
+      "names": {
+        "en": "Reverse Grip Bent-Over Rows",
+        "ru": "Тяга штанги в наклоне обратным хватом",
+        "kk": "Кері ұстаумен еңкейіп штанганы тарту"
+      },
+      "muscleGroup": "middle back",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/One-Arm_Dumbbell_Row",
+      "names": {
+        "en": "One-Arm Dumbbell Row",
+        "ru": "Тяга гантели одной рукой",
+        "kk": "Гантельді бір қолмен тарту"
+      },
+      "muscleGroup": "middle back",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Bent_Over_Two-Dumbbell_Row",
+      "names": {
+        "en": "Bent Over Two-Dumbbell Row",
+        "ru": "Тяга двух гантелей в наклоне",
+        "kk": "Еңкейіп екі гантельді тарту"
+      },
+      "muscleGroup": "middle back",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Dumbbell_Incline_Row",
+      "names": {
+        "en": "Dumbbell Incline Row",
+        "ru": "Тяга гантелей с упором грудью",
+        "kk": "Кеудені тіреп гантельдерді тарту"
+      },
+      "muscleGroup": "middle back",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/T-Bar_Row_with_Handle",
+      "names": {
+        "en": "T-Bar Row with Handle",
+        "ru": "Тяга Т-грифа",
+        "kk": "Т-грифті тарту"
+      },
+      "muscleGroup": "middle back",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Lying_T-Bar_Row",
+      "names": {
+        "en": "Lying T-Bar Row",
+        "ru": "Тяга Т-грифа с упором грудью",
+        "kk": "Кеудені тіреп Т-грифті тарту"
+      },
+      "muscleGroup": "middle back",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Leverage_High_Row",
+      "names": {
+        "en": "Leverage High Row",
+        "ru": "Верхняя тяга в рычажном тренажёре",
+        "kk": "Иінтіректі тренажерде жоғарыдан тарту"
+      },
+      "muscleGroup": "middle back",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Straight-Arm_Pulldown",
+      "names": {
+        "en": "Straight-Arm Pulldown",
+        "ru": "Тяга верхнего блока прямыми руками",
+        "kk": "Жоғарғы блокты түзу қолмен тарту"
+      },
+      "muscleGroup": "lats",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Inverted_Row",
+      "names": {
+        "en": "Inverted Row",
+        "ru": "Горизонтальные подтягивания",
+        "kk": "Көлденең тартылу"
+      },
+      "muscleGroup": "middle back",
+      "equipment": null,
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Hyperextensions_Back_Extensions",
+      "names": {
+        "en": "Hyperextensions (Back Extensions)",
+        "ru": "Гиперэкстензия",
+        "kk": "Гиперэкстензия"
+      },
+      "muscleGroup": "lower back",
+      "equipment": "other",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Barbell_Deadlift",
+      "names": {
+        "en": "Barbell Deadlift",
+        "ru": "Становая тяга",
+        "kk": "Стандық тарту"
+      },
+      "muscleGroup": "lower back",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Sumo_Deadlift",
+      "names": {
+        "en": "Sumo Deadlift",
+        "ru": "Становая тяга сумо",
+        "kk": "Сумо стандық тартуы"
+      },
+      "muscleGroup": "hamstrings",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Romanian_Deadlift",
+      "names": {
+        "en": "Romanian Deadlift",
+        "ru": "Румынская тяга со штангой",
+        "kk": "Штангамен румындық тарту"
+      },
+      "muscleGroup": "hamstrings",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Stiff-Legged_Dumbbell_Deadlift",
+      "names": {
+        "en": "Stiff-Legged Dumbbell Deadlift",
+        "ru": "Тяга гантелей на прямых ногах",
+        "kk": "Аяқты түзу ұстап гантельдерді тарту"
+      },
+      "muscleGroup": "hamstrings",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Trap_Bar_Deadlift",
+      "names": {
+        "en": "Trap Bar Deadlift",
+        "ru": "Становая тяга с трэп-грифом",
+        "kk": "Трэп-грифпен стандық тарту"
+      },
+      "muscleGroup": "quadriceps",
+      "equipment": "other",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Standing_Military_Press",
+      "names": {
+        "en": "Standing Military Press",
+        "ru": "Жим штанги стоя",
+        "kk": "Тұрып штанганы сығымдау"
+      },
+      "muscleGroup": "shoulders",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Seated_Barbell_Military_Press",
+      "names": {
+        "en": "Seated Barbell Military Press",
+        "ru": "Жим штанги сидя",
+        "kk": "Отырып штанганы сығымдау"
+      },
+      "muscleGroup": "shoulders",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Dumbbell_Shoulder_Press",
+      "names": {
+        "en": "Dumbbell Shoulder Press",
+        "ru": "Жим гантелей сидя",
+        "kk": "Отырып гантельдерді сығымдау"
+      },
+      "muscleGroup": "shoulders",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Standing_Dumbbell_Press",
+      "names": {
+        "en": "Standing Dumbbell Press",
+        "ru": "Жим гантелей стоя",
+        "kk": "Тұрып гантельдерді сығымдау"
+      },
+      "muscleGroup": "shoulders",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Arnold_Dumbbell_Press",
+      "names": {
+        "en": "Arnold Dumbbell Press",
+        "ru": "Жим Арнольда",
+        "kk": "Арнольд сығымдауы"
+      },
+      "muscleGroup": "shoulders",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Machine_Shoulder_Military_Press",
+      "names": {
+        "en": "Machine Shoulder (Military) Press",
+        "ru": "Жим на плечи в тренажёре",
+        "kk": "Иыққа арналған тренажерде сығымдау"
+      },
+      "muscleGroup": "shoulders",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Smith_Machine_Overhead_Shoulder_Press",
+      "names": {
+        "en": "Smith Machine Overhead Shoulder Press",
+        "ru": "Жим на плечи в Смите",
+        "kk": "Смит тренажерінде иыққа сығымдау"
+      },
+      "muscleGroup": "shoulders",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Side_Lateral_Raise",
+      "names": {
+        "en": "Side Lateral Raise",
+        "ru": "Подъём гантелей через стороны",
+        "kk": "Гантельдерді екі жаққа көтеру"
+      },
+      "muscleGroup": "shoulders",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Seated_Side_Lateral_Raise",
+      "names": {
+        "en": "Seated Side Lateral Raise",
+        "ru": "Подъём гантелей через стороны сидя",
+        "kk": "Отырып гантельдерді екі жаққа көтеру"
+      },
+      "muscleGroup": "shoulders",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Standing_Low-Pulley_Deltoid_Raise",
+      "names": {
+        "en": "Standing Low-Pulley Deltoid Raise",
+        "ru": "Подъём руки в сторону на нижнем блоке",
+        "kk": "Төменгі блокта қолды бір жаққа көтеру"
+      },
+      "muscleGroup": "shoulders",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Front_Dumbbell_Raise",
+      "names": {
+        "en": "Front Dumbbell Raise",
+        "ru": "Подъём гантелей перед собой",
+        "kk": "Гантельдерді алға көтеру"
+      },
+      "muscleGroup": "shoulders",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Seated_Bent-Over_Rear_Delt_Raise",
+      "names": {
+        "en": "Seated Bent-Over Rear Delt Raise",
+        "ru": "Разведение гантелей в наклоне сидя",
+        "kk": "Отырып еңкейіп гантельдерді екі жаққа ашу"
+      },
+      "muscleGroup": "shoulders",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Reverse_Machine_Flyes",
+      "names": {
+        "en": "Reverse Machine Flyes",
+        "ru": "Обратная «бабочка»",
+        "kk": "Кері «көбелек»"
+      },
+      "muscleGroup": "shoulders",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Face_Pull",
+      "names": {
+        "en": "Face Pull",
+        "ru": "Тяга каната к лицу",
+        "kk": "Арқанды бетке қарай тарту"
+      },
+      "muscleGroup": "shoulders",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Cable_Rear_Delt_Fly",
+      "names": {
+        "en": "Cable Rear Delt Fly",
+        "ru": "Разведение рук на задние дельты в кроссовере",
+        "kk": "Кроссоверде артқы дельтаға қолдарды ашу"
+      },
+      "muscleGroup": "shoulders",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Upright_Barbell_Row",
+      "names": {
+        "en": "Upright Barbell Row",
+        "ru": "Тяга штанги к подбородку",
+        "kk": "Штанганы иекке қарай тарту"
+      },
+      "muscleGroup": "shoulders",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Barbell_Shrug",
+      "names": {
+        "en": "Barbell Shrug",
+        "ru": "Шраги со штангой",
+        "kk": "Штангамен иықты көтеру"
+      },
+      "muscleGroup": "traps",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Dumbbell_Shrug",
+      "names": {
+        "en": "Dumbbell Shrug",
+        "ru": "Шраги с гантелями",
+        "kk": "Гантельдермен иықты көтеру"
+      },
+      "muscleGroup": "traps",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Barbell_Curl",
+      "names": {
+        "en": "Barbell Curl",
+        "ru": "Подъём штанги на бицепс",
+        "kk": "Бицепске штанга көтеру"
+      },
+      "muscleGroup": "biceps",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/EZ-Bar_Curl",
+      "names": {
+        "en": "EZ-Bar Curl",
+        "ru": "Подъём EZ-штанги на бицепс",
+        "kk": "Бицепске EZ-штанга көтеру"
+      },
+      "muscleGroup": "biceps",
+      "equipment": "e-z curl bar",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Dumbbell_Bicep_Curl",
+      "names": {
+        "en": "Dumbbell Bicep Curl",
+        "ru": "Подъём гантелей на бицепс",
+        "kk": "Бицепске гантель көтеру"
+      },
+      "muscleGroup": "biceps",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Dumbbell_Alternate_Bicep_Curl",
+      "names": {
+        "en": "Dumbbell Alternate Bicep Curl",
+        "ru": "Попеременный подъём гантелей на бицепс",
+        "kk": "Бицепске гантельдерді кезекпен көтеру"
+      },
+      "muscleGroup": "biceps",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Hammer_Curls",
+      "names": {
+        "en": "Hammer Curls",
+        "ru": "Молотковые сгибания с гантелями",
+        "kk": "Гантельмен балға тәрізді бүгу"
+      },
+      "muscleGroup": "biceps",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Incline_Dumbbell_Curl",
+      "names": {
+        "en": "Incline Dumbbell Curl",
+        "ru": "Подъём гантелей на бицепс на наклонной скамье",
+        "kk": "Көлбеу орындықта бицепске гантель көтеру"
+      },
+      "muscleGroup": "biceps",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Concentration_Curls",
+      "names": {
+        "en": "Concentration Curls",
+        "ru": "Концентрированное сгибание руки",
+        "kk": "Шынтақты тіреп гантельмен қолды бүгу"
+      },
+      "muscleGroup": "biceps",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Preacher_Curl",
+      "names": {
+        "en": "Preacher Curl",
+        "ru": "Подъём штанги на скамье Скотта",
+        "kk": "Скотт орындығында штанга көтеру"
+      },
+      "muscleGroup": "biceps",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/One_Arm_Dumbbell_Preacher_Curl",
+      "names": {
+        "en": "One Arm Dumbbell Preacher Curl",
+        "ru": "Подъём гантели на скамье Скотта",
+        "kk": "Скотт орындығында гантель көтеру"
+      },
+      "muscleGroup": "biceps",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Standing_Biceps_Cable_Curl",
+      "names": {
+        "en": "Standing Biceps Cable Curl",
+        "ru": "Сгибание рук на нижнем блоке",
+        "kk": "Төменгі блокта қолдарды бүгу"
+      },
+      "muscleGroup": "biceps",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Cable_Hammer_Curls_-_Rope_Attachment",
+      "names": {
+        "en": "Cable Hammer Curls - Rope Attachment",
+        "ru": "Молотковые сгибания с канатом",
+        "kk": "Арқанмен балға тәрізді бүгу"
+      },
+      "muscleGroup": "biceps",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Reverse_Barbell_Curl",
+      "names": {
+        "en": "Reverse Barbell Curl",
+        "ru": "Подъём штанги обратным хватом",
+        "kk": "Кері ұстаумен штанга көтеру"
+      },
+      "muscleGroup": "biceps",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Close-Grip_Barbell_Bench_Press",
+      "names": {
+        "en": "Close-Grip Barbell Bench Press",
+        "ru": "Жим штанги лёжа узким хватом",
+        "kk": "Тар ұстаумен жатып штанганы сығымдау"
+      },
+      "muscleGroup": "triceps",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/EZ-Bar_Skullcrusher",
+      "names": {
+        "en": "EZ-Bar Skullcrusher",
+        "ru": "Французский жим с EZ-штангой лёжа",
+        "kk": "Жатып EZ-штангамен француз сығымдауы"
+      },
+      "muscleGroup": "triceps",
+      "equipment": "e-z curl bar",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Lying_Dumbbell_Tricep_Extension",
+      "names": {
+        "en": "Lying Dumbbell Tricep Extension",
+        "ru": "Разгибание рук с гантелями лёжа",
+        "kk": "Жатып гантельдермен қолдарды жазу"
+      },
+      "muscleGroup": "triceps",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Seated_Triceps_Press",
+      "names": {
+        "en": "Seated Triceps Press",
+        "ru": "Разгибание рук с гантелью из-за головы сидя",
+        "kk": "Отырып гантельмен қолдарды бастың артынан жазу"
+      },
+      "muscleGroup": "triceps",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Standing_Overhead_Barbell_Triceps_Extension",
+      "names": {
+        "en": "Standing Overhead Barbell Triceps Extension",
+        "ru": "Французский жим со штангой стоя",
+        "kk": "Тұрып штангамен француз сығымдауы"
+      },
+      "muscleGroup": "triceps",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Triceps_Pushdown",
+      "names": {
+        "en": "Triceps Pushdown",
+        "ru": "Разгибание рук на блоке с прямой рукоятью",
+        "kk": "Блокта түзу тұтқамен қолдарды жазу"
+      },
+      "muscleGroup": "triceps",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Triceps_Pushdown_-_Rope_Attachment",
+      "names": {
+        "en": "Triceps Pushdown - Rope Attachment",
+        "ru": "Разгибание рук на блоке с канатом",
+        "kk": "Блокта арқанмен қолдарды жазу"
+      },
+      "muscleGroup": "triceps",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Triceps_Pushdown_-_V-Bar_Attachment",
+      "names": {
+        "en": "Triceps Pushdown - V-Bar Attachment",
+        "ru": "Разгибание рук на блоке с V-рукоятью",
+        "kk": "Блокта V-тұтқамен қолдарды жазу"
+      },
+      "muscleGroup": "triceps",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Cable_Rope_Overhead_Triceps_Extension",
+      "names": {
+        "en": "Cable Rope Overhead Triceps Extension",
+        "ru": "Разгибание рук с канатом из-за головы",
+        "kk": "Арқанмен қолдарды бастың артынан жазу"
+      },
+      "muscleGroup": "triceps",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Tricep_Dumbbell_Kickback",
+      "names": {
+        "en": "Tricep Dumbbell Kickback",
+        "ru": "Разгибание руки с гантелью в наклоне",
+        "kk": "Еңкейіп гантельмен қолды артқа жазу"
+      },
+      "muscleGroup": "triceps",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Dips_-_Triceps_Version",
+      "names": {
+        "en": "Dips - Triceps Version",
+        "ru": "Отжимания на брусьях на трицепс",
+        "kk": "Трицепске арналған қоссырықта итерілу"
+      },
+      "muscleGroup": "triceps",
+      "equipment": "body only",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Bench_Dips",
+      "names": {
+        "en": "Bench Dips",
+        "ru": "Обратные отжимания от скамьи",
+        "kk": "Орындыққа артпен тіреліп итерілу"
+      },
+      "muscleGroup": "triceps",
+      "equipment": "body only",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Barbell_Squat",
+      "names": {
+        "en": "Barbell Squat",
+        "ru": "Приседания со штангой",
+        "kk": "Штангамен отырып-тұру"
+      },
+      "muscleGroup": "quadriceps",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Front_Barbell_Squat",
+      "names": {
+        "en": "Front Barbell Squat",
+        "ru": "Фронтальные приседания со штангой",
+        "kk": "Штанганы кеудеде ұстап отырып-тұру"
+      },
+      "muscleGroup": "quadriceps",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Goblet_Squat",
+      "names": {
+        "en": "Goblet Squat",
+        "ru": "Гоблет-приседания с гирей",
+        "kk": "Гірді кеудеде ұстап отырып-тұру"
+      },
+      "muscleGroup": "quadriceps",
+      "equipment": "kettlebells",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Bodyweight_Squat",
+      "names": {
+        "en": "Bodyweight Squat",
+        "ru": "Приседания без отягощения",
+        "kk": "Өз салмағымен отырып-тұру"
+      },
+      "muscleGroup": "quadriceps",
+      "equipment": "body only",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Smith_Machine_Squat",
+      "names": {
+        "en": "Smith Machine Squat",
+        "ru": "Приседания в Смите",
+        "kk": "Смит тренажерінде отырып-тұру"
+      },
+      "muscleGroup": "quadriceps",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Hack_Squat",
+      "names": {
+        "en": "Hack Squat",
+        "ru": "Гакк-приседания",
+        "kk": "Гакк-тренажерінде отырып-тұру"
+      },
+      "muscleGroup": "quadriceps",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Leg_Press",
+      "names": {
+        "en": "Leg Press",
+        "ru": "Жим ногами",
+        "kk": "Аяқпен сығымдау"
+      },
+      "muscleGroup": "quadriceps",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Leg_Extensions",
+      "names": {
+        "en": "Leg Extensions",
+        "ru": "Разгибание ног в тренажёре",
+        "kk": "Тренажерде аяқты жазу"
+      },
+      "muscleGroup": "quadriceps",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Barbell_Lunge",
+      "names": {
+        "en": "Barbell Lunge",
+        "ru": "Выпады со штангой",
+        "kk": "Штангамен алға адымдап отыру"
+      },
+      "muscleGroup": "quadriceps",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Dumbbell_Lunges",
+      "names": {
+        "en": "Dumbbell Lunges",
+        "ru": "Выпады с гантелями",
+        "kk": "Гантельдермен алға адымдап отыру"
+      },
+      "muscleGroup": "quadriceps",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Dumbbell_Rear_Lunge",
+      "names": {
+        "en": "Dumbbell Rear Lunge",
+        "ru": "Обратные выпады с гантелями",
+        "kk": "Гантельдермен артқа адымдап отыру"
+      },
+      "muscleGroup": "quadriceps",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Split_Squat_with_Dumbbells",
+      "names": {
+        "en": "Split Squat with Dumbbells",
+        "ru": "Болгарские приседания с гантелями",
+        "kk": "Гантельдермен болгарлық отырып-тұру"
+      },
+      "muscleGroup": "quadriceps",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Dumbbell_Step_Ups",
+      "names": {
+        "en": "Dumbbell Step Ups",
+        "ru": "Зашагивания на платформу с гантелями",
+        "kk": "Гантельдермен платформаға адымдап көтерілу"
+      },
+      "muscleGroup": "quadriceps",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Lying_Leg_Curls",
+      "names": {
+        "en": "Lying Leg Curls",
+        "ru": "Сгибание ног лёжа",
+        "kk": "Жатып аяқты бүгу"
+      },
+      "muscleGroup": "hamstrings",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Seated_Leg_Curl",
+      "names": {
+        "en": "Seated Leg Curl",
+        "ru": "Сгибание ног сидя",
+        "kk": "Отырып аяқты бүгу"
+      },
+      "muscleGroup": "hamstrings",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Standing_Leg_Curl",
+      "names": {
+        "en": "Standing Leg Curl",
+        "ru": "Сгибание ноги стоя",
+        "kk": "Тұрып аяқты бүгу"
+      },
+      "muscleGroup": "hamstrings",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Barbell_Hip_Thrust",
+      "names": {
+        "en": "Barbell Hip Thrust",
+        "ru": "Ягодичный мост со штангой с опорой на скамью",
+        "kk": "Жауырынды орындыққа тіреп штангамен жамбасты көтеру"
+      },
+      "muscleGroup": "glutes",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Butt_Lift_Bridge",
+      "names": {
+        "en": "Butt Lift (Bridge)",
+        "ru": "Ягодичный мост на полу",
+        "kk": "Еденде жамбасты көтеру"
+      },
+      "muscleGroup": "glutes",
+      "equipment": "body only",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Single_Leg_Glute_Bridge",
+      "names": {
+        "en": "Single Leg Glute Bridge",
+        "ru": "Ягодичный мост на одной ноге",
+        "kk": "Бір аяқпен жамбасты көтеру"
+      },
+      "muscleGroup": "glutes",
+      "equipment": "body only",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/One-Legged_Cable_Kickback",
+      "names": {
+        "en": "One-Legged Cable Kickback",
+        "ru": "Отведение ноги назад в кроссовере",
+        "kk": "Кроссоверде аяқты артқа әкету"
+      },
+      "muscleGroup": "glutes",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Thigh_Abductor",
+      "names": {
+        "en": "Thigh Abductor",
+        "ru": "Разведение ног в тренажёре",
+        "kk": "Тренажерде аяқты екі жаққа ашу"
+      },
+      "muscleGroup": "abductors",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Thigh_Adductor",
+      "names": {
+        "en": "Thigh Adductor",
+        "ru": "Сведение ног в тренажёре",
+        "kk": "Тренажерде аяқты біріктіру"
+      },
+      "muscleGroup": "adductors",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Standing_Calf_Raises",
+      "names": {
+        "en": "Standing Calf Raises",
+        "ru": "Подъём на носки стоя в тренажёре",
+        "kk": "Тренажерде тұрып аяқ ұшына көтерілу"
+      },
+      "muscleGroup": "calves",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Seated_Calf_Raise",
+      "names": {
+        "en": "Seated Calf Raise",
+        "ru": "Подъём на носки сидя в тренажёре",
+        "kk": "Тренажерде отырып аяқ ұшына көтерілу"
+      },
+      "muscleGroup": "calves",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Calf_Press_On_The_Leg_Press_Machine",
+      "names": {
+        "en": "Calf Press On The Leg Press Machine",
+        "ru": "Подъём на носки в тренажёре для жима ногами",
+        "kk": "Аяқпен сығымдау тренажерінде аяқ ұшына көтерілу"
+      },
+      "muscleGroup": "calves",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Standing_Dumbbell_Calf_Raise",
+      "names": {
+        "en": "Standing Dumbbell Calf Raise",
+        "ru": "Подъём на носки стоя с гантелями",
+        "kk": "Гантельдермен тұрып аяқ ұшына көтерілу"
+      },
+      "muscleGroup": "calves",
+      "equipment": "dumbbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Crunches",
+      "names": {
+        "en": "Crunches",
+        "ru": "Скручивания на полу",
+        "kk": "Еденде іш бұлшықеттерін жиыру"
+      },
+      "muscleGroup": "abdominals",
+      "equipment": "body only",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Reverse_Crunch",
+      "names": {
+        "en": "Reverse Crunch",
+        "ru": "Обратные скручивания",
+        "kk": "Кері жиырылу"
+      },
+      "muscleGroup": "abdominals",
+      "equipment": "body only",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Air_Bike",
+      "names": {
+        "en": "Air Bike",
+        "ru": "Скручивания «велосипед»",
+        "kk": "«Велосипед» жиырылуы"
+      },
+      "muscleGroup": "abdominals",
+      "equipment": "body only",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Hanging_Leg_Raise",
+      "names": {
+        "en": "Hanging Leg Raise",
+        "ru": "Подъём ног в висе",
+        "kk": "Асылып тұрып аяқты көтеру"
+      },
+      "muscleGroup": "abdominals",
+      "equipment": "body only",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Knee_Hip_Raise_On_Parallel_Bars",
+      "names": {
+        "en": "Knee/Hip Raise On Parallel Bars",
+        "ru": "Подъём коленей на брусьях",
+        "kk": "Қоссырықта тізені көтеру"
+      },
+      "muscleGroup": "abdominals",
+      "equipment": "other",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Cable_Crunch",
+      "names": {
+        "en": "Cable Crunch",
+        "ru": "Скручивания на верхнем блоке",
+        "kk": "Жоғарғы блокта іш бұлшықеттерін жиыру"
+      },
+      "muscleGroup": "abdominals",
+      "equipment": "cable",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Ab_Crunch_Machine",
+      "names": {
+        "en": "Ab Crunch Machine",
+        "ru": "Скручивания в тренажёре",
+        "kk": "Тренажерде іш бұлшықеттерін жиыру"
+      },
+      "muscleGroup": "abdominals",
+      "equipment": "machine",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Ab_Roller",
+      "names": {
+        "en": "Ab Roller",
+        "ru": "Выкатывания с роликом для пресса",
+        "kk": "Пресс дөңгелегін алға домалату"
+      },
+      "muscleGroup": "abdominals",
+      "equipment": "other",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Russian_Twist",
+      "names": {
+        "en": "Russian Twist",
+        "ru": "Русские скручивания",
+        "kk": "Отырып денені екі жаққа бұру"
+      },
+      "muscleGroup": "abdominals",
+      "equipment": "body only",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Plank",
+      "names": {
+        "en": "Plank",
+        "ru": "Планка",
+        "kk": "Планка"
+      },
+      "muscleGroup": "abdominals",
+      "equipment": "body only",
+      "measure": "time",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Side_Bridge",
+      "names": {
+        "en": "Side Bridge",
+        "ru": "Боковая планка",
+        "kk": "Бүйірлік планка"
+      },
+      "muscleGroup": "abdominals",
+      "equipment": "body only",
+      "measure": "time",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Dead_Bug",
+      "names": {
+        "en": "Dead Bug",
+        "ru": "«Мёртвый жук»",
+        "kk": "«Өлі қоңыз»"
+      },
+      "muscleGroup": "abdominals",
+      "equipment": "body only",
+      "measure": "reps",
+      "usesBodyWeight": true
+    },
+    {
+      "id": "free-exercise-db/Palms-Up_Barbell_Wrist_Curl_Over_A_Bench",
+      "names": {
+        "en": "Palms-Up Barbell Wrist Curl Over A Bench",
+        "ru": "Сгибание запястий со штангой",
+        "kk": "Штангамен білезікті бүгу"
+      },
+      "muscleGroup": "forearms",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    },
+    {
+      "id": "free-exercise-db/Palms-Down_Wrist_Curl_Over_A_Bench",
+      "names": {
+        "en": "Palms-Down Wrist Curl Over A Bench",
+        "ru": "Разгибание запястий со штангой",
+        "kk": "Штангамен білезікті жазу"
+      },
+      "muscleGroup": "forearms",
+      "equipment": "barbell",
+      "measure": "reps",
+      "usesBodyWeight": false
+    }
+  ]
+}
