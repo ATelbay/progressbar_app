@@ -31,7 +31,7 @@ Shell-команды запускай через `rtk`: поддерживаем
 
 **Память.** На Mac с 24 ГБ платформы собирать и проверять по очереди: выключать iOS-симулятор перед Android и наоборот, перед запуском смотреть давление на память. Android проверяли с `-memory 2048 -gpu host -no-snapshot -no-window`. В `android/gradle.properties` ограничены Java-куча (2 ГБ), метаданные (1 ГБ) и число задач (2). После проверок выключай симулятор и эмуляторы.
 
-**Что проверено на устройствах.** Вход через боевой Firebase с вымышленным номером — на iOS (iPhone 17 Pro, iOS 26.4) и Android (Pixel 9), без отправки настоящего SMS. Все экраны, кроме связей, — на iPhone 17 Pro против эмуляторов (`tool/walkthrough.sh`), включая экран тренировки с крупным системным шрифтом. Офлайн и перезапуск — там же (`tool/offline_storage_test.sh`). На Android новые экраны не запускались.
+**Что проверено на устройствах.** Вход через боевой Firebase с вымышленным номером — на iOS (iPhone 17 Pro, iOS 26.4) и Android (Pixel 9), без отправки настоящего SMS. Все экраны, кроме связей, — на iPhone 17 Pro против эмуляторов (`tool/walkthrough.sh`), включая экран тренировки с крупным системным шрифтом. Офлайн и перезапуск — там же (`tool/offline_storage_test.sh`). На Android (эмулятор Pixel 9, 2026-10-07) против эмуляторов прошли основной проход, связи с назначениями, настоящая ссылка-приглашение, окно «Поделиться» и офлайн с перезапуском; подробности и найденное — в HANDOFF, раздел «Android».
 
 ## Экраны
 
@@ -104,6 +104,12 @@ tool/walkthrough.sh <id симулятора> <папка для снимков>
 rtk proxy flutter run -d <id устройства> --dart-define=USE_FIREBASE_EMULATORS=true
 # Код «из SMS» для введённого номера: http://localhost:9099/emulator/v1/projects/progressbar-app/verificationCodes
 
+# То же на Android-эмуляторе (эмуляторы Firebase запущены, iOS-симулятор выключен):
+~/Library/Android/sdk/emulator/emulator -avd Pixel_9_coach -memory 2048 -gpu host -no-snapshot -no-window
+rtk proxy python3 tool/android_walkthrough.py emulator-5554 integration_test/walkthrough_test.dart build/android-walkthrough
+rtk proxy python3 tool/android_walkthrough.py emulator-5554 integration_test/links_test.dart build/android-links
+tool/offline_storage_test_android.sh emulator-5554
+
 # Развернуть правила:
 rtk proxy npx -y firebase-tools@latest deploy --only firestore:rules --project progressbar-app
 
@@ -154,6 +160,9 @@ Firebase CLI глобально не установлен — запускай �
 - Эмуляторам Firebase нужна Java 21+, а `JAVA_HOME` указывает на 17. Подходит Java из Android Studio: `export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"; export PATH="$JAVA_HOME/bin:$PATH"`.
 - `flutter test integration_test/…` после прогона удаляет приложение с устройства вместе с локальной базой Firestore, поэтому перезапуск так не проверить; вход при этом остаётся в связке ключей iOS. Для перезапуска — `tool/offline_storage_test.sh`.
 - Аккаунтов разработчика Apple и Google Play ещё нет; доставка через сторы отложена.
+- **На Android две записи в Firestore, отправленные подряд без ожидания, могут примениться в обратном порядке**: плагин отдаёт каждую своему потоку. Не отправляй две записи одного документа из одного обработчика; если нужно несколько изменений — клади их в одну пачку. Подробности — HANDOFF, раздел «Android».
+- Проходы используют постоянные тестовые номера. Если между прогонами не перезапускать эмуляторы Firebase, пользователь уже существует и `walkthrough_test` не увидит анкету. Очистка: `curl -X DELETE http://localhost:9099/emulator/v1/projects/progressbar-app/accounts`.
+- `adb` не в PATH: `export PATH="$HOME/Library/Android/sdk/platform-tools:$PATH"`. Android блокирует нешифрованный HTTP к эмуляторам Firebase; для отладочной сборки это разрешено в `android/app/src/debug/AndroidManifest.xml`.
 
 ## Назначения программ (часть 2, 2026-10-06)
 

@@ -7,8 +7,9 @@
 # Then:  tool/walkthrough.sh <simulator id> <folder for screenshots>
 set -u
 device=$1
-out=$2
-mkdir -p "$out"
+mkdir -p "$2"
+# simctl saves screenshots only to an absolute path.
+out=${2:A}
 log="$out/run.log"
 : > "$log"
 rtk proxy flutter test integration_test/walkthrough_test.dart -d "$device" > "$log" 2>&1 &

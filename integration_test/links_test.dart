@@ -186,6 +186,14 @@ void main() {
       await tap(find.text(l.inviteCreate));
       await wait(find.text(l.inviteCopy));
       await shot('01-invitation');
+      if (Platform.isAndroid) {
+        // The real system share sheet; the runner closes it with «back».
+        await tap(find.text(l.inviteShare));
+        await shot('01b-share-sheet');
+        // ignore: avoid_print
+        print('BACK:');
+        await tester.pump(const Duration(seconds: 2));
+      }
       final invite =
           (await db
                   .collection('invitations')
@@ -329,18 +337,24 @@ void main() {
               .single
               .id;
       await login(traineePhone, 'Айгерим');
-      // This time by link, handed over the way the system hands it to a
-      // running app. iOS itself asks «Open in Progress Bar?» first; that system
-      // prompt cannot be pressed from here.
-      await tester.binding.defaultBinaryMessenger.handlePlatformMessage(
-        'flutter/navigation',
-        const JSONMethodCodec().encodeMethodCall(
-          MethodCall('pushRouteInformation', {
-            'location': inviteLink(secondInvite),
-          }),
-        ),
-        (_) {},
-      );
+      // This time by link. On Android the runner opens it for real, the way
+      // the camera does after reading the QR code. iOS first asks «Open in
+      // Progress Bar?», and that system prompt cannot be pressed from here,
+      // so there the link is handed over the way the system hands it over.
+      if (Platform.isAndroid) {
+        // ignore: avoid_print
+        print('LINK:${inviteLink(secondInvite)}');
+      } else {
+        await tester.binding.defaultBinaryMessenger.handlePlatformMessage(
+          'flutter/navigation',
+          const JSONMethodCodec().encodeMethodCall(
+            MethodCall('pushRouteInformation', {
+              'location': inviteLink(secondInvite),
+            }),
+          ),
+          (_) {},
+        );
+      }
       await wait(find.text(l.inviteAccept));
       await shot('15-opened-by-link');
       await tap(find.text(l.inviteAccept));

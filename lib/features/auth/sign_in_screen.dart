@@ -58,59 +58,70 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     return Scaffold(
       body: GlowBackground(
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(PbSpace.s4),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: PbSpace.s8 * 2),
-                Text(
-                  l10n.appTitle,
-                  style: PbText.numHero.copyWith(
-                    fontSize: 88,
-                    height: 0.92,
-                    color: c.ink,
-                  ),
-                ),
-                const SizedBox(height: PbSpace.s6),
-                Text(
-                  l10n.signInTagline,
-                  style: PbText.body.copyWith(color: c.inkMuted),
-                ),
-                const Spacer(),
-                GlassPanel(
+          // With the keyboard open on a small screen the content is taller
+          // than what is left, so it scrolls instead of overflowing.
+          child: CustomScrollView(
+            slivers: [
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Padding(
+                  padding: const EdgeInsets.all(PbSpace.s4),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      TextField(
-                        controller: _phone,
-                        keyboardType: TextInputType.phone,
-                        autofillHints: const [AutofillHints.telephoneNumber],
-                        textInputAction: TextInputAction.done,
-                        onSubmitted: (_) => _submit(),
-                        style: PbText.heading.copyWith(color: c.ink),
-                        decoration: InputDecoration(
-                          labelText: l10n.signInPhoneLabel,
-                          errorText: _error,
-                          errorMaxLines: 3,
+                      const SizedBox(height: PbSpace.s8 * 2),
+                      Text(
+                        l10n.appTitle,
+                        style: PbText.numHero.copyWith(
+                          fontSize: 88,
+                          height: 0.92,
+                          color: c.ink,
                         ),
                       ),
-                      const SizedBox(height: PbSpace.s3),
-                      FilledButton(
-                        onPressed: _busy ? null : _submit,
-                        child: Text(l10n.signInGetCode),
-                      ),
-                      const SizedBox(height: PbSpace.s3),
+                      const SizedBox(height: PbSpace.s6),
                       Text(
-                        l10n.signInSmsHint,
-                        textAlign: TextAlign.center,
-                        style: PbText.caption.copyWith(color: c.inkMuted),
+                        l10n.signInTagline,
+                        style: PbText.body.copyWith(color: c.inkMuted),
+                      ),
+                      const Spacer(),
+                      GlassPanel(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            TextField(
+                              controller: _phone,
+                              keyboardType: TextInputType.phone,
+                              autofillHints: const [
+                                AutofillHints.telephoneNumber,
+                              ],
+                              textInputAction: TextInputAction.done,
+                              onSubmitted: (_) => _submit(),
+                              style: PbText.heading.copyWith(color: c.ink),
+                              decoration: InputDecoration(
+                                labelText: l10n.signInPhoneLabel,
+                                errorText: _error,
+                                errorMaxLines: 3,
+                              ),
+                            ),
+                            const SizedBox(height: PbSpace.s3),
+                            FilledButton(
+                              onPressed: _busy ? null : _submit,
+                              child: Text(l10n.signInGetCode),
+                            ),
+                            const SizedBox(height: PbSpace.s3),
+                            Text(
+                              l10n.signInSmsHint,
+                              textAlign: TextAlign.center,
+                              style: PbText.caption.copyWith(color: c.inkMuted),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
