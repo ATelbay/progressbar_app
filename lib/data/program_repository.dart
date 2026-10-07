@@ -45,17 +45,29 @@ class FirestoreProgramRepository implements ProgramRepository {
           );
 
   @override
-  Future<void> save(Program program) async => sendWrite(
-    _programs(program.authorId).doc(program.id).set({
-      ...programToMap(program),
-      'updatedAt': FieldValue.serverTimestamp(),
-    }),
-    onRejected,
-  );
+  Future<void> save(Program program) {
+    final doc = _programs(program.authorId).doc(program.id);
+    final writeId = newFirestoreId(_db);
+    return sendWrite(
+      landsIn: doc,
+      writeId: writeId,
+      write: () => doc.set({
+        ...programToMap(program),
+        'updatedAt': FieldValue.serverTimestamp(),
+        writeIdField: writeId,
+      }),
+      onRejected: onRejected,
+    );
+  }
 
   @override
-  Future<void> delete(Program program) async => sendWrite(
-    _programs(program.authorId).doc(program.id).delete(),
-    onRejected,
-  );
+  Future<void> delete(Program program) {
+    final doc = _programs(program.authorId).doc(program.id);
+    return sendWrite(
+      landsIn: doc,
+      writeId: null,
+      write: doc.delete,
+      onRejected: onRejected,
+    );
+  }
 }

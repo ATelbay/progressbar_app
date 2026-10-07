@@ -103,16 +103,31 @@ class FirestoreWorkoutRepository implements WorkoutRepository {
 
   /// A refused write is rolled back in the cache, so what is remembered here
   /// may be wrong: read it again next time.
-  void _send(WriteBatch batch, String uid) =>
-      sendWrite(batch.commit(), (error, stack) {
-        _known.remove(uid);
-        onRejected(error, stack);
-      });
+  ///
+  /// Every batch here sets or deletes [workout]'s document, and the pointer
+  /// changes in the same batch, so the workout shows that the batch is in
+  /// the cache. [writeId] is null when the batch deletes the workout.
+  Future<void> _send(WriteBatch batch, Workout workout, String? writeId) =>
+      sendWrite(
+        landsIn: _workouts(workout.traineeId).doc(workout.id),
+        writeId: writeId,
+        write: batch.commit,
+        onRejected: (error, stack) {
+          _known.remove(workout.traineeId);
+          onRejected(error, stack);
+        },
+      );
 
-  void _setWorkout(WriteBatch batch, Workout workout) => batch.set(
-    _workouts(workout.traineeId).doc(workout.id),
-    {...workoutToMap(workout), 'updatedAt': FieldValue.serverTimestamp()},
-  );
+  /// Returns the ID of the write, for [_send].
+  String _setWorkout(WriteBatch batch, Workout workout) {
+    final writeId = newFirestoreId(_db);
+    batch.set(_workouts(workout.traineeId).doc(workout.id), {
+      ...workoutToMap(workout),
+      'updatedAt': FieldValue.serverTimestamp(),
+      writeIdField: writeId,
+    });
+    return writeId;
+  }
 
   @override
   Stream<Workout?> watchActive(String uid) {
@@ -172,22 +187,22 @@ class FirestoreWorkoutRepository implements WorkoutRepository {
     final active = await _activeId(workout.traineeId);
     if (active != null) throw ActiveWorkoutExists(active);
     final batch = _db.batch();
-    _setWorkout(batch, workout);
+    final writeId = _setWorkout(batch, workout);
     _setPointer(batch, workout.traineeId, workout.id);
-    _send(batch, workout.traineeId);
+    await _send(batch, workout, writeId);
   });
 
   @override
   Future<void> save(Workout workout) => _serially(() async {
     final active = await _activeId(workout.traineeId);
     final batch = _db.batch();
-    _setWorkout(batch, workout);
+    final writeId = _setWorkout(batch, workout);
     if (workout.isCompleted) {
       if (active == workout.id) _setPointer(batch, workout.traineeId, null);
     } else if (active != workout.id) {
       throw StateError('Workout ${workout.id} is not the one in progress');
     }
-    _send(batch, workout.traineeId);
+    await _send(batch, workout, writeId);
   });
 
   @override
@@ -198,6 +213,6 @@ class FirestoreWorkoutRepository implements WorkoutRepository {
     final batch = _db.batch()
       ..delete(_workouts(workout.traineeId).doc(workout.id));
     _setPointer(batch, workout.traineeId, null);
-    _send(batch, workout.traineeId);
+    await _send(batch, workout, null);
   });
 }

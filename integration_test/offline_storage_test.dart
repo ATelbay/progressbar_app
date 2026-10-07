@@ -85,12 +85,6 @@ void main() {
   bool recorded(Workout? w) =>
       w != null && w.exercises.single.sets.single.fact == fact;
 
-  // On Android the Firestore plugin hands every write to a thread of its own,
-  // so two writes issued within the same millisecond may be applied in the
-  // wrong order. A person taps far slower than that; the test keeps that pace.
-  Future<void> asAPerson() =>
-      Future<void>.delayed(const Duration(milliseconds: 300));
-
   Future<Workout?> onServer(String uid, String id) async {
     final snap = await db.doc('users/$uid/workouts/$id').get(server);
     return snap.exists ? workoutFromMap(id, snap.data()!) : null;
@@ -121,14 +115,12 @@ void main() {
     await db.disableNetwork();
     var first = started('w1', uid);
     await repo.start(first);
-    await asAPerson();
     await expectLater(
       repo.start(started('w2', uid)),
       throwsA(isA<ActiveWorkoutExists>()),
     );
     first = withFact(first);
     await repo.save(first);
-    await asAPerson();
 
     final cached = await onDevice(uid, recorded);
     expect(cached?.id, 'w1');
@@ -143,7 +135,6 @@ void main() {
     );
 
     await repo.save(completeWorkout(first, now: DateTime.now()));
-    await asAPerson();
     expect(await onDevice(uid, (w) => w == null), isNull);
     expect(
       (await repo
@@ -156,7 +147,6 @@ void main() {
     );
     var second = started('w2', uid);
     await repo.start(second);
-    await asAPerson();
 
     // Four queued writes go out in order once the network is back.
     await db.enableNetwork();
@@ -187,7 +177,6 @@ void main() {
     await db.disableNetwork();
     second = withFact(second);
     await repo.save(second);
-    await asAPerson();
     expect((await onDevice(uid, recorded))!.id, 'w2');
     // ignore: avoid_print
     print('OFFLINE_STORAGE first run done for $uid');

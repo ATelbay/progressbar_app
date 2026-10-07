@@ -2,6 +2,7 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:progressbar_app/data/firestore_codec.dart';
+import 'package:progressbar_app/data/firestore_writes.dart';
 import 'package:progressbar_app/data/personal_exercise_repository.dart';
 import 'package:progressbar_app/data/program_repository.dart';
 import 'package:progressbar_app/data/workout_repository.dart';
@@ -442,5 +443,112 @@ void main() {
         );
       },
     );
+  });
+
+  group('the order of writes', () {
+    test(
+      'a write is issued only after the previous one is in the cache',
+      () async {
+        final db = FakeFirebaseFirestore();
+        final doc = db.doc('users/$uid/programs/p1');
+        final events = <String>[];
+        // Like the Android plugin, the first write reaches the cache late.
+        final first = sendWrite(
+          landsIn: doc,
+          writeId: 'a',
+          write: () async {
+            events.add('first issued');
+            await Future<void>.delayed(const Duration(milliseconds: 50));
+            await doc.set({'name': 'old', writeIdField: 'a'});
+            events.add('first in cache');
+          },
+          onRejected: (_, _) {},
+        );
+        final second = sendWrite(
+          landsIn: doc,
+          writeId: 'b',
+          write: () {
+            events.add('second issued');
+            return doc.set({'name': 'new', writeIdField: 'b'});
+          },
+          onRejected: (_, _) {},
+        );
+        final removed = sendWrite(
+          landsIn: doc,
+          writeId: null,
+          write: () {
+            events.add('delete issued');
+            return doc.delete();
+          },
+          onRejected: (_, _) {},
+        );
+        await Future.wait([first, second, removed]);
+        expect((await doc.get()).exists, isFalse);
+        expect(events, [
+          'first issued',
+          'first in cache',
+          'second issued',
+          'delete issued',
+        ]);
+      },
+    );
+
+    test(
+      'a refused write is reported and does not stop the next one',
+      () async {
+        final db = FakeFirebaseFirestore();
+        final doc = db.doc('users/$uid/programs/p1');
+        final rejected = <Object>[];
+        await doc.set({writeIdField: 'a'});
+        await sendWrite(
+          landsIn: doc,
+          writeId: 'a',
+          write: () async => throw StateError('refused'),
+          onRejected: (e, _) => rejected.add(e),
+        );
+        await sendWrite(
+          landsIn: doc,
+          writeId: 'b',
+          write: () => doc.set({writeIdField: 'b'}),
+          onRejected: (e, _) => rejected.add(e),
+        );
+        expect(rejected.single, isStateError);
+        expect((await doc.get()).data()![writeIdField], 'b');
+      },
+    );
+
+    test('results recorded right after the start are kept in order', () async {
+      final db = FakeFirebaseFirestore();
+      final repo = FirestoreWorkoutRepository(db);
+      var workout = startWorkout(
+        id: 'w1',
+        traineeId: uid,
+        now: DateTime.utc(2026, 10, 7, 18),
+        newId: () => newFirestoreId(db),
+        catalog: catalog,
+        languageCode: 'ru',
+        program: program,
+        day: program.days.first,
+      );
+      // Nothing is awaited between the two, as a quick double action does.
+      final started = repo.start(workout);
+      workout = recordSummary(
+        workout,
+        workout.exercises.first.id,
+        setCount: 1,
+        fact: const SetValues(reps: 8, weightKg: 60),
+        newId: () => newFirestoreId(db),
+        now: DateTime.utc(2026, 10, 7, 18, 5),
+      );
+      await Future.wait([started, repo.save(workout)]);
+      final stored = workoutFromMap(
+        'w1',
+        (await db.doc('users/$uid/workouts/w1').get()).data()!,
+      );
+      expect(
+        stored.exercises.first.sets.first.fact,
+        const SetValues(reps: 8, weightKg: 60),
+      );
+    });
   });
 }

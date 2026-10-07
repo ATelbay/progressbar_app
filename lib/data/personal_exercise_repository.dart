@@ -49,12 +49,17 @@ class FirestorePersonalExerciseRepository
         !exercise.id.startsWith(customExercisePrefix)) {
       throw ArgumentError.value(exercise.id, 'id');
     }
-    sendWrite(
-      _doc(uid, exercise.id).set({
+    final doc = _doc(uid, exercise.id);
+    final writeId = newFirestoreId(_db);
+    await sendWrite(
+      landsIn: doc,
+      writeId: writeId,
+      write: () => doc.set({
         ...exerciseToMap(exercise),
         'updatedAt': FieldValue.serverTimestamp(),
+        writeIdField: writeId,
       }),
-      onRejected,
+      onRejected: onRejected,
     );
   }
 
@@ -63,6 +68,12 @@ class FirestorePersonalExerciseRepository
     if (!isBuiltInExercise(exerciseId)) {
       throw ArgumentError.value(exerciseId, 'exerciseId');
     }
-    sendWrite(_doc(uid, exerciseId).delete(), onRejected);
+    final doc = _doc(uid, exerciseId);
+    await sendWrite(
+      landsIn: doc,
+      writeId: null,
+      write: doc.delete,
+      onRejected: onRejected,
+    );
   }
 }
