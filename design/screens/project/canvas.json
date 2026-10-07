@@ -1,629 +1,671 @@
 {
- "v": 3,
- "attachments": {},
- "boards": {
-  "Builder.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "3. Конструктор программы",
-   "w": 390,
-   "x": 940,
-   "y": 0
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Builder.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "3. Конструктор программы",
+      "w": 390,
+      "x": 940,
+      "y": 0
+    },
+    "BuilderDawn.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "3. Конструктор программы — Рассвет",
+      "w": 390,
+      "x": 940,
+      "y": 2228
+    },
+    "BuilderPlan.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "3. Конструктор — план упражнения",
+      "w": 390,
+      "x": 470,
+      "y": 2892
+    },
+    "BuilderPlanDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "3. Конструктор — план упражнения — Рассвет",
+      "w": 390,
+      "x": 470,
+      "y": 7048
+    },
+    "BuilderPlanKeypad.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "3. Конструктор — вес ещё не записывали",
+      "w": 390,
+      "x": 940,
+      "y": 2892
+    },
+    "BuilderPlanKeypadDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "3. Конструктор — вес ещё не записывали — Рассвет",
+      "w": 390,
+      "x": 940,
+      "y": 7048
+    },
+    "CoachActions.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "7. Люди — деактивировать или удалить",
+      "w": 390,
+      "x": 2350,
+      "y": 964
+    },
+    "CoachActionsDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "7. Люди — деактивировать или удалить — Рассвет",
+      "w": 390,
+      "x": 2350,
+      "y": 5120
+    },
+    "DeleteAccount.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "9. Профиль — удалить аккаунт?",
+      "w": 390,
+      "x": 470,
+      "y": 964
+    },
+    "DeleteAccountDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "9. Профиль — удалить аккаунт? — Рассвет",
+      "w": 390,
+      "x": 470,
+      "y": 5120
+    },
+    "EntryBodyweight.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "4. Тренировка — собственный вес",
+      "w": 390,
+      "x": 470,
+      "y": 1928
+    },
+    "EntryBodyweightDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "4. Тренировка — собственный вес — Рассвет",
+      "w": 390,
+      "x": 470,
+      "y": 6084
+    },
+    "EntryKeypad.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "4. Тренировка — вес с клавиатуры",
+      "w": 390,
+      "x": 1880,
+      "y": 1928
+    },
+    "EntryKeypadDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "4. Тренировка — вес с клавиатуры — Рассвет",
+      "w": 390,
+      "x": 1880,
+      "y": 6084
+    },
+    "EntryTime.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "4. Тренировка — упражнение на время",
+      "w": 390,
+      "x": 0,
+      "y": 1928
+    },
+    "EntryTimeDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "4. Тренировка — упражнение на время — Рассвет",
+      "w": 390,
+      "x": 0,
+      "y": 6084
+    },
+    "ExercisePicker.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "3. Конструктор — справочник упражнений",
+      "w": 390,
+      "x": 940,
+      "y": 1928
+    },
+    "ExercisePickerDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "3. Конструктор — справочник упражнений — Рассвет",
+      "w": 390,
+      "x": 940,
+      "y": 6084
+    },
+    "FinishConfirm.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "4. Тренировка — завершить?",
+      "w": 390,
+      "x": 0,
+      "y": 964
+    },
+    "FinishConfirmDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "4. Тренировка — завершить? — Рассвет",
+      "w": 390,
+      "x": 0,
+      "y": 5120
+    },
+    "History.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "5. История",
+      "w": 390,
+      "x": 0,
+      "y": 964
+    },
+    "HistoryDawn.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "5. История — Рассвет",
+      "w": 390,
+      "x": 0,
+      "y": 3192
+    },
+    "HistoryEmpty.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "5. История — пусто",
+      "w": 390,
+      "x": 1410,
+      "y": 0
+    },
+    "HistoryEmptyDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "5. История — пусто — Рассвет",
+      "w": 390,
+      "x": 1410,
+      "y": 4156
+    },
+    "Home.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "2. Главная",
+      "w": 390,
+      "x": 470,
+      "y": 0
+    },
+    "HomeDawn.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "2. Главная — Рассвет",
+      "w": 390,
+      "x": 470,
+      "y": 2228
+    },
+    "HomeEmpty.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "2. Главная — пусто",
+      "w": 390,
+      "x": 940,
+      "y": 0
+    },
+    "HomeEmptyDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "2. Главная — пусто — Рассвет",
+      "w": 390,
+      "x": 940,
+      "y": 4156
+    },
+    "InviteAccept.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "7. Люди — принять приглашение",
+      "w": 390,
+      "x": 1880,
+      "y": 964
+    },
+    "InviteAcceptDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "7. Люди — принять приглашение — Рассвет",
+      "w": 390,
+      "x": 1880,
+      "y": 5120
+    },
+    "InviteCode.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "7. Люди — код, QR, ссылка",
+      "w": 390,
+      "x": 1410,
+      "y": 964
+    },
+    "InviteCodeDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "7. Люди — код, QR, ссылка — Рассвет",
+      "w": 390,
+      "x": 1410,
+      "y": 5120
+    },
+    "InviteRole.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "7. Люди — в какой роли приглашаю",
+      "w": 390,
+      "x": 940,
+      "y": 964
+    },
+    "InviteRoleDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "7. Люди — в какой роли приглашаю — Рассвет",
+      "w": 390,
+      "x": 940,
+      "y": 5120
+    },
+    "LoadError.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "2. Главная — не удалось загрузить",
+      "w": 390,
+      "x": 0,
+      "y": 2892
+    },
+    "LoadErrorDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "2. Главная — не удалось загрузить — Рассвет",
+      "w": 390,
+      "x": 0,
+      "y": 7048
+    },
+    "Login.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "1. Вход",
+      "w": 390,
+      "x": 0,
+      "y": 0
+    },
+    "LoginCode.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "1. Вход — код из SMS",
+      "w": 390,
+      "x": 0,
+      "y": 0
+    },
+    "LoginCodeDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "1. Вход — код из SMS — Рассвет",
+      "w": 390,
+      "x": 0,
+      "y": 4156
+    },
+    "LoginDawn.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "1. Вход — Рассвет",
+      "w": 390,
+      "x": 0,
+      "y": 2228
+    },
+    "LoginProfile.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "1. Вход — имя и вес",
+      "w": 390,
+      "x": 470,
+      "y": 0
+    },
+    "LoginProfileDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "1. Вход — имя и вес — Рассвет",
+      "w": 390,
+      "x": 470,
+      "y": 4156
+    },
+    "Main.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "4. Тренировка — одной строкой",
+      "w": 390,
+      "x": 1410,
+      "y": 0
+    },
+    "MainDawn.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "4. Тренировка — одной строкой — Рассвет",
+      "w": 390,
+      "x": 1410,
+      "y": 2228
+    },
+    "People.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "7. Люди",
+      "w": 390,
+      "x": 940,
+      "y": 964
+    },
+    "PeopleDawn.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "7. Люди — Рассвет",
+      "w": 390,
+      "x": 940,
+      "y": 3192
+    },
+    "Profile.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "9. Профиль",
+      "w": 390,
+      "x": 1880,
+      "y": 964
+    },
+    "ProfileDawn.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "9. Профиль — Рассвет",
+      "w": 390,
+      "x": 1880,
+      "y": 3192
+    },
+    "Progress.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "6. Прогресс",
+      "w": 390,
+      "x": 470,
+      "y": 964
+    },
+    "ProgressDawn.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "6. Прогресс — Рассвет",
+      "w": 390,
+      "x": 470,
+      "y": 3192
+    },
+    "ProgressEmpty.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "6. Прогресс — пусто",
+      "w": 390,
+      "x": 1880,
+      "y": 0
+    },
+    "ProgressEmptyDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "6. Прогресс — пусто — Рассвет",
+      "w": 390,
+      "x": 1880,
+      "y": 4156
+    },
+    "Trainee.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "8. Подопечный глазами тренера",
+      "w": 390,
+      "x": 1410,
+      "y": 964
+    },
+    "TraineeDawn.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "8. Подопечный глазами тренера — Рассвет",
+      "w": 390,
+      "x": 1410,
+      "y": 3192
+    },
+    "TraineeReadOnly.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "8. Подопечный — только просмотр",
+      "w": 390,
+      "x": 1410,
+      "y": 1928
+    },
+    "TraineeReadOnlyDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "8. Подопечный — только просмотр — Рассвет",
+      "w": 390,
+      "x": 1410,
+      "y": 6084
+    },
+    "WorkoutEdit.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "5. История — исправить тренировку",
+      "w": 390,
+      "x": 2350,
+      "y": 1928
+    },
+    "WorkoutEditDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "5. История — исправить тренировку — Рассвет",
+      "w": 390,
+      "x": 2350,
+      "y": 6084
+    },
+    "WorkoutFull.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "4. Тренировка — каждый подход",
+      "w": 390,
+      "x": 1880,
+      "y": 0
+    },
+    "WorkoutFullDawn.dc.html": {
+      "h": 844,
+      "radius": 40,
+      "title": "4. Тренировка — каждый подход — Рассвет",
+      "w": 390,
+      "x": 1880,
+      "y": 2228
+    },
+    "WorkoutOffline.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "4. Тренировка — без сети",
+      "w": 390,
+      "x": 2350,
+      "y": 0
+    },
+    "WorkoutOfflineDawn.dc.html": {
+      "h": 844,
+      "page": "states",
+      "radius": 40,
+      "title": "4. Тренировка — без сети — Рассвет",
+      "w": 390,
+      "x": 2350,
+      "y": 4156
+    }
   },
-  "BuilderDawn.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "3. Конструктор программы — Рассвет",
-   "w": 390,
-   "x": 940,
-   "y": 2228
+  "createdOnFiles": {
+    "at": "2026-10-04T14:35:00Z",
+    "v": 1
   },
-  "CoachActions.dc.html": {
-   "x": 2350,
-   "y": 964,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "7. Люди — деактивировать или удалить"
+  "designSystems": [
+    {
+      "artifact": "https://claude.ai/artifact/6pwDsPNipiAAuBUTsjePsU",
+      "copiedAt": "2026-10-04T14:35:00Z",
+      "namespace": "progressbar",
+      "title": "Progress Bar",
+      "version": "1791124025-cbdf"
+    }
+  ],
+  "launch": {
+    "view": "canvas"
   },
-  "CoachActionsDawn.dc.html": {
-   "x": 2350,
-   "y": 5120,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "7. Люди — деактивировать или удалить — Рассвет"
+  "notes": {
+    "dawn": {
+      "kind": "title1",
+      "maxW": 2270,
+      "text": "Рассвет — светлая тема",
+      "w": 240,
+      "x": 0,
+      "y": 1928
+    },
+    "dusk": {
+      "kind": "title1",
+      "maxW": 2270,
+      "text": "Закат — тёмная тема",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "states-dawn": {
+      "kind": "title1",
+      "maxW": 2740,
+      "page": "states",
+      "text": "Состояния — Рассвет",
+      "w": 240,
+      "x": 0,
+      "y": 3856
+    },
+    "states-dusk": {
+      "kind": "title1",
+      "maxW": 2740,
+      "page": "states",
+      "text": "Состояния — Закат",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    }
   },
-  "DeleteAccount.dc.html": {
-   "x": 470,
-   "y": 964,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "9. Профиль — удалить аккаунт?"
-  },
-  "DeleteAccountDawn.dc.html": {
-   "x": 470,
-   "y": 5120,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "9. Профиль — удалить аккаунт? — Рассвет"
-  },
-  "EntryBodyweight.dc.html": {
-   "x": 470,
-   "y": 1928,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "4. Тренировка — собственный вес"
-  },
-  "EntryBodyweightDawn.dc.html": {
-   "x": 470,
-   "y": 6084,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "4. Тренировка — собственный вес — Рассвет"
-  },
-  "EntryTime.dc.html": {
-   "x": 0,
-   "y": 1928,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "4. Тренировка — упражнение на время"
-  },
-  "EntryTimeDawn.dc.html": {
-   "x": 0,
-   "y": 6084,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "4. Тренировка — упражнение на время — Рассвет"
-  },
-  "ExercisePicker.dc.html": {
-   "x": 940,
-   "y": 1928,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "3. Конструктор — справочник упражнений"
-  },
-  "ExercisePickerDawn.dc.html": {
-   "x": 940,
-   "y": 6084,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "3. Конструктор — справочник упражнений — Рассвет"
-  },
-  "FinishConfirm.dc.html": {
-   "x": 0,
-   "y": 964,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "4. Тренировка — завершить?"
-  },
-  "FinishConfirmDawn.dc.html": {
-   "x": 0,
-   "y": 5120,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "4. Тренировка — завершить? — Рассвет"
-  },
-  "History.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "5. История",
-   "w": 390,
-   "x": 0,
-   "y": 964
-  },
-  "HistoryDawn.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "5. История — Рассвет",
-   "w": 390,
-   "x": 0,
-   "y": 3192
-  },
-  "HistoryEmpty.dc.html": {
-   "x": 1410,
-   "y": 0,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "5. История — пусто"
-  },
-  "HistoryEmptyDawn.dc.html": {
-   "x": 1410,
-   "y": 4156,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "5. История — пусто — Рассвет"
-  },
-  "Home.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "2. Главная",
-   "w": 390,
-   "x": 470,
-   "y": 0
-  },
-  "HomeDawn.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "2. Главная — Рассвет",
-   "w": 390,
-   "x": 470,
-   "y": 2228
-  },
-  "HomeEmpty.dc.html": {
-   "x": 940,
-   "y": 0,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "2. Главная — пусто"
-  },
-  "HomeEmptyDawn.dc.html": {
-   "x": 940,
-   "y": 4156,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "2. Главная — пусто — Рассвет"
-  },
-  "InviteAccept.dc.html": {
-   "x": 1880,
-   "y": 964,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "7. Люди — принять приглашение"
-  },
-  "InviteAcceptDawn.dc.html": {
-   "x": 1880,
-   "y": 5120,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "7. Люди — принять приглашение — Рассвет"
-  },
-  "InviteCode.dc.html": {
-   "x": 1410,
-   "y": 964,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "7. Люди — код, QR, ссылка"
-  },
-  "InviteCodeDawn.dc.html": {
-   "x": 1410,
-   "y": 5120,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "7. Люди — код, QR, ссылка — Рассвет"
-  },
-  "InviteRole.dc.html": {
-   "x": 940,
-   "y": 964,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "7. Люди — в какой роли приглашаю"
-  },
-  "InviteRoleDawn.dc.html": {
-   "x": 940,
-   "y": 5120,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "7. Люди — в какой роли приглашаю — Рассвет"
-  },
-  "Login.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "1. Вход",
-   "w": 390,
-   "x": 0,
-   "y": 0
-  },
-  "LoginCode.dc.html": {
-   "x": 0,
-   "y": 0,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "1. Вход — код из SMS"
-  },
-  "LoginCodeDawn.dc.html": {
-   "x": 0,
-   "y": 4156,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "1. Вход — код из SMS — Рассвет"
-  },
-  "LoginDawn.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "1. Вход — Рассвет",
-   "w": 390,
-   "x": 0,
-   "y": 2228
-  },
-  "LoginProfile.dc.html": {
-   "x": 470,
-   "y": 0,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "1. Вход — имя и вес"
-  },
-  "LoginProfileDawn.dc.html": {
-   "x": 470,
-   "y": 4156,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "1. Вход — имя и вес — Рассвет"
-  },
-  "Main.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "4. Тренировка — одной строкой",
-   "w": 390,
-   "x": 1410,
-   "y": 0
-  },
-  "MainDawn.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "4. Тренировка — одной строкой — Рассвет",
-   "w": 390,
-   "x": 1410,
-   "y": 2228
-  },
-  "People.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "7. Люди",
-   "w": 390,
-   "x": 940,
-   "y": 964
-  },
-  "PeopleDawn.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "7. Люди — Рассвет",
-   "w": 390,
-   "x": 940,
-   "y": 3192
-  },
-  "Profile.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "9. Профиль",
-   "w": 390,
-   "x": 1880,
-   "y": 964
-  },
-  "ProfileDawn.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "9. Профиль — Рассвет",
-   "w": 390,
-   "x": 1880,
-   "y": 3192
-  },
-  "Progress.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "6. Прогресс",
-   "w": 390,
-   "x": 470,
-   "y": 964
-  },
-  "ProgressDawn.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "6. Прогресс — Рассвет",
-   "w": 390,
-   "x": 470,
-   "y": 3192
-  },
-  "ProgressEmpty.dc.html": {
-   "x": 1880,
-   "y": 0,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "6. Прогресс — пусто"
-  },
-  "ProgressEmptyDawn.dc.html": {
-   "x": 1880,
-   "y": 4156,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "6. Прогресс — пусто — Рассвет"
-  },
-  "Trainee.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "8. Подопечный глазами тренера",
-   "w": 390,
-   "x": 1410,
-   "y": 964
-  },
-  "TraineeDawn.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "8. Подопечный глазами тренера — Рассвет",
-   "w": 390,
-   "x": 1410,
-   "y": 3192
-  },
-  "TraineeReadOnly.dc.html": {
-   "x": 1410,
-   "y": 1928,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "8. Подопечный — только просмотр"
-  },
-  "TraineeReadOnlyDawn.dc.html": {
-   "x": 1410,
-   "y": 6084,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "8. Подопечный — только просмотр — Рассвет"
-  },
-  "WorkoutFull.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "4. Тренировка — каждый подход",
-   "w": 390,
-   "x": 1880,
-   "y": 0
-  },
-  "WorkoutFullDawn.dc.html": {
-   "h": 844,
-   "radius": 40,
-   "title": "4. Тренировка — каждый подход — Рассвет",
-   "w": 390,
-   "x": 1880,
-   "y": 2228
-  },
-  "WorkoutOffline.dc.html": {
-   "x": 2350,
-   "y": 0,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "4. Тренировка — без сети"
-  },
-  "WorkoutOfflineDawn.dc.html": {
-   "x": 2350,
-   "y": 4156,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "4. Тренировка — без сети — Рассвет"
-  },
-  "EntryKeypad.dc.html": {
-   "x": 1880,
-   "y": 1928,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "4. Тренировка — вес с клавиатуры"
-  },
-  "EntryKeypadDawn.dc.html": {
-   "x": 1880,
-   "y": 6084,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "4. Тренировка — вес с клавиатуры — Рассвет"
-  },
-  "WorkoutEdit.dc.html": {
-   "x": 2350,
-   "y": 1928,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "5. История — исправить тренировку"
-  },
-  "WorkoutEditDawn.dc.html": {
-   "x": 2350,
-   "y": 6084,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "5. История — исправить тренировку — Рассвет"
-  },
-  "LoadError.dc.html": {
-   "x": 0,
-   "y": 2892,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "2. Главная — не удалось загрузить"
-  },
-  "LoadErrorDawn.dc.html": {
-   "x": 0,
-   "y": 7048,
-   "w": 390,
-   "h": 844,
-   "radius": 40,
-   "page": "states",
-   "title": "2. Главная — не удалось загрузить — Рассвет"
-  }
- },
- "createdOnFiles": {
-  "at": "2026-10-04T14:35:00Z",
-  "v": 1
- },
- "designSystems": [
-  {
-   "artifact": "https://claude.ai/artifact/6pwDsPNipiAAuBUTsjePsU",
-   "copiedAt": "2026-10-04T14:35:00Z",
-   "namespace": "progressbar",
-   "title": "Progress Bar",
-   "version": "1791124025-cbdf"
-  }
- ],
- "launch": {
-  "view": "canvas"
- },
- "notes": {
-  "dawn": {
-   "kind": "title1",
-   "maxW": 2270,
-   "text": "Рассвет — светлая тема",
-   "w": 240,
-   "x": 0,
-   "y": 1928
-  },
-  "dusk": {
-   "kind": "title1",
-   "maxW": 2270,
-   "text": "Закат — тёмная тема",
-   "w": 240,
-   "x": 0,
-   "y": -300
-  },
-  "states-dawn": {
-   "x": 0,
-   "y": 3856,
-   "text": "Состояния — Рассвет",
-   "kind": "title1",
-   "maxW": 2740,
-   "page": "states"
-  },
-  "states-dusk": {
-   "x": 0,
-   "y": -300,
-   "text": "Состояния — Закат",
-   "kind": "title1",
-   "maxW": 2740,
-   "page": "states"
-  }
- },
- "order": [
-  "Main.dc.html",
-  "Login.dc.html",
-  "Home.dc.html",
-  "Builder.dc.html",
-  "WorkoutFull.dc.html",
-  "History.dc.html",
-  "Progress.dc.html",
-  "People.dc.html",
-  "Trainee.dc.html",
-  "Profile.dc.html",
-  "MainDawn.dc.html",
-  "HomeDawn.dc.html",
-  "LoginDawn.dc.html",
-  "BuilderDawn.dc.html",
-  "WorkoutFullDawn.dc.html",
-  "HistoryDawn.dc.html",
-  "ProgressDawn.dc.html",
-  "PeopleDawn.dc.html",
-  "TraineeDawn.dc.html",
-  "ProfileDawn.dc.html",
-  "LoginCode.dc.html",
-  "LoginCodeDawn.dc.html",
-  "LoginProfile.dc.html",
-  "LoginProfileDawn.dc.html",
-  "HomeEmpty.dc.html",
-  "HomeEmptyDawn.dc.html",
-  "HistoryEmpty.dc.html",
-  "HistoryEmptyDawn.dc.html",
-  "ProgressEmpty.dc.html",
-  "ProgressEmptyDawn.dc.html",
-  "WorkoutOffline.dc.html",
-  "WorkoutOfflineDawn.dc.html",
-  "FinishConfirm.dc.html",
-  "FinishConfirmDawn.dc.html",
-  "DeleteAccount.dc.html",
-  "DeleteAccountDawn.dc.html",
-  "InviteRole.dc.html",
-  "InviteRoleDawn.dc.html",
-  "InviteCode.dc.html",
-  "InviteCodeDawn.dc.html",
-  "InviteAccept.dc.html",
-  "InviteAcceptDawn.dc.html",
-  "CoachActions.dc.html",
-  "CoachActionsDawn.dc.html",
-  "EntryTime.dc.html",
-  "EntryTimeDawn.dc.html",
-  "EntryBodyweight.dc.html",
-  "EntryBodyweightDawn.dc.html",
-  "ExercisePicker.dc.html",
-  "ExercisePickerDawn.dc.html",
-  "TraineeReadOnly.dc.html",
-  "TraineeReadOnlyDawn.dc.html",
-  "EntryKeypad.dc.html",
-  "EntryKeypadDawn.dc.html",
-  "WorkoutEdit.dc.html",
-  "WorkoutEditDawn.dc.html",
-  "LoadError.dc.html",
-  "LoadErrorDawn.dc.html"
- ],
- "pages": [
-  {
-   "id": "screens",
-   "name": "Экраны"
-  },
-  {
-   "id": "states",
-   "name": "Состояния"
-  }
- ],
- "title": "Progress Bar — экраны"
+  "order": [
+    "Main.dc.html",
+    "Login.dc.html",
+    "Home.dc.html",
+    "Builder.dc.html",
+    "WorkoutFull.dc.html",
+    "History.dc.html",
+    "Progress.dc.html",
+    "People.dc.html",
+    "Trainee.dc.html",
+    "Profile.dc.html",
+    "MainDawn.dc.html",
+    "HomeDawn.dc.html",
+    "LoginDawn.dc.html",
+    "BuilderDawn.dc.html",
+    "WorkoutFullDawn.dc.html",
+    "HistoryDawn.dc.html",
+    "ProgressDawn.dc.html",
+    "PeopleDawn.dc.html",
+    "TraineeDawn.dc.html",
+    "ProfileDawn.dc.html",
+    "LoginCode.dc.html",
+    "LoginCodeDawn.dc.html",
+    "LoginProfile.dc.html",
+    "LoginProfileDawn.dc.html",
+    "HomeEmpty.dc.html",
+    "HomeEmptyDawn.dc.html",
+    "HistoryEmpty.dc.html",
+    "HistoryEmptyDawn.dc.html",
+    "ProgressEmpty.dc.html",
+    "ProgressEmptyDawn.dc.html",
+    "WorkoutOffline.dc.html",
+    "WorkoutOfflineDawn.dc.html",
+    "FinishConfirm.dc.html",
+    "FinishConfirmDawn.dc.html",
+    "DeleteAccount.dc.html",
+    "DeleteAccountDawn.dc.html",
+    "InviteRole.dc.html",
+    "InviteRoleDawn.dc.html",
+    "InviteCode.dc.html",
+    "InviteCodeDawn.dc.html",
+    "InviteAccept.dc.html",
+    "InviteAcceptDawn.dc.html",
+    "CoachActions.dc.html",
+    "CoachActionsDawn.dc.html",
+    "EntryTime.dc.html",
+    "EntryTimeDawn.dc.html",
+    "EntryBodyweight.dc.html",
+    "EntryBodyweightDawn.dc.html",
+    "ExercisePicker.dc.html",
+    "ExercisePickerDawn.dc.html",
+    "TraineeReadOnly.dc.html",
+    "TraineeReadOnlyDawn.dc.html",
+    "EntryKeypad.dc.html",
+    "EntryKeypadDawn.dc.html",
+    "WorkoutEdit.dc.html",
+    "WorkoutEditDawn.dc.html",
+    "LoadError.dc.html",
+    "LoadErrorDawn.dc.html",
+    "BuilderPlan.dc.html",
+    "BuilderPlanDawn.dc.html",
+    "BuilderPlanKeypad.dc.html",
+    "BuilderPlanKeypadDawn.dc.html"
+  ],
+  "pages": [
+    {
+      "id": "screens",
+      "name": "Экраны"
+    },
+    {
+      "id": "states",
+      "name": "Состояния"
+    }
+  ],
+  "title": "Progress Bar — экраны"
 }

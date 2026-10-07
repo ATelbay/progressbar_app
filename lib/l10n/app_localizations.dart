@@ -547,7 +547,7 @@ abstract class AppLocalizations {
   /// No description provided for @finishCancel.
   ///
   /// In en, this message translates to:
-  /// **'Cancel the workout and delete the records'**
+  /// **'Cancel the workout'**
   String get finishCancel;
 
   /// No description provided for @homeActiveLabel.
@@ -748,6 +748,18 @@ abstract class AppLocalizations {
   /// **'Note for the trainee'**
   String get builderNote;
 
+  /// No description provided for @builderLastTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Last time: {result}'**
+  String builderLastTime(String result);
+
+  /// No description provided for @builderNoHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Not recorded before — enter the weight'**
+  String get builderNoHistory;
+
   /// No description provided for @builderNotePrefix.
   ///
   /// In en, this message translates to:
@@ -910,6 +922,30 @@ abstract class AppLocalizations {
   /// **'Don\'t save'**
   String get editDiscard;
 
+  /// No description provided for @dayToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today, {date}'**
+  String dayToday(String date);
+
+  /// No description provided for @dayPickerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Day of the workout'**
+  String get dayPickerTitle;
+
+  /// No description provided for @editDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete workout'**
+  String get editDelete;
+
+  /// No description provided for @editDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this workout? Its results will disappear from history and progress. This cannot be undone.'**
+  String get editDeleteConfirm;
+
   /// No description provided for @progressMaxWeight.
   ///
   /// In en, this message translates to:
@@ -974,6 +1010,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Language'**
   String get profileLanguage;
+
+  /// No description provided for @profileTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get profileTheme;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
 
   /// No description provided for @languageSystem.
   ///

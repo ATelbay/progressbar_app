@@ -189,9 +189,57 @@ Workout removeExtraSet(
   return exercise.sets.where((s) => s.id != setId).toList();
 });
 
-Workout completeWorkout(Workout workout, {required DateTime now}) {
+///
+/// [day] is given when the workout is written down after the fact; it must
+/// not be later than today.
+Workout completeWorkout(
+  Workout workout, {
+  required DateTime now,
+  DateTime? day,
+}) {
   if (workout.isCompleted) throw StateError('Workout is already completed');
-  return workout.copyWith(status: WorkoutStatus.completed, completedAt: now);
+  final completed = workout.copyWith(
+    status: WorkoutStatus.completed,
+    completedAt: now,
+  );
+  return day == null || _sameDay(day, now)
+      ? completed
+      : completed.copyWith(performedOn: _dayOnly(day, now));
+}
+
+DateTime _dayOnly(DateTime day, DateTime now) {
+  final date = DateTime(day.year, day.month, day.day);
+  if (date.isAfter(DateTime(now.year, now.month, now.day))) {
+    throw ArgumentError.value(day, 'day', 'A workout cannot be in the future');
+  }
+  return date;
+}
+
+bool _sameDay(DateTime a, DateTime b) =>
+    a.year == b.year && a.month == b.month && a.day == b.day;
+
+/// When the workout counts as done: on the day set by hand if there is one,
+/// otherwise when it was completed. History and progress are ordered by it.
+DateTime performedAt(Workout workout) {
+  final done = workout.completedAt ?? workout.startedAt;
+  final day = workout.performedOn;
+  if (day == null) return done;
+  // The day is the user's calendar day, so the time of day is local too.
+  final time = done.toLocal();
+  return DateTime(
+    day.year,
+    day.month,
+    day.day,
+    time.hour,
+    time.minute,
+    time.second,
+  );
+}
+
+/// Moves a completed workout to another day, today or earlier.
+Workout setWorkoutDay(Workout workout, DateTime day, {required DateTime now}) {
+  if (!workout.isCompleted) throw StateError('Workout is not completed');
+  return workout.copyWith(performedOn: _dayOnly(day, now), editedAt: now);
 }
 
 void _checkValues(SetValues v) {
@@ -303,7 +351,7 @@ List<ProgressPoint> progressFor(String exerciseId, Iterable<Workout> workouts) {
     for (final exercise in workout.exercises) {
       if (exercise.exerciseId != exerciseId) continue;
       for (final fact in exercise.sets.map((s) => s.fact).nonNulls) {
-        final point = _pointFor(workout.completedAt!, exercise, fact);
+        final point = _pointFor(performedAt(workout), exercise, fact);
         if (best == null ||
             point.extraKg > best.extraKg ||
             (point.extraKg == best.extraKg && point.value > best.value)) {
@@ -342,7 +390,7 @@ SetValues? prefillFor(
   Iterable<Workout> earlierWorkouts,
 ) {
   final sorted = earlierWorkouts.where((w) => w.isCompleted).toList()
-    ..sort((a, b) => b.completedAt!.compareTo(a.completedAt!));
+    ..sort((a, b) => performedAt(b).compareTo(performedAt(a)));
   for (final workout in sorted) {
     for (final past in workout.exercises) {
       if (past.exerciseId != exercise.exerciseId) continue;
@@ -379,6 +427,9 @@ enum Effort {
 
 /// Steps of the entry panel buttons; finer weights are typed on the keypad.
 const weightStepKg = 2.5;
+
+/// Steps offered when planning an exercise in the program builder.
+const planWeightStepsKg = [0.5, 1.0, 5.0];
 const secondsStep = 5;
 const maxWeightKg = 999.75;
 
@@ -421,14 +472,26 @@ SetsSummary? factSummary(WorkoutExercise exercise) =>
 SetsSummary? lastResult(
   WorkoutExercise exercise,
   Iterable<Workout> earlierWorkouts,
+) => lastRecorded(exercise.exerciseId, earlierWorkouts)?.summary;
+
+/// The latest completed workout's record of the catalog exercise
+/// [exerciseId]: its summary and the heaviest weight in it.
+({SetsSummary summary, double weightKg})? lastRecorded(
+  String exerciseId,
+  Iterable<Workout> workouts,
 ) {
-  final sorted = earlierWorkouts.where((w) => w.isCompleted).toList()
-    ..sort((a, b) => b.completedAt!.compareTo(a.completedAt!));
+  final sorted = workouts.where((w) => w.isCompleted).toList()
+    ..sort((a, b) => performedAt(b).compareTo(performedAt(a)));
   for (final workout in sorted) {
     for (final past in workout.exercises) {
-      if (past.exerciseId != exercise.exerciseId) continue;
+      if (past.exerciseId != exerciseId) continue;
       final summary = factSummary(past);
-      if (summary != null) return summary;
+      if (summary == null) continue;
+      final heaviest = past.sets
+          .map((s) => s.fact?.weightKg)
+          .nonNulls
+          .reduce((a, b) => a > b ? a : b);
+      return (summary: summary, weightKg: heaviest);
     }
   }
   return null;
@@ -509,7 +572,7 @@ List<({String exerciseId, String name})> exercisesWithResults(
   Iterable<Workout> workouts,
 ) {
   final sorted = workouts.where((w) => w.isCompleted).toList()
-    ..sort((a, b) => b.completedAt!.compareTo(a.completedAt!));
+    ..sort((a, b) => performedAt(b).compareTo(performedAt(a)));
   final seen = <String>{};
   return [
     for (final workout in sorted)

@@ -257,7 +257,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get finishBack => 'Вернуться к тренировке';
 
   @override
-  String get finishCancel => 'Отменить тренировку и удалить записи';
+  String get finishCancel => 'Отменить тренировку';
 
   @override
   String get homeActiveLabel => 'Идёт тренировка';
@@ -363,6 +363,14 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get builderNote => 'Заметка к упражнению';
+
+  @override
+  String builderLastTime(String result) {
+    return 'В прошлый раз: $result';
+  }
+
+  @override
+  String get builderNoHistory => 'Раньше не записывали — введите вес';
 
   @override
   String builderNotePrefix(String note) {
@@ -486,6 +494,21 @@ class AppLocalizationsRu extends AppLocalizations {
   String get editDiscard => 'Не сохранять';
 
   @override
+  String dayToday(String date) {
+    return 'Сегодня, $date';
+  }
+
+  @override
+  String get dayPickerTitle => 'День тренировки';
+
+  @override
+  String get editDelete => 'Удалить тренировку';
+
+  @override
+  String get editDeleteConfirm =>
+      'Удалить эту тренировку? Её результаты исчезнут из истории и прогресса. Вернуть их будет нельзя.';
+
+  @override
   String get progressMaxWeight => 'Максимальный вес';
 
   @override
@@ -532,6 +555,15 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profileLanguage => 'Язык';
+
+  @override
+  String get profileTheme => 'Тема';
+
+  @override
+  String get themeDark => 'Тёмная';
+
+  @override
+  String get themeLight => 'Светлая';
 
   @override
   String get languageSystem => 'Как в телефоне';

@@ -44,6 +44,33 @@ class ProfileScreen extends ConsumerWidget {
     }
   }
 
+  static String _themeName(AppLocalizations l10n, ThemeChoice theme) =>
+      switch (theme) {
+        ThemeChoice.system => l10n.languageSystem,
+        ThemeChoice.dark => l10n.themeDark,
+        ThemeChoice.light => l10n.themeLight,
+      };
+
+  Future<void> _pickTheme(
+    BuildContext context,
+    WidgetRef ref,
+    UserProfile profile,
+  ) async {
+    final l10n = AppLocalizations.of(context)!;
+    final picked = await showPbSheet<(ThemeChoice,)>(
+      context,
+      ChoiceSheet<ThemeChoice>(
+        title: l10n.profileTheme,
+        selected: profile.theme,
+        options: [
+          for (final theme in ThemeChoice.values)
+            (theme, _themeName(l10n, theme)),
+        ],
+      ),
+    );
+    if (picked != null) _save(ref, profile.copyWith(theme: picked.$1));
+  }
+
   Future<void> _pickEntryMode(
     BuildContext context,
     WidgetRef ref,
@@ -150,6 +177,12 @@ class ProfileScreen extends ConsumerWidget {
                                       ?.$2 ??
                                   l10n.languageSystem,
                               onTap: () => _pickLanguage(context, ref, profile),
+                            ),
+                            const SizedBox(height: PbSpace.s2),
+                            setting(
+                              l10n.profileTheme,
+                              value: _themeName(l10n, profile.theme),
+                              onTap: () => _pickTheme(context, ref, profile),
                             ),
                             const SizedBox(height: PbSpace.s2),
                             setting(

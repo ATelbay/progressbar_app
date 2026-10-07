@@ -445,6 +445,44 @@ void main() {
     );
   });
 
+  test('the day set by hand is stored and orders history', () async {
+    final db = FakeFirebaseFirestore();
+    final repo = FirestoreWorkoutRepository(db);
+    final now = DateTime(2026, 10, 7, 19);
+    Future<void> done(String id, {DateTime? day}) async {
+      final workout = startWorkout(
+        id: id,
+        traineeId: uid,
+        now: now,
+        newId: () => newFirestoreId(db),
+        catalog: catalog,
+        languageCode: 'ru',
+        program: program,
+        day: program.days.first,
+      );
+      await repo.start(workout);
+      await repo.save(completeWorkout(workout, now: now, day: day));
+    }
+
+    await done('today');
+    await done('lastWeek', day: DateTime(2026, 9, 30));
+    await done('yesterday', day: DateTime(2026, 10, 6));
+    expect(
+      (await db.doc('users/$uid/workouts/lastWeek').get())
+          .data()!['performedOn'],
+      '2026-09-30',
+    );
+    final history = await repo.watchCompleted(uid).first;
+    expect(history.map((w) => w.id), ['today', 'yesterday', 'lastWeek']);
+    expect(history.last.performedOn, DateTime(2026, 9, 30));
+
+    await repo.deleteCompleted(history.last);
+    expect((await repo.watchCompleted(uid).first).map((w) => w.id), [
+      'today',
+      'yesterday',
+    ]);
+  });
+
   group('the order of writes', () {
     test(
       'a write is issued only after the previous one is in the cache',

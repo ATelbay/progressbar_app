@@ -12,6 +12,7 @@ import '../../widgets/glass_panel.dart';
 import '../../widgets/glow_background.dart';
 import '../../widgets/step_button.dart';
 import '../workout/entry_panel.dart';
+import '../workout/workout_day_button.dart';
 import '../workout/workout_providers.dart';
 import 'history_screen.dart';
 
@@ -44,6 +45,30 @@ class _WorkoutEditScreenState extends ConsumerState<WorkoutEditScreen> {
         onChanged: (updated) => setState(() => _draft = updated),
       ),
     );
+  }
+
+  Future<void> _delete(Workout stored) async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: Text(l10n.editDeleteConfirm),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.builderKeep),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: context.pb.danger),
+            child: Text(l10n.builderDelete),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    unawaited(ref.read(workoutRepositoryProvider).deleteCompleted(stored));
+    context.pop();
   }
 
   @override
@@ -113,6 +138,16 @@ class _WorkoutEditScreenState extends ConsumerState<WorkoutEditScreen> {
                     ),
                   ),
                 ),
+                WorkoutDayButton(
+                  day: performedAt(workout),
+                  onPicked: (day) => setState(
+                    () => _draft = setWorkoutDay(
+                      workout,
+                      day,
+                      now: DateTime.now(),
+                    ),
+                  ),
+                ),
                 Expanded(
                   child: ListView.separated(
                     itemCount: workout.exercises.length,
@@ -149,6 +184,12 @@ class _WorkoutEditScreenState extends ConsumerState<WorkoutEditScreen> {
                   onPressed: () => context.pop(),
                   child: Text(l10n.editDiscard),
                 ),
+                if (stored != null)
+                  TextButton(
+                    onPressed: () => _delete(stored),
+                    style: TextButton.styleFrom(foregroundColor: c.danger),
+                    child: Text(l10n.editDelete),
+                  ),
               ],
             ),
           ),

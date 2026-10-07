@@ -76,6 +76,22 @@ Program programFromMap(String id, Map<String, dynamic> data) => Program(
   ],
 );
 
+/// A calendar day is stored as «2026-10-07»: it must not shift with the time
+/// zone the way a moment in time does.
+String? _day(DateTime? day) => day == null
+    ? null
+    : '${day.year.toString().padLeft(4, '0')}-'
+          '${day.month.toString().padLeft(2, '0')}-'
+          '${day.day.toString().padLeft(2, '0')}';
+
+DateTime? _dayFrom(Object? value) {
+  if (value is! String) return null;
+  final parts = value.split('-').map(int.tryParse).toList();
+  return parts.length == 3 && !parts.contains(null)
+      ? DateTime(parts[0]!, parts[1]!, parts[2]!)
+      : null;
+}
+
 /// Plan and fact are stored side by side per set and never merged.
 Map<String, Object?> workoutToMap(Workout workout) => {
   'schemaVersion': schemaVersion,
@@ -88,6 +104,7 @@ Map<String, Object?> workoutToMap(Workout workout) => {
   'status': workout.status.name,
   'startedAt': _timestamp(workout.startedAt),
   'completedAt': _timestamp(workout.completedAt),
+  'performedOn': _day(workout.performedOn),
   'editedAt': _timestamp(workout.editedAt),
   'comment': workout.comment,
   'bodyWeightKg': workout.bodyWeightKg,
@@ -124,6 +141,7 @@ Workout workoutFromMap(String id, Map<String, dynamic> data) => Workout(
   status: WorkoutStatus.values.byName(data['status'] as String),
   startedAt: _date(data['startedAt'])!,
   completedAt: _date(data['completedAt']),
+  performedOn: _dayFrom(data['performedOn']),
   editedAt: _date(data['editedAt']),
   comment: data['comment'] as String?,
   bodyWeightKg: (data['bodyWeightKg'] as num?)?.toDouble(),

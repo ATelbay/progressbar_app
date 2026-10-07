@@ -106,7 +106,11 @@ void main() {
       if (index == 0) await mark('SHOT:04-picker');
       await tap(find.byType(GlassCard).at(index));
       await wait(find.text(l10n.entrySets));
-      if (index == 0) await mark('SHOT:05-plan');
+      // Nothing recorded yet, so the weight is typed on the keypad first.
+      if (index == 0) await mark('SHOT:05-plan-keypad');
+      await tap(find.widgetWithText(FilledButton, l10n.welcomeDone));
+      await wait(find.text(l10n.builderNote));
+      if (index == 0) await mark('SHOT:05b-plan');
       await tap(find.widgetWithText(FilledButton, l10n.welcomeDone));
     }
     await mark('SHOT:06-builder');

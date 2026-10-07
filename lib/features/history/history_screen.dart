@@ -18,7 +18,7 @@ import '../workout/workout_providers.dart';
 /// «2 октября · Грудь и трицепс»; just the date for a workout without a day.
 String workoutTitle(BuildContext context, Workout workout) {
   final date = DateFormat.MMMMd(Localizations.localeOf(context).languageCode)
-      .format(workout.completedAt ?? workout.startedAt);
+      .format(performedAt(workout));
   return workout.dayName == null ? date : '$date · ${workout.dayName}';
 }
 

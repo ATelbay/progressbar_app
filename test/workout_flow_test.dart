@@ -6,7 +6,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:progressbar_app/app.dart';
 import 'package:progressbar_app/data/exercise_catalog_repository.dart';
+import 'package:progressbar_app/data/firestore_codec.dart';
 import 'package:progressbar_app/data/link_repository.dart';
+import 'package:progressbar_app/data/program_repository.dart';
 import 'package:progressbar_app/domain/link_logic.dart';
 import 'package:progressbar_app/domain/models.dart';
 import 'package:progressbar_app/features/auth/auth_controller.dart';
@@ -14,6 +16,7 @@ import 'package:progressbar_app/features/exercises/exercise_catalog_provider.dar
 import 'package:progressbar_app/features/firestore_provider.dart';
 import 'package:progressbar_app/features/people/people_providers.dart';
 import 'package:progressbar_app/widgets/qr_code.dart';
+import 'package:progressbar_app/widgets/step_button.dart';
 
 import 'support/fakes.dart';
 
@@ -168,7 +171,7 @@ void main() {
     await tap(tester, find.widgetWithText(TextButton, 'Finish'));
     // Nothing is recorded, so there is nothing to keep.
     expect(find.widgetWithText(FilledButton, 'Finish'), findsNothing);
-    await tap(tester, find.text('Cancel the workout and delete the records'));
+    await tap(tester, find.text('Cancel the workout'));
     expect(find.text('The bar is empty for now'), findsOneWidget);
     expect((await db.collection('users/user-1/workouts').get()).docs, isEmpty);
   });
@@ -194,6 +197,8 @@ void main() {
     await tester.enterText(find.byType(TextField), 'Strength');
     await settle(tester);
     expect(find.text('Day 1'), findsOneWidget);
+    // Once it has a name it is stored, so it can already be deleted.
+    expect(find.text('Delete program'), findsOneWidget);
     // An empty day cannot be started.
     expect(
       tester
@@ -208,10 +213,21 @@ void main() {
     await tester.enterText(find.byType(TextField), 'bench press');
     await settle(tester);
     await tap(tester, find.textContaining('Bench Press').first);
-    await tap(tester, find.byTooltip('More: Weight'));
+    // Never recorded, so there is no weight to start from: it is typed.
+    expect(find.textContaining('Not recorded before'), findsOneWidget);
+    expect(find.text('Note for the trainee'), findsNothing);
+    await tap(tester, find.widgetWithText(PbPill, '7'));
+    await tap(tester, find.byTooltip('Decimal point'));
+    await tap(tester, find.widgetWithText(PbPill, '5'));
+    await tap(tester, find.text('Done'));
+    // From here on the weight is stepped, up in the top row and down below.
+    expect(find.text('Note for the trainee'), findsOneWidget);
+    await tap(tester, find.text('+0.5'));
+    await tap(tester, find.text('−5'));
+    await tap(tester, find.text('−1'));
     await tap(tester, find.byTooltip('More: Sets'));
     await tap(tester, find.text('Done'));
-    expect(find.text('4 × 10 × 2.5 kg', findRichText: true), findsOneWidget);
+    expect(find.text('4 × 10 × 2 kg', findRichText: true), findsOneWidget);
 
     await tap(tester, find.byTooltip('Add day'));
     expect(find.text('Day 2'), findsOneWidget);
@@ -229,7 +245,7 @@ void main() {
     await tap(tester, find.text('Start workout'));
     // The workout opens with the plan and the day's name.
     expect(find.text('Day 1'), findsOneWidget);
-    expect(find.text('4 × 10 × 2.5 kg', findRichText: true), findsOneWidget);
+    expect(find.text('4 × 10 × 2 kg', findRichText: true), findsOneWidget);
     await tap(tester, find.text('Record'));
     expect(find.text('on plan'), findsOneWidget);
 
@@ -238,8 +254,8 @@ void main() {
     expect(workout['dayName'], 'Day 1');
     final sets = workout['exercises'][0]['sets'] as List;
     expect(sets.length, 4);
-    expect(sets.map((s) => s['plan']['weightKg']), everyElement(2.5));
-    expect(sets.map((s) => s['fact']['weightKg']), everyElement(2.5));
+    expect(sets.map((s) => s['plan']['weightKg']), everyElement(2));
+    expect(sets.map((s) => s['fact']['weightKg']), everyElement(2));
 
     await tester.binding.handlePopRoute();
     await settle(tester);
@@ -254,7 +270,12 @@ void main() {
     await startWithBenchPress(tester);
     await tap(tester, find.text('Record'));
     await tap(tester, find.widgetWithText(FilledButton, 'Finish'));
+    // With results recorded the workout is finished, not thrown away; the
+    // day it counts for is today unless changed.
+    expect(find.text('Cancel the workout'), findsNothing);
+    expect(find.textContaining('Today, '), findsOneWidget);
     await tap(tester, find.widgetWithText(FilledButton, 'Finish').last);
+    expect((await onlyWorkout())['performedOn'], isNull);
 
     await tap(tester, find.text('History'));
     expect(find.text('No program'), findsOneWidget);
@@ -288,6 +309,17 @@ void main() {
     expect(stored['editedAt'], isNotNull);
     expect(stored['status'], 'completed');
     expect((stored['exercises'][0]['sets'] as List).length, 2);
+
+    // A completed workout can be removed from history, after a question.
+    await tap(tester, find.byTooltip('Edit workout'));
+    await tap(tester, find.text('Delete workout'));
+    expect(find.textContaining('Delete this workout?'), findsOneWidget);
+    await tap(tester, find.text('Keep'));
+    expect((await db.collection('users/user-1/workouts').get()).docs.length, 1);
+    await tap(tester, find.text('Delete workout'));
+    await tap(tester, find.text('Delete'));
+    expect((await db.collection('users/user-1/workouts').get()).docs, isEmpty);
+    expect(find.text('Delete workout'), findsNothing);
   });
 
   testWidgets('history without workouts leads back to programs', (
@@ -329,43 +361,60 @@ void main() {
     expect(find.text('+7.5 kg over 2 workouts'), findsOneWidget);
   });
 
-  testWidgets('profile changes language, entry mode, name and body weight', (
-    tester,
-  ) async {
-    await openApp(tester);
-    await tap(tester, find.text('Profile'));
-    expect(find.text('Арман'), findsOneWidget);
-    expect(find.text('80 kg', findRichText: true), findsOneWidget);
+  testWidgets(
+    'profile changes language, theme, entry mode, name and body weight',
+    (tester) async {
+      await openApp(tester);
+      await tap(tester, find.text('Profile'));
+      expect(find.text('Арман'), findsOneWidget);
+      expect(find.text('80 kg', findRichText: true), findsOneWidget);
 
-    await tap(tester, find.text('Result entry'));
-    await tap(tester, find.text('Set by set'));
-    expect(profiles.profileOf('user-1')!.entryMode, EntryMode.perSet);
+      await tap(tester, find.text('Result entry'));
+      await tap(tester, find.text('Set by set'));
+      expect(profiles.profileOf('user-1')!.entryMode, EntryMode.perSet);
 
-    await tap(tester, find.text('Арман'));
-    await tester.enterText(find.byType(TextField), 'Арман Т.');
-    await tap(tester, find.byTooltip('More: Body weight'));
-    await tap(tester, find.text('Save'));
-    expect(profiles.profileOf('user-1')!.name, 'Арман Т.');
-    expect(profiles.profileOf('user-1')!.bodyWeightKg, 80.5);
+      // The look follows the phone until one is chosen.
+      await tap(tester, find.text('Theme'));
+      await tap(tester, find.text('Dark'));
+      expect(profiles.profileOf('user-1')!.theme, ThemeChoice.dark);
+      expect(
+        Theme.of(tester.element(find.text('Theme'))).brightness,
+        Brightness.dark,
+      );
 
-    await tap(tester, find.text('Language'));
-    await tap(tester, find.text('Русский'));
-    expect(profiles.profileOf('user-1')!.languageCode, 'ru');
-    // The whole interface follows at once.
-    expect(find.text('Профиль'), findsWidgets);
-    expect(find.text('Справочник упражнений'), findsOneWidget);
+      await tap(tester, find.text('Арман'));
+      await tester.enterText(find.byType(TextField), 'Арман Т.');
+      await tap(tester, find.byTooltip('More: Body weight'));
+      await tap(tester, find.text('Save'));
+      expect(profiles.profileOf('user-1')!.name, 'Арман Т.');
+      expect(profiles.profileOf('user-1')!.bodyWeightKg, 80.5);
 
-    await tap(tester, find.text('Язык'));
-    await tap(tester, find.text('Как в телефоне'));
-    expect(profiles.profileOf('user-1')!.languageCode, isNull);
-    expect(find.text('Exercise catalog'), findsOneWidget);
-  });
+      await tap(tester, find.text('Language'));
+      await tap(tester, find.text('Русский'));
+      expect(profiles.profileOf('user-1')!.languageCode, 'ru');
+      // The whole interface follows at once.
+      expect(find.text('Профиль'), findsWidgets);
+      expect(find.text('Справочник упражнений'), findsOneWidget);
+
+      await tap(tester, find.text('Язык'));
+      await tap(tester, find.text('Как в телефоне'));
+      expect(profiles.profileOf('user-1')!.languageCode, isNull);
+      expect(find.text('Exercise catalog'), findsOneWidget);
+    },
+  );
 
   testWidgets('the catalog takes own exercises and edits of built-in ones', (
     tester,
   ) async {
     await openApp(tester);
     await tap(tester, find.text('Profile'));
+    // The test font is far wider than the real one, so the settings take
+    // more room here than on a phone and the last row starts off screen.
+    await tester.dragUntilVisible(
+      find.text('Exercise catalog'),
+      find.byType(ListView),
+      const Offset(0, -200),
+    );
     await tap(tester, find.text('Exercise catalog'));
 
     await tap(tester, find.text('Your own exercise'));
@@ -582,5 +631,112 @@ void main() {
     expect(find.text('invites you as a coach'), findsOneWidget);
     await tap(tester, find.text('Accept'));
     expect(find.text('Home'), findsWidgets);
+  });
+
+  testWidgets('the entry panel stays in view as recorded exercises pile up', (
+    tester,
+  ) async {
+    await openApp(tester);
+    await tester.runAsync(
+      () => FirestoreProgramRepository(db).save(
+        Program(
+          id: 'long',
+          authorId: 'user-1',
+          name: 'Long day',
+          days: [
+            ProgramDay(
+              id: 'd1',
+              name: 'Day 1',
+              exercises: [
+                for (final (index, id) in catalog.keys.take(9).indexed)
+                  ProgramExercise(
+                    id: 'pe$index',
+                    exerciseId: id,
+                    sets: const [SetValues(reps: 10, weightKg: 20)],
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+    await settle(tester);
+    await tap(tester, find.text('Long day'));
+    await tap(tester, find.text('Start workout'));
+    // No scrolling by hand: the button must be under the finger every time.
+    for (var recorded = 0; recorded < 9; recorded++) {
+      final record = find.widgetWithText(FilledButton, 'Record').hitTestable();
+      expect(record, findsOneWidget, reason: 'after $recorded recorded');
+      await tester.tap(record);
+      await settle(tester);
+    }
+    expect(find.text('Everything is recorded'), findsOneWidget);
+  });
+
+  testWidgets('a plan starts from the weight lifted last time', (tester) async {
+    await openApp(tester);
+    final bench = catalog.values.firstWhere(
+      (e) => e.nameFor('en').contains('Bench Press'),
+    );
+    final done = DateTime(2026, 10, 1, 18);
+    await tester.runAsync(
+      () => db
+          .doc('users/user-1/workouts/past')
+          .set(
+            workoutToMap(
+              Workout(
+                id: 'past',
+                traineeId: 'user-1',
+                status: WorkoutStatus.completed,
+                startedAt: done,
+                completedAt: done,
+                exercises: [
+                  WorkoutExercise(
+                    id: 'we1',
+                    exerciseId: bench.id,
+                    name: bench.nameFor('en'),
+                    measure: bench.measure,
+                    usesBodyWeight: false,
+                    sets: const [
+                      WorkoutSet(
+                        id: 's1',
+                        fact: SetValues(reps: 8, weightKg: 57.5),
+                      ),
+                      WorkoutSet(
+                        id: 's2',
+                        fact: SetValues(reps: 8, weightKg: 57.5),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+    );
+    await settle(tester);
+    await tap(tester, find.text('New program'));
+    await tester.enterText(find.byType(TextField), 'Strength');
+    await settle(tester);
+    await tap(tester, find.widgetWithText(OutlinedButton, 'Exercise'));
+    await tester.enterText(find.byType(TextField), bench.nameFor('en'));
+    await settle(tester);
+    // The first match is the search field itself.
+    await tap(tester, find.text(bench.nameFor('en')).last);
+
+    expect(find.text('Last time: 2 × 8 × 57.5 kg'), findsOneWidget);
+    expect(find.text('57.5 kg', findRichText: true), findsOneWidget);
+    await tap(tester, find.text('+5'));
+    await tap(tester, find.text('Done'));
+    expect(find.text('3 × 10 × 62.5 kg', findRichText: true), findsOneWidget);
+
+    // Touching the number opens the keypad for an exact weight.
+    await tap(tester, find.text('3 × 10 × 62.5 kg', findRichText: true));
+    expect(find.textContaining('Last time'), findsNothing);
+    await tap(tester, find.text('62.5 kg', findRichText: true));
+    await tap(tester, find.widgetWithText(PbPill, '6'));
+    await tap(tester, find.widgetWithText(PbPill, '1'));
+    await tap(tester, find.text('Done'));
+    await tap(tester, find.text('Done'));
+    expect(find.text('3 × 10 × 61 kg', findRichText: true), findsOneWidget);
   });
 }

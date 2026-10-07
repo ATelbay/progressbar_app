@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>План упражнения в конструкторе</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="pb.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&amp;family=Fira+Sans+Extra+Condensed:wght@600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="pb" data-theme="{{theme}}" style="width: 390px; height: 844px">
+<div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+<div class="scr">
+<div class="left">
+<a class="icon" href="Home.dc.html" aria-label="Назад"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"></path></svg></a>
+<h1 class="title">Сила, 3 дня</h1>
+</div>
+<div class="hscroll" role="tablist" aria-label="Дни программы">
+<button class="pill on">Грудь и трицепс</button>
+<button class="pill">Спина и бицепс</button>
+<button class="pill">Ноги</button>
+</div>
+<div class="stack">
+<div class="glass card row"><div class="b">Жим на наклонной</div><span class="num n-sm">3 × 10 × 22<span class="unit">кг</span></span></div>
+<div class="glass card row"><div class="b">Разводка в кроссовере</div><span class="num n-sm">3 × 12 × 15<span class="unit">кг</span></span></div>
+</div>
+</div>
+<div class="scrim"></div>
+<section class="glass panel sheet" role="dialog" aria-label="План упражнения">
+<div style="display: grid; gap: 2px">
+<h2 class="h">Жим лёжа</h2>
+<div class="cap">В прошлый раз: 3 × 8 × 57,5 кг</div>
+</div>
+<div class="erow">
+<div><div class="label">Подходы</div><span class="num n-lg">3</span></div>
+<button class="icon step" aria-label="Меньше подходов"><svg viewBox="0 0 24 24"><path d="M6 12h12"></path></svg></button>
+<button class="icon step" aria-label="Больше подходов"><svg viewBox="0 0 24 24"><path d="M6 12h12M12 6v12"></path></svg></button>
+</div>
+<div class="erow">
+<div><div class="label">Повторения</div><span class="num n-lg">8</span></div>
+<button class="icon step" aria-label="Меньше повторений"><svg viewBox="0 0 24 24"><path d="M6 12h12"></path></svg></button>
+<button class="icon step" aria-label="Больше повторений"><svg viewBox="0 0 24 24"><path d="M6 12h12M12 6v12"></path></svg></button>
+</div>
+<div style="display: grid; gap: 8px">
+<div>
+<div class="label">Вес</div>
+<button class="num n-lg" style="padding: 0; border: 0; background: none; color: inherit; cursor: pointer" aria-label="Вес 57,5 кг, ввести с клавиатуры">57,5<span class="unit" style="font-size: 24px">кг</span></button>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px" role="group" aria-label="Изменить вес">
+<button class="pill" style="padding: 0">+0,5</button>
+<button class="pill" style="padding: 0">+1</button>
+<button class="pill" style="padding: 0">+5</button>
+<button class="pill" style="padding: 0">−0,5</button>
+<button class="pill" style="padding: 0">−1</button>
+<button class="pill" style="padding: 0">−5</button>
+</div>
+</div>
+<div class="field" style="font-size: 17px; font-weight: 500; color: var(--ink-muted)">Заметка для подопечного</div>
+<a class="btn" href="Builder.dc.html">Готово</a>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dusk","dawn"],"default":"dusk"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { theme: this.props.theme ?? 'dusk' };
+}
+}
+</script>
+</body>
+</html>

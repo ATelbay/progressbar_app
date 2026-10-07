@@ -150,7 +150,7 @@
   },
   "finishBodyAll": "All exercises are recorded.",
   "finishBack": "Back to the workout",
-  "finishCancel": "Cancel the workout and delete the records",
+  "finishCancel": "Cancel the workout",
   "homeActiveLabel": "Workout in progress",
   "homeContinue": "Continue",
   "homeMyPrograms": "My programs",
@@ -198,6 +198,15 @@
     }
   },
   "builderNote": "Note for the trainee",
+  "builderLastTime": "Last time: {result}",
+  "@builderLastTime": {
+    "placeholders": {
+      "result": {
+        "type": "String"
+      }
+    }
+  },
+  "builderNoHistory": "Not recorded before — enter the weight",
   "builderNotePrefix": "Note: {note}",
   "@builderNotePrefix": {
     "placeholders": {
@@ -274,6 +283,17 @@
   "editNotice": "This workout is completed. After a change a coach will see it marked «edited after completion».",
   "editSave": "Save changes",
   "editDiscard": "Don't save",
+  "dayToday": "Today, {date}",
+  "@dayToday": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "dayPickerTitle": "Day of the workout",
+  "editDelete": "Delete workout",
+  "editDeleteConfirm": "Delete this workout? Its results will disappear from history and progress. This cannot be undone.",
   "progressMaxWeight": "Heaviest weight",
   "progressMaxTime": "Longest time",
   "progressMaxReps": "Most reps",
@@ -310,6 +330,9 @@
   },
   "profileSettings": "Settings",
   "profileLanguage": "Language",
+  "profileTheme": "Theme",
+  "themeDark": "Dark",
+  "themeLight": "Light",
   "languageSystem": "Same as the phone",
   "profileEntryMode": "Result entry",
   "entryModeSummary": "In one line",

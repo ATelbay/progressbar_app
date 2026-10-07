@@ -15,6 +15,7 @@ import '../../widgets/glow_background.dart';
 import '../auth/auth_controller.dart';
 import '../format.dart';
 import 'entry_panel.dart';
+import 'workout_day_button.dart';
 import 'workout_providers.dart';
 
 /// Plates for the workout's exercises: done, the one being recorded, waiting.
@@ -37,6 +38,29 @@ class WorkoutScreen extends ConsumerStatefulWidget {
 }
 
 class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
+  final _panelKey = GlobalKey();
+  Object? _followed;
+
+  /// Recorded exercises pile up above the entry panel and push it down. When
+  /// what is being entered changes, the screen scrolls so that the panel and
+  /// its «record» button are in view again.
+  void _followPanel(Object entering) {
+    if (entering == _followed) return;
+    _followed = entering;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final panel = _panelKey.currentContext;
+      if (panel == null || !panel.mounted) return;
+      Scrollable.ensureVisible(
+        panel,
+        duration: MediaQuery.disableAnimationsOf(panel)
+            ? Duration.zero
+            : const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+      );
+    });
+  }
+
   /// An exercise the user picked themselves; otherwise the next unrecorded.
   String? _pickedId;
   EntryMode? _mode;
@@ -73,18 +97,19 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
   }
 
   Future<void> _finish(Workout workout) async {
-    final choice = await showModalBottomSheet<_Finish>(
+    final result = await showModalBottomSheet<(_Finish, DateTime)>(
       context: context,
       backgroundColor: Colors.transparent,
       barrierColor: context.pb.scrim,
       isScrollControlled: true,
       builder: (_) => _FinishSheet(workout: workout),
     );
-    if (choice == null || !mounted) return;
+    if (result == null || !mounted) return;
+    final (choice, day) = result;
     final workouts = ref.read(workoutRepositoryProvider);
     unawaited(
       choice == _Finish.complete
-          ? workouts.save(completeWorkout(workout, now: _now))
+          ? workouts.save(completeWorkout(workout, now: _now, day: day))
           : workouts.cancel(workout),
     );
   }
@@ -114,6 +139,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     final done = recordedCount(workout);
     final total = workout.exercises.length;
     final newId = ref.read(newIdProvider);
+    _followPanel((
+      current?.id,
+      mode,
+      current?.sets.where((s) => s.fact != null).length,
+    ));
 
     return Scaffold(
       body: GlowBackground(
@@ -178,78 +208,82 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       spacing: PbSpace.s2,
                       children: [
-                        if (current == null)
-                          _NothingToRecord(
-                            empty: total == 0,
-                            onAdd: () => _addExercise(workout),
-                            onFinish: () => _finish(workout),
-                          )
-                        else
-                          EntryPanel(
-                            // A fresh panel for every exercise, mode and
-                            // recorded set, so its numbers start over.
-                            key: ValueKey((
-                              current.id,
-                              mode,
-                              current.sets.where((s) => s.fact != null).length,
-                            )),
-                            workout: workout,
-                            exercise: current,
-                            earlier: earlier,
-                            mode: mode,
-                            lastSetCount: profile?.lastSetCount,
-                            onModeChanged: (mode) {
-                              setState(() => _mode = mode);
-                              _remember(mode: mode);
-                            },
-                            onRecordSummary: (setCount, fact) {
-                              _save(
-                                recordSummary(
-                                  workout,
-                                  current.id,
-                                  setCount: setCount,
-                                  fact: fact,
-                                  newId: newId,
-                                  now: _now,
+                        KeyedSubtree(
+                          key: _panelKey,
+                          child: current == null
+                              ? _NothingToRecord(
+                                  empty: total == 0,
+                                  onAdd: () => _addExercise(workout),
+                                  onFinish: () => _finish(workout),
+                                )
+                              : EntryPanel(
+                                  // A fresh panel for every exercise, mode and
+                                  // recorded set, so its numbers start over.
+                                  key: ValueKey((
+                                    current.id,
+                                    mode,
+                                    current.sets
+                                        .where((s) => s.fact != null)
+                                        .length,
+                                  )),
+                                  workout: workout,
+                                  exercise: current,
+                                  earlier: earlier,
+                                  mode: mode,
+                                  lastSetCount: profile?.lastSetCount,
+                                  onModeChanged: (mode) {
+                                    setState(() => _mode = mode);
+                                    _remember(mode: mode);
+                                  },
+                                  onRecordSummary: (setCount, fact) {
+                                    _save(
+                                      recordSummary(
+                                        workout,
+                                        current.id,
+                                        setCount: setCount,
+                                        fact: fact,
+                                        newId: newId,
+                                        now: _now,
+                                      ),
+                                    );
+                                    _remember(setCount: setCount);
+                                    setState(() => _pickedId = null);
+                                  },
+                                  onRecordSet: (setId, fact, rpe) {
+                                    final updated = recordSet(
+                                      workout,
+                                      current.id,
+                                      setId,
+                                      fact: fact,
+                                      rpe: rpe,
+                                      now: _now,
+                                    );
+                                    _save(updated);
+                                    final same = updated.exercises.firstWhere(
+                                      (e) => e.id == current.id,
+                                    );
+                                    // Stay on the exercise until its plan is done.
+                                    setState(
+                                      () => _pickedId = nextSet(same) == null
+                                          ? null
+                                          : current.id,
+                                    );
+                                  },
+                                  onExtraSet: (fact, rpe) {
+                                    _save(
+                                      addExtraSet(
+                                        workout,
+                                        current.id,
+                                        fact: fact,
+                                        rpe: rpe,
+                                        newId: newId,
+                                        now: _now,
+                                      ),
+                                    );
+                                    setState(() => _pickedId = current.id);
+                                  },
                                 ),
-                              );
-                              _remember(setCount: setCount);
-                              setState(() => _pickedId = null);
-                            },
-                            onRecordSet: (setId, fact, rpe) {
-                              final updated = recordSet(
-                                workout,
-                                current.id,
-                                setId,
-                                fact: fact,
-                                rpe: rpe,
-                                now: _now,
-                              );
-                              _save(updated);
-                              final same = updated.exercises.firstWhere(
-                                (e) => e.id == current.id,
-                              );
-                              // Stay on the exercise until its plan is done.
-                              setState(
-                                () => _pickedId = nextSet(same) == null
-                                    ? null
-                                    : current.id,
-                              );
-                            },
-                            onExtraSet: (fact, rpe) {
-                              _save(
-                                addExtraSet(
-                                  workout,
-                                  current.id,
-                                  fact: fact,
-                                  rpe: rpe,
-                                  newId: newId,
-                                  now: _now,
-                                ),
-                              );
-                              setState(() => _pickedId = current.id);
-                            },
-                          ),
+                        ),
                         for (final exercise in workout.exercises)
                           if (exercise.id != current?.id &&
                               !(exercise.hasFact && mode == EntryMode.summary))
@@ -372,15 +406,24 @@ class _NothingToRecord extends StatelessWidget {
   }
 }
 
-class _FinishSheet extends StatelessWidget {
+class _FinishSheet extends StatefulWidget {
   const _FinishSheet({required this.workout});
 
   final Workout workout;
 
   @override
+  State<_FinishSheet> createState() => _FinishSheetState();
+}
+
+class _FinishSheetState extends State<_FinishSheet> {
+  /// Today unless the workout is being written down after the fact.
+  DateTime _day = DateTime.now();
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final c = context.pb;
+    final workout = widget.workout;
     final done = recordedCount(workout);
     final total = workout.exercises.length;
     return SafeArea(
@@ -402,21 +445,31 @@ class _FinishSheet extends StatelessWidget {
                     : l10n.finishBody(done, total),
                 style: PbText.body.copyWith(color: c.inkMuted),
               ),
-              // A workout with nothing recorded has nothing to keep.
-              if (done > 0)
+              // A workout with nothing recorded has nothing to keep, so it
+              // can only be cancelled. Once something is recorded, it is
+              // finished instead and can be deleted from history later.
+              if (done > 0) ...[
+                WorkoutDayButton(
+                  day: _day,
+                  onPicked: (day) => setState(() => _day = day),
+                ),
                 FilledButton(
-                  onPressed: () => Navigator.pop(context, _Finish.complete),
+                  onPressed: () =>
+                      Navigator.pop(context, (_Finish.complete, _day)),
                   child: Text(l10n.workoutFinish),
                 ),
+              ],
               OutlinedButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text(l10n.finishBack),
               ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, _Finish.cancel),
-                style: TextButton.styleFrom(foregroundColor: c.danger),
-                child: Text(l10n.finishCancel, textAlign: TextAlign.center),
-              ),
+              if (done == 0)
+                TextButton(
+                  onPressed: () =>
+                      Navigator.pop(context, (_Finish.cancel, _day)),
+                  style: TextButton.styleFrom(foregroundColor: c.danger),
+                  child: Text(l10n.finishCancel, textAlign: TextAlign.center),
+                ),
             ],
           ),
         ),

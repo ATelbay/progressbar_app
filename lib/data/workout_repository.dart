@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../domain/models.dart';
+import '../domain/workout_logic.dart';
 import 'firestore_codec.dart';
 import 'firestore_writes.dart';
 
@@ -48,6 +49,9 @@ abstract interface class WorkoutRepository {
 
   /// Discards the workout in progress.
   Future<void> cancel(Workout workout);
+
+  /// Removes a completed workout from history for good.
+  Future<void> deleteCompleted(Workout workout);
 }
 
 class FirestoreWorkoutRepository implements WorkoutRepository {
@@ -171,14 +175,14 @@ class FirestoreWorkoutRepository implements WorkoutRepository {
       .map(
         (snap) =>
             [for (final doc in snap.docs) workoutFromMap(doc.id, doc.data())]
-              ..sort((a, b) => b.completedAt!.compareTo(a.completedAt!)),
+              ..sort((a, b) => performedAt(b).compareTo(performedAt(a))),
       );
 
   @override
   Stream<List<Workout>> watchAll(String uid) => _workouts(uid).snapshots().map(
     (snap) =>
         [for (final doc in snap.docs) workoutFromMap(doc.id, doc.data())]
-          ..sort((a, b) => b.startedAt.compareTo(a.startedAt)),
+          ..sort((a, b) => performedAt(b).compareTo(performedAt(a))),
   );
 
   @override
@@ -213,6 +217,16 @@ class FirestoreWorkoutRepository implements WorkoutRepository {
     final batch = _db.batch()
       ..delete(_workouts(workout.traineeId).doc(workout.id));
     _setPointer(batch, workout.traineeId, null);
+    await _send(batch, workout, null);
+  });
+
+  @override
+  Future<void> deleteCompleted(Workout workout) => _serially(() async {
+    if (!workout.isCompleted) {
+      throw StateError('Workout ${workout.id} is still in progress');
+    }
+    final batch = _db.batch()
+      ..delete(_workouts(workout.traineeId).doc(workout.id));
     await _send(batch, workout, null);
   });
 }

@@ -489,3 +489,24 @@ test('a removed coach who is added again sees the earlier workouts and plans', a
   await assertSucceeds(getDocs(query(collection(coach, 'users/athlete/assignments'), where('coachId', '==', 'coach'))));
   await assertSucceeds(setDoc(assignmentRef(coach), assignment()));
 });
+
+test('a completed workout is deleted only by its owner, with the day it counts for kept free', async () => {
+  await assertSucceeds(invite('coach', 'coach'));
+  await assertSucceeds(accept('athlete', 'coach', 'athlete'));
+  const own = dbOf('athlete');
+  await start(own, 'w1');
+  // Still in progress: it goes only together with the pointer.
+  await assertFails(deleteDoc(workoutRef(own, 'w1')));
+  await assertSucceeds(
+    writeBatch(own)
+      .set(workoutRef(own, 'w1'), completed({ performedOn: '2026-09-30' }))
+      .set(pointerRef(own), { workoutId: null })
+      .commit(),
+  );
+  await assertSucceeds(setDoc(workoutRef(own, 'w1'), completed({ performedOn: '2026-10-01' })));
+  await assertFails(deleteDoc(workoutRef(dbOf('coach'), 'w1')));
+  await assertFails(deleteDoc(workoutRef(dbOf('other'), 'w1')));
+  await assertSucceeds(deleteDoc(workoutRef(own, 'w1')));
+  await assertSucceeds(start(own, 'w2'));
+});
+

@@ -30,6 +30,8 @@ class FirestoreProfileRepository implements ProfileRepository {
           EntryMode.values.asNameMap()[data['entryMode']] ?? EntryMode.summary,
       lastSetCount: data['lastSetCount'] as int?,
       languageCode: data['languageCode'] as String?,
+      theme:
+          ThemeChoice.values.asNameMap()[data['theme']] ?? ThemeChoice.system,
     );
   });
 
@@ -41,6 +43,7 @@ class FirestoreProfileRepository implements ProfileRepository {
     'entryMode': profile.entryMode.name,
     'lastSetCount': profile.lastSetCount,
     'languageCode': profile.languageCode,
+    'theme': profile.theme.name,
     'updatedAt': FieldValue.serverTimestamp(),
   }, SetOptions(merge: true));
 }

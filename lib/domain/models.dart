@@ -13,6 +13,9 @@ enum LinkRole { coach, trainee }
 /// How the user prefers to enter results.
 enum EntryMode { summary, perSet }
 
+/// The look the user chose; [system] follows the phone.
+enum ThemeChoice { system, dark, light }
+
 class UserProfile {
   const UserProfile({
     required this.id,
@@ -22,6 +25,7 @@ class UserProfile {
     this.entryMode = EntryMode.summary,
     this.lastSetCount,
     this.languageCode,
+    this.theme = ThemeChoice.system,
   });
 
   final String id;
@@ -35,6 +39,7 @@ class UserProfile {
 
   /// Interface language the user chose; null follows the phone.
   final String? languageCode;
+  final ThemeChoice theme;
 
   /// [languageCode] is a function so that it can also be set back to null.
   UserProfile copyWith({
@@ -43,6 +48,7 @@ class UserProfile {
     EntryMode? entryMode,
     int? lastSetCount,
     String? Function()? languageCode,
+    ThemeChoice? theme,
   }) => UserProfile(
     id: id,
     name: name ?? this.name,
@@ -51,6 +57,7 @@ class UserProfile {
     entryMode: entryMode ?? this.entryMode,
     lastSetCount: lastSetCount ?? this.lastSetCount,
     languageCode: languageCode == null ? this.languageCode : languageCode(),
+    theme: theme ?? this.theme,
   );
 }
 
@@ -286,6 +293,7 @@ class Workout {
     this.programName,
     this.dayName,
     this.completedAt,
+    this.performedOn,
     this.editedAt,
     this.comment,
     this.bodyWeightKg,
@@ -309,6 +317,10 @@ class Workout {
   final DateTime startedAt;
   final DateTime? completedAt;
 
+  /// The day the workout counts for when it was written down later than it
+  /// was done; a date without a time. Null: the day it was completed.
+  final DateTime? performedOn;
+
   /// Set when a completed workout is corrected.
   final DateTime? editedAt;
   final String? comment;
@@ -323,6 +335,7 @@ class Workout {
   Workout copyWith({
     WorkoutStatus? status,
     DateTime? completedAt,
+    DateTime? performedOn,
     DateTime? editedAt,
     String? comment,
     List<WorkoutExercise>? exercises,
@@ -337,6 +350,7 @@ class Workout {
     status: status ?? this.status,
     startedAt: startedAt,
     completedAt: completedAt ?? this.completedAt,
+    performedOn: performedOn ?? this.performedOn,
     editedAt: editedAt ?? this.editedAt,
     comment: comment ?? this.comment,
     bodyWeightKg: bodyWeightKg,

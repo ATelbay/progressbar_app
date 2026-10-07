@@ -735,4 +735,74 @@ void main() {
     expect(found.first.name, 'Жим лёжа');
     expect(exercisesWithResults([start()]), isEmpty);
   });
+
+  group('the day of a workout', () {
+    final now = DateTime(2026, 10, 7, 19, 30);
+
+    test('is the day it was completed unless another one is given', () {
+      final today = completeWorkout(start(), now: now, day: now);
+      expect(today.performedOn, isNull);
+      expect(performedAt(today), now);
+
+      final earlier = completeWorkout(
+        start(),
+        now: now,
+        day: DateTime(2026, 10, 3, 23, 59),
+      );
+      expect(earlier.performedOn, DateTime(2026, 10, 3));
+      expect(earlier.completedAt, now);
+      // Finishing is not a correction.
+      expect(earlier.editedAfterCompletion, isFalse);
+      expect(performedAt(earlier), DateTime(2026, 10, 3, 19, 30));
+    });
+
+    test('cannot be in the future', () {
+      expect(
+        () => completeWorkout(start(), now: now, day: DateTime(2026, 10, 8)),
+        throwsArgumentError,
+      );
+      final done = completeWorkout(start(), now: now);
+      expect(
+        () => setWorkoutDay(done, DateTime(2026, 10, 8), now: now),
+        throwsArgumentError,
+      );
+      expect(
+        () => setWorkoutDay(start(), DateTime(2026, 10, 1), now: now),
+        throwsStateError,
+      );
+    });
+
+    test(
+      'moving a completed workout marks it edited and reorders progress',
+      () {
+        Workout with_(double kg) {
+          final w = start();
+          return recordSummary(
+            w,
+            w.exercises.first.id,
+            setCount: 1,
+            fact: SetValues(reps: 8, weightKg: kg),
+            newId: counter(),
+            now: now,
+          );
+        }
+
+        final older = completeWorkout(
+          with_(60),
+          now: now.subtract(const Duration(days: 1)),
+        );
+        final newer = completeWorkout(with_(70), now: now);
+        List<double> values(List<Workout> workouts) => [
+          for (final point in progressFor('bench', workouts)) point.value,
+        ];
+        expect(values([older, newer]), [60, 70]);
+
+        // The newer one is said to have happened a week earlier.
+        final moved = setWorkoutDay(newer, DateTime(2026, 9, 30), now: now);
+        expect(moved.editedAfterCompletion, isTrue);
+        expect(moved.performedOn, DateTime(2026, 9, 30));
+        expect(values([older, moved]), [70, 60]);
+      },
+    );
+  });
 }

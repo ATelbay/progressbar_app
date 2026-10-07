@@ -8,6 +8,7 @@ import '../../widgets/glass_panel.dart';
 import '../../widgets/step_button.dart';
 import '../format.dart';
 import 'number_field.dart';
+import 'weight_keypad.dart';
 
 /// Where a result is typed in. Summary mode takes «sets × reps × weight» in
 /// one go, per-set mode takes one set at a time; both end up stored per set.
@@ -48,8 +49,8 @@ class _EntryPanelState extends State<EntryPanel> {
   /// The set being recorded in per-set mode; null adds one beyond the plan.
   String? _setId;
 
-  /// Text on the weight keypad while it is open.
-  String? _typed;
+  /// Whether the weight keypad is open in place of the fields.
+  bool _typing = false;
 
   WorkoutExercise get _exercise => widget.exercise;
   bool get _timed => _exercise.measure == Measure.time;
@@ -95,21 +96,6 @@ class _EntryPanelState extends State<EntryPanel> {
     _count = (_count + direction * step).clamp(step, 999);
   });
 
-  void _type(String key) => setState(() {
-    final typed = _typed!;
-    if (key == ',' && typed.contains(',')) return;
-    if (typed.length < 6) _typed = typed + key;
-  });
-
-  void _closeKeypad() {
-    final kg = parseWeight(_typed!);
-    if (kg == null) return;
-    setState(() {
-      _weightKg = kg;
-      _typed = null;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -123,8 +109,17 @@ class _EntryPanelState extends State<EntryPanel> {
           Text(_exercise.name, style: PbText.heading.copyWith(color: c.ink)),
           if (_exercise.note case final note?)
             Text(note, style: PbText.caption.copyWith(color: c.inkMuted)),
-          if (_typed != null)
-            ..._keypad(l10n, c)
+          if (_typing)
+            WeightKeypad(
+              label: _exercise.usesBodyWeight
+                  ? l10n.entryExtraWeight
+                  : l10n.entryWeight,
+              weightKg: _weightKg,
+              onDone: (kg) => setState(() {
+                if (kg != null) _weightKg = kg;
+                _typing = false;
+              }),
+            )
           else if (widget.mode == EntryMode.summary) ...[
             if (plan != null)
               Row(
@@ -224,7 +219,7 @@ class _EntryPanelState extends State<EntryPanel> {
           onStep: (d) => setState(
             () => _weightKg = stepWeight(_weightKg, d * weightStepKg),
           ),
-          onTapValue: () => setState(() => _typed = ''),
+          onTapValue: () => setState(() => _typing = true),
         ),
     ];
   }
@@ -342,106 +337,6 @@ class _EntryPanelState extends State<EntryPanel> {
       values(set.plan, PbText.numSm, c.inkMuted),
       values(set.fact, PbText.numMd, c.ink),
       Align(alignment: Alignment.centerRight, child: chip ?? const SizedBox()),
-    ];
-  }
-
-  List<Widget> _keypad(AppLocalizations l10n, PbColors c) {
-    final typed = _typed!;
-    void add(double kg) => setState(() {
-      final sum = stepWeight(parseWeight(typed) ?? _weightKg, kg);
-      _typed = formatNumber(context, sum).replaceAll('.', ',');
-    });
-    Widget key(
-      String label, {
-      String? tooltip,
-      Widget? child,
-      VoidCallback? onTap,
-    }) => PbPill(
-      tooltip: tooltip,
-      onTap: onTap ?? () => _type(label),
-      child: child ?? Text(label, style: PbText.numMd),
-    );
-    final shown = typed.isEmpty ? formatNumber(context, _weightKg) : typed;
-    return [
-      Wrap(
-        alignment: WrapAlignment.spaceBetween,
-        crossAxisAlignment: WrapCrossAlignment.end,
-        runSpacing: PbSpace.s2,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                _exercise.usesBodyWeight
-                    ? l10n.entryExtraWeight
-                    : l10n.entryWeight,
-                style: PbText.label.copyWith(color: c.inkMuted),
-              ),
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: c.accentText, width: 3),
-                  ),
-                ),
-                child: NumberValue(
-                  value: shown,
-                  unit: l10n.unitKg,
-                  style: PbText.numHero,
-                  muted: typed.isEmpty,
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            spacing: PbSpace.s2,
-            children: [
-              for (final kg in const [2.5, 5.0, 10.0])
-                PbPill(
-                  onTap: () => add(kg),
-                  child: Text('+${formatNumber(context, kg)}'),
-                ),
-            ],
-          ),
-        ],
-      ),
-      for (final row in const [
-        ['1', '2', '3'],
-        ['4', '5', '6'],
-        ['7', '8', '9'],
-      ])
-        Row(
-          spacing: PbSpace.s2,
-          children: [for (final k in row) Expanded(child: key(k))],
-        ),
-      Row(
-        spacing: PbSpace.s2,
-        children: [
-          Expanded(child: key(',', tooltip: l10n.keyComma)),
-          Expanded(child: key('0')),
-          Expanded(
-            child: key(
-              '⌫',
-              tooltip: l10n.keyErase,
-              child: const Icon(Icons.backspace_outlined),
-              onTap: () => setState(() {
-                if (typed.isNotEmpty) {
-                  _typed = typed.substring(0, typed.length - 1);
-                }
-              }),
-            ),
-          ),
-        ],
-      ),
-      FilledButton(
-        onPressed: typed.isEmpty
-            ? () => setState(() => _typed = null)
-            : parseWeight(typed) == null
-            ? null
-            : _closeKeypad,
-        child: Text(l10n.welcomeDone),
-      ),
     ];
   }
 }

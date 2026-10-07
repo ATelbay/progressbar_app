@@ -1,4 +1,5 @@
 import 'models.dart';
+import 'workout_logic.dart';
 
 /// Program IDs are scoped to their author, including inside assignments.
 String assignmentId(String coachId, String programId) =>
@@ -49,4 +50,4 @@ List<Workout> traineeWorkouts(
                 (!mineOnly || w.supervisorCoachId == link.coachId),
           )
           .toList()
-        ..sort((a, b) => b.startedAt.compareTo(a.startedAt)));
+        ..sort((a, b) => performedAt(b).compareTo(performedAt(a))));

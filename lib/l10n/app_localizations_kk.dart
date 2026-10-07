@@ -259,7 +259,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get finishBack => 'Жаттығуға оралу';
 
   @override
-  String get finishCancel => 'Жаттығудан бас тартып, жазбаларды жою';
+  String get finishCancel => 'Жаттығудан бас тарту';
 
   @override
   String get homeActiveLabel => 'Жаттығу жүріп жатыр';
@@ -365,6 +365,14 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get builderNote => 'Жаттығуға ескертпе';
+
+  @override
+  String builderLastTime(String result) {
+    return 'Өткен жолы: $result';
+  }
+
+  @override
+  String get builderNoHistory => 'Бұрын жазылмаған — салмақты енгізіңіз';
 
   @override
   String builderNotePrefix(String note) {
@@ -479,6 +487,21 @@ class AppLocalizationsKk extends AppLocalizations {
   String get editDiscard => 'Сақтамау';
 
   @override
+  String dayToday(String date) {
+    return 'Бүгін, $date';
+  }
+
+  @override
+  String get dayPickerTitle => 'Жаттығу күні';
+
+  @override
+  String get editDelete => 'Жаттығуды жою';
+
+  @override
+  String get editDeleteConfirm =>
+      'Осы жаттығуды жою керек пе? Нәтижелері тарих пен прогрестен жойылады. Қайтару мүмкін емес.';
+
+  @override
   String get progressMaxWeight => 'Ең үлкен салмақ';
 
   @override
@@ -522,6 +545,15 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get profileLanguage => 'Тіл';
+
+  @override
+  String get profileTheme => 'Тақырып';
+
+  @override
+  String get themeDark => 'Қараңғы';
+
+  @override
+  String get themeLight => 'Жарық';
 
   @override
   String get languageSystem => 'Телефондағыдай';

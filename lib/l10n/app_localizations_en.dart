@@ -256,7 +256,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get finishBack => 'Back to the workout';
 
   @override
-  String get finishCancel => 'Cancel the workout and delete the records';
+  String get finishCancel => 'Cancel the workout';
 
   @override
   String get homeActiveLabel => 'Workout in progress';
@@ -362,6 +362,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get builderNote => 'Note for the trainee';
+
+  @override
+  String builderLastTime(String result) {
+    return 'Last time: $result';
+  }
+
+  @override
+  String get builderNoHistory => 'Not recorded before — enter the weight';
 
   @override
   String builderNotePrefix(String note) {
@@ -479,6 +487,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editDiscard => 'Don\'t save';
 
   @override
+  String dayToday(String date) {
+    return 'Today, $date';
+  }
+
+  @override
+  String get dayPickerTitle => 'Day of the workout';
+
+  @override
+  String get editDelete => 'Delete workout';
+
+  @override
+  String get editDeleteConfirm =>
+      'Delete this workout? Its results will disappear from history and progress. This cannot be undone.';
+
+  @override
   String get progressMaxWeight => 'Heaviest weight';
 
   @override
@@ -523,6 +546,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileLanguage => 'Language';
+
+  @override
+  String get profileTheme => 'Theme';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get themeLight => 'Light';
 
   @override
   String get languageSystem => 'Same as the phone';
