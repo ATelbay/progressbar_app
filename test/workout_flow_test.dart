@@ -220,6 +220,11 @@ void main() {
     await tap(tester, find.byTooltip('Decimal point'));
     await tap(tester, find.widgetWithText(PbPill, '5'));
     await tap(tester, find.text('Done'));
+    expect(find.text('3 × 10 × 7.5 kg', findRichText: true), findsOneWidget);
+    // The keypad saves and closes the whole sheet in one tap. Reopen the
+    // saved plan to adjust its steps and set count.
+    expect(find.text('Note for the trainee'), findsNothing);
+    await tap(tester, find.text('3 × 10 × 7.5 kg', findRichText: true));
     // From here on the weight is stepped, up in the top row and down below.
     expect(find.text('Note for the trainee'), findsOneWidget);
     await tap(tester, find.text('+0.5'));
@@ -736,7 +741,7 @@ void main() {
     await tap(tester, find.widgetWithText(PbPill, '6'));
     await tap(tester, find.widgetWithText(PbPill, '1'));
     await tap(tester, find.text('Done'));
-    await tap(tester, find.text('Done'));
+    expect(find.text('Note for the trainee'), findsNothing);
     expect(find.text('3 × 10 × 61 kg', findRichText: true), findsOneWidget);
   });
 }

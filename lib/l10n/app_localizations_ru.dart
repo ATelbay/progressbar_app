@@ -846,4 +846,27 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get programMissingExercise =>
       'Упражнение недоступно. Начать этот день пока нельзя.';
+
+  @override
+  String get workoutLocalSaved =>
+      'Ждём связи с сервером. Результаты сохранены на телефоне и отправятся сами, даже если закрыть приложение.';
+
+  @override
+  String get workoutLocalReady =>
+      'Ждём связи с сервером. Можно тренироваться: новые результаты сохранятся на телефоне.';
+
+  @override
+  String get workoutNotSent => 'не отправлено';
+
+  @override
+  String get saveWorkoutRejected =>
+      'Сервер не принял изменения тренировки. Проверьте результаты: последнее изменение не сохранено.';
+
+  @override
+  String get saveProgramRejected =>
+      'Сервер не принял изменения программы. Проверьте план: последнее изменение не сохранено.';
+
+  @override
+  String get saveExerciseRejected =>
+      'Сервер не принял изменения упражнения. Последнее изменение не сохранено.';
 }

@@ -835,4 +835,27 @@ class AppLocalizationsKk extends AppLocalizations {
   @override
   String get programMissingExercise =>
       'Жаттығу қолжетімсіз. Бұл күнді әзірге бастау мүмкін емес.';
+
+  @override
+  String get workoutLocalSaved =>
+      'Сервермен байланыс күтілуде. Нәтижелер телефонда сақталған және қолданбаны жапсаңыз да, өздігінен жіберіледі.';
+
+  @override
+  String get workoutLocalReady =>
+      'Сервермен байланыс күтілуде. Жаттығуды жалғастыра беріңіз: жаңа нәтижелер телефонда сақталады.';
+
+  @override
+  String get workoutNotSent => 'жіберілмеген';
+
+  @override
+  String get saveWorkoutRejected =>
+      'Сервер жаттығудағы өзгерістерді қабылдамады. Нәтижелерді тексеріңіз: соңғы өзгеріс сақталмады.';
+
+  @override
+  String get saveProgramRejected =>
+      'Сервер бағдарламадағы өзгерістерді қабылдамады. Жоспарды тексеріңіз: соңғы өзгеріс сақталмады.';
+
+  @override
+  String get saveExerciseRejected =>
+      'Сервер жаттығу түріндегі өзгерістерді қабылдамады. Соңғы өзгеріс сақталмады.';
 }

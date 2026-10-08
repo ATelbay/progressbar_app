@@ -6,6 +6,7 @@ import 'l10n/app_localizations.dart';
 import 'features/auth/auth_controller.dart';
 import 'router.dart';
 import 'theme.dart';
+import 'widgets/storage_write_notice.dart';
 
 class ProgressBarApp extends ConsumerWidget {
   const ProgressBarApp({super.key});
@@ -30,6 +31,7 @@ class ProgressBarApp extends ConsumerWidget {
       darkTheme: buildTheme(Brightness.dark),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      builder: (_, child) => StorageWriteNotice(child: child!),
       routerConfig: ref.watch(routerProvider),
     );
   }

@@ -13,7 +13,9 @@ import 'package:integration_test/integration_test.dart';
 import 'package:progressbar_app/data/firestore_codec.dart';
 import 'package:progressbar_app/data/firestore_writes.dart';
 import 'package:progressbar_app/data/workout_repository.dart';
+import 'package:progressbar_app/data/workout_sync_repository.dart';
 import 'package:progressbar_app/domain/models.dart';
+import 'package:progressbar_app/domain/storage_status.dart';
 import 'package:progressbar_app/domain/workout_logic.dart';
 import 'package:progressbar_app/firebase_options.dart';
 
@@ -53,6 +55,16 @@ void main() {
   final rejected = <Object>[];
   FirestoreWorkoutRepository repository() =>
       FirestoreWorkoutRepository(db, onRejected: (e, _) => rejected.add(e));
+
+  Future<WorkoutSyncState> syncState(
+    String uid,
+    String id,
+    bool Function(WorkoutSyncState) expected,
+  ) =>
+      FirestoreWorkoutSyncRepository(db)
+          .watch(uid, id)
+          .firstWhere(expected)
+          .timeout(const Duration(seconds: 10));
 
   Workout started(String id, String uid) => startWorkout(
     id: id,
@@ -103,6 +115,9 @@ void main() {
     db = FirebaseFirestore.instance..useFirestoreEmulator('localhost', 8080);
     auth = FirebaseAuth.instance;
     await auth.useAuthEmulator('localhost', 9099);
+    // Inspect the restored pending write before reconnecting. Otherwise the
+    // SDK could send it during startup before the assertion observes it.
+    if (phase == 'restart') await db.disableNetwork();
   });
 
   testWidgets('offline workout is stored, guarded and synced', (tester) async {
@@ -125,6 +140,9 @@ void main() {
     final cached = await onDevice(uid, recorded);
     expect(cached?.id, 'w1');
     expect(cached!.exercises.single.sets.single.fact, fact);
+    final pending = await syncState(uid, 'w1', (s) => s.hasPendingWrites);
+    expect(pending.fromCache, isTrue);
+    expect(pending.pendingExercises(cached), {cached.exercises.single.id});
     expect(
       cached.exercises.single.sets.single.plan,
       const SetValues(reps: 8, weightKg: 57.5),
@@ -157,6 +175,7 @@ void main() {
     expect(synced.exercises.single.sets.single.fact, fact);
     expect((await onServer(uid, 'w2'))!.isCompleted, isFalse);
     expect(await pointerOnServer(uid), 'w2');
+    await syncState(uid, 'w1', (s) => !s.hasPendingWrites && !s.fromCache);
 
     // The server itself refuses a second workout in progress.
     await expectLater(
@@ -192,13 +211,18 @@ void main() {
     final restored = await repo.watchActive(uid!).first;
     expect(restored?.id, 'w2');
     expect(restored!.exercises.single.sets.single.fact, fact);
+    final pending = await syncState(uid, 'w2', (s) => s.hasPendingWrites);
+    expect(pending.fromCache, isTrue);
+    expect(pending.pendingExercises(restored), {restored.exercises.single.id});
     await expectLater(
       repo.start(started('w3', uid)),
       throwsA(isA<ActiveWorkoutExists>()),
     );
 
     // The change made offline before the restart reaches the server.
+    await db.enableNetwork();
     await db.waitForPendingWrites();
+    await syncState(uid, 'w2', (s) => !s.hasPendingWrites && !s.fromCache);
     expect(rejected, isEmpty);
     final synced = await onServer(uid, 'w2');
     expect(synced!.isCompleted, isFalse);

@@ -836,4 +836,27 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get programMissingExercise =>
       'An exercise is unavailable. This day cannot be started yet.';
+
+  @override
+  String get workoutLocalSaved =>
+      'Waiting for the server. Results are saved on this phone and will be sent automatically, even if you close the app.';
+
+  @override
+  String get workoutLocalReady =>
+      'Waiting for the server. You can keep training: new results will be saved on this phone.';
+
+  @override
+  String get workoutNotSent => 'not sent';
+
+  @override
+  String get saveWorkoutRejected =>
+      'The server refused the workout changes. Check your results: the last change was not saved.';
+
+  @override
+  String get saveProgramRejected =>
+      'The server refused the program changes. Check your plan: the last change was not saved.';
+
+  @override
+  String get saveExerciseRejected =>
+      'The server refused the exercise changes. The last change was not saved.';
 }

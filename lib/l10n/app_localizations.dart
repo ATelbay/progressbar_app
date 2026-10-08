@@ -1520,6 +1520,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'An exercise is unavailable. This day cannot be started yet.'**
   String get programMissingExercise;
+
+  /// No description provided for @workoutLocalSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the server. Results are saved on this phone and will be sent automatically, even if you close the app.'**
+  String get workoutLocalSaved;
+
+  /// No description provided for @workoutLocalReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the server. You can keep training: new results will be saved on this phone.'**
+  String get workoutLocalReady;
+
+  /// No description provided for @workoutNotSent.
+  ///
+  /// In en, this message translates to:
+  /// **'not sent'**
+  String get workoutNotSent;
+
+  /// No description provided for @saveWorkoutRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'The server refused the workout changes. Check your results: the last change was not saved.'**
+  String get saveWorkoutRejected;
+
+  /// No description provided for @saveProgramRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'The server refused the program changes. Check your plan: the last change was not saved.'**
+  String get saveProgramRejected;
+
+  /// No description provided for @saveExerciseRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'The server refused the exercise changes. The last change was not saved.'**
+  String get saveExerciseRejected;
 }
 
 class _AppLocalizationsDelegate

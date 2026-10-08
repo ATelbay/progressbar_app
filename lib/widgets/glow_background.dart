@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../theme.dart';
 
@@ -34,16 +35,21 @@ class GlowBackground extends StatelessWidget {
         ),
       ),
     );
-    return ColoredBox(
-      color: c.ground,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          glow(c.glow1, const Alignment(-1.6, -1.15), 1.1),
-          glow(c.glow2, const Alignment(1.8, -0.2), 1.0),
-          glow(c.glow3, const Alignment(-0.3, 1.35), 1.2),
-          child,
-        ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: Theme.of(context).brightness == Brightness.dark
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
+      child: ColoredBox(
+        color: c.ground,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            glow(c.glow1, const Alignment(-1.6, -1.15), 1.1),
+            glow(c.glow2, const Alignment(1.8, -0.2), 1.0),
+            glow(c.glow3, const Alignment(-0.3, 1.35), 1.2),
+            child,
+          ],
+        ),
       ),
     );
   }

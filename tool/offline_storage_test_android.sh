@@ -8,6 +8,7 @@
 # Then, with the Android emulator booted:
 #   tool/offline_storage_test_android.sh <adb serial>
 set -u
+set -o pipefail
 device=$1
 package=com.atelbay.progressbar
 log=$(mktemp -t offline-storage-android)
@@ -19,7 +20,7 @@ adb -s "$device" uninstall $package > /dev/null 2>&1
 
 for phase in first restart; do
   rtk proxy flutter build apk --debug \
-    -t integration_test/offline_storage_test.dart --dart-define=PHASE=$phase | tail -1
+    -t integration_test/offline_storage_test.dart --dart-define=PHASE=$phase | tail -1 || exit 1
   # Installed over the previous build, so the app's local database stays.
   adb -s "$device" install -r build/app/outputs/flutter-apk/app-debug.apk > /dev/null || exit 1
   adb -s "$device" logcat -c

@@ -11,13 +11,14 @@
 # with it, after every run. Here the test is built as the app itself, installed
 # over the previous build and its process is killed between the two phases.
 set -u
+set -o pipefail
 device=$1
 bundle=com.atelbay.progressbar
 log=$(mktemp -t offline-storage)
 
 for phase in first restart; do
   rtk proxy flutter build ios --simulator --debug \
-    -t integration_test/offline_storage_test.dart --dart-define=PHASE=$phase | tail -1
+    -t integration_test/offline_storage_test.dart --dart-define=PHASE=$phase | tail -1 || exit 1
   xcrun simctl install "$device" build/ios/iphonesimulator/Runner.app || exit 1
   : > "$log"
   xcrun simctl spawn "$device" log stream --style compact \

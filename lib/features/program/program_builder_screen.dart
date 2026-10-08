@@ -739,10 +739,10 @@ class _PlanSheetState extends State<_PlanSheet> {
             label: weightLabel,
             weightKg: _weightKg,
             quickAdd: const [],
-            onDone: (kg) => setState(() {
+            onDone: (kg) {
               _weightKg = kg ?? _weightKg ?? 0;
-              _typing = false;
-            }),
+              _close();
+            },
           )
         else ...[
           if (!_timed) ...[

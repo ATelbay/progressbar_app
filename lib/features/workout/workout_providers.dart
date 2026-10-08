@@ -3,12 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/firestore_writes.dart';
 import '../../data/workout_repository.dart';
 import '../../domain/models.dart';
+import '../../domain/storage_status.dart';
 import '../../domain/workout_logic.dart';
 import '../auth/auth_controller.dart';
 import '../firestore_provider.dart';
+import '../storage_status_providers.dart';
 
 final workoutRepositoryProvider = Provider<WorkoutRepository>(
-  (ref) => FirestoreWorkoutRepository(ref.watch(firestoreProvider)),
+  (ref) => FirestoreWorkoutRepository(
+    ref.watch(firestoreProvider),
+    onRejected: rejectedWriteHandler(ref, StorageArea.workout),
+  ),
 );
 
 /// IDs for new programs, workouts, exercises and sets.

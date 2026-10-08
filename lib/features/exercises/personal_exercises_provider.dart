@@ -3,12 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/personal_exercise_repository.dart';
 import '../../domain/exercise_catalog.dart';
 import '../../domain/models.dart';
+import '../../domain/storage_status.dart';
 import '../auth/auth_controller.dart';
 import 'exercise_catalog_provider.dart';
 import '../firestore_provider.dart';
+import '../storage_status_providers.dart';
 
 final personalExerciseRepositoryProvider = Provider<PersonalExerciseRepository>(
-  (ref) => FirestorePersonalExerciseRepository(ref.watch(firestoreProvider)),
+  (ref) => FirestorePersonalExerciseRepository(
+    ref.watch(firestoreProvider),
+    onRejected: rejectedWriteHandler(ref, StorageArea.exercise),
+  ),
 );
 
 /// The signed-in user's own exercises and edits of built-in ones.

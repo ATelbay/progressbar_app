@@ -14,6 +14,7 @@ import '../../widgets/glass_panel.dart';
 import '../../widgets/glow_background.dart';
 import '../auth/auth_controller.dart';
 import '../format.dart';
+import '../storage_status_providers.dart';
 import 'entry_panel.dart';
 import 'workout_day_button.dart';
 import 'workout_providers.dart';
@@ -131,6 +132,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
       );
     }
     final earlier = ref.watch(completedWorkoutsProvider).value ?? const [];
+    final sync = ref.watch(workoutSyncProvider(workout.id)).value;
+    final pending = sync?.pendingExercises(workout) ?? const <String>{};
     final profile = ref.watch(profileProvider).value;
     final mode = _mode ?? profile?.entryMode ?? EntryMode.summary;
     final current =
@@ -191,6 +194,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                             ],
                           ),
                         ),
+                        if (sync?.fromCache == true)
+                          _OfflineNotice(pending: sync!.hasPendingWrites),
                         // Per-set entry and the keypad are tall: recorded
                         // exercises move below so «record» stays in reach.
                         for (final exercise in workout.exercises)
@@ -199,6 +204,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                               mode == EntryMode.summary)
                             _ExerciseCard(
                               exercise: exercise,
+                              pending: pending.contains(exercise.id),
                               onTap: () =>
                                   setState(() => _pickedId = exercise.id),
                             ),
@@ -284,11 +290,20 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                                   },
                                 ),
                         ),
+                        if (current != null && pending.contains(current.id))
+                          Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: PbChip(
+                              l10n.workoutNotSent,
+                              color: c.warning,
+                            ),
+                          ),
                         for (final exercise in workout.exercises)
                           if (exercise.id != current?.id &&
                               !(exercise.hasFact && mode == EntryMode.summary))
                             _ExerciseCard(
                               exercise: exercise,
+                              pending: pending.contains(exercise.id),
                               onTap: () =>
                                   setState(() => _pickedId = exercise.id),
                             ),
@@ -312,10 +327,15 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
 
 /// A recorded exercise with its result, or a waiting one with its plan.
 class _ExerciseCard extends StatelessWidget {
-  const _ExerciseCard({required this.exercise, required this.onTap});
+  const _ExerciseCard({
+    required this.exercise,
+    required this.onTap,
+    required this.pending,
+  });
 
   final WorkoutExercise exercise;
   final VoidCallback onTap;
+  final bool pending;
 
   @override
   Widget build(BuildContext context) {
@@ -339,7 +359,19 @@ class _ExerciseCard extends StatelessWidget {
                   exercise.name,
                   style: PbText.bodyStrong.copyWith(color: c.ink),
                 ),
-                ?chip,
+                if (chip != null || pending)
+                  Wrap(
+                    spacing: PbSpace.s2,
+                    runSpacing: PbSpace.s1,
+                    children: [
+                      ?chip,
+                      if (pending)
+                        PbChip(
+                          AppLocalizations.of(context)!.workoutNotSent,
+                          color: c.warning,
+                        ),
+                    ],
+                  ),
               ],
             ),
           ),
@@ -365,6 +397,46 @@ class _ExerciseCard extends StatelessWidget {
               style: PbText.caption.copyWith(color: c.inkMuted),
             ),
         ],
+      ),
+    );
+  }
+}
+
+class _OfflineNotice extends StatelessWidget {
+  const _OfflineNotice({required this.pending});
+
+  final bool pending;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.pb;
+    final l10n = AppLocalizations.of(context)!;
+    return Semantics(
+      liveRegion: true,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: c.glassStrong,
+          borderRadius: BorderRadius.circular(PbRadius.lg),
+          border: Border.all(color: c.warning, width: 1.5),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: PbSpace.s3,
+            vertical: PbSpace.s2,
+          ),
+          child: Row(
+            spacing: PbSpace.s2,
+            children: [
+              Icon(Icons.cloud_off_outlined, color: c.warning),
+              Expanded(
+                child: Text(
+                  pending ? l10n.workoutLocalSaved : l10n.workoutLocalReady,
+                  style: PbText.caption.copyWith(color: c.ink),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
