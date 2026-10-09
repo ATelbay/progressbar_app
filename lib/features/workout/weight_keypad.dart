@@ -6,6 +6,7 @@ import '../../theme.dart';
 import '../../widgets/step_button.dart';
 import '../format.dart';
 import 'number_field.dart';
+import 'number_keypad.dart';
 
 /// Types a weight exactly: digits, a comma and quick additions. Takes the
 /// place of the fields it is opened from until «done».
@@ -49,16 +50,6 @@ class _WeightKeypadState extends State<WeightKeypad> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final c = context.pb;
-    Widget key(
-      String label, {
-      String? tooltip,
-      Widget? child,
-      VoidCallback? onTap,
-    }) => PbPill(
-      tooltip: tooltip,
-      onTap: onTap ?? () => _type(label),
-      child: child ?? Text(label, style: PbText.numMd),
-    );
     final shown = _typed.isEmpty
         ? formatNumber(context, widget.weightKg ?? 0)
         : _typed;
@@ -108,33 +99,14 @@ class _WeightKeypadState extends State<WeightKeypad> {
             ),
           ],
         ),
-        for (final row in const [
-          ['1', '2', '3'],
-          ['4', '5', '6'],
-          ['7', '8', '9'],
-        ])
-          Row(
-            spacing: PbSpace.s2,
-            children: [for (final k in row) Expanded(child: key(k))],
-          ),
-        Row(
-          spacing: PbSpace.s2,
-          children: [
-            Expanded(child: key(',', tooltip: l10n.keyComma)),
-            Expanded(child: key('0')),
-            Expanded(
-              child: key(
-                '⌫',
-                tooltip: l10n.keyErase,
-                child: const Icon(Icons.backspace_outlined),
-                onTap: () => setState(() {
-                  if (_typed.isNotEmpty) {
-                    _typed = _typed.substring(0, _typed.length - 1);
-                  }
-                }),
-              ),
-            ),
-          ],
+        NumberKeypad(
+          decimal: true,
+          onKey: _type,
+          onErase: () => setState(() {
+            if (_typed.isNotEmpty) {
+              _typed = _typed.substring(0, _typed.length - 1);
+            }
+          }),
         ),
         FilledButton(
           onPressed: _typed.isEmpty

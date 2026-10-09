@@ -129,6 +129,8 @@ void main() {
       await wait(find.text(l10n.workoutLocalReady));
       await mark('SHOT:01-offline-dark');
 
+      await tap(find.widgetWithText(FilledButton, l10n.entryContinue));
+      await tap(find.widgetWithText(FilledButton, l10n.entryContinue));
       await tap(find.widgetWithText(FilledButton, l10n.entryRecord));
       await wait(find.text(l10n.workoutNotSent));
       await wait(find.text(l10n.workoutLocalSaved));
@@ -153,6 +155,8 @@ void main() {
       );
       await mark('SHOT:03-pending-light');
       await mark('FONT:accessibility-large');
+      await tap(find.widgetWithText(FilledButton, l10n.entryContinue));
+      await tap(find.widgetWithText(FilledButton, l10n.entryContinue));
       final record = find.widgetWithText(FilledButton, l10n.entryRecord);
       await tester.ensureVisible(record);
       await tester.pump(const Duration(milliseconds: 300));

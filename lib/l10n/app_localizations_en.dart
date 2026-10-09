@@ -206,6 +206,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get entryContinue => 'Continue';
+
+  @override
   String get entryRecord => 'Record';
 
   @override
@@ -844,6 +847,12 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get workoutLocalReady =>
       'Waiting for the server. You can keep training: new results will be saved on this phone.';
+
+  @override
+  String get workoutOutsidePlan => 'Outside plan';
+
+  @override
+  String get workoutExerciseRecorded => 'Recorded';
 
   @override
   String get workoutNotSent => 'not sent';

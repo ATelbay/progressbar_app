@@ -19,8 +19,7 @@ import '../auth/auth_controller.dart';
 import '../exercises/personal_exercises_provider.dart';
 import '../format.dart';
 import '../people/people_providers.dart';
-import '../workout/number_field.dart';
-import '../workout/weight_keypad.dart';
+import '../workout/summary_entry.dart';
 import '../workout/workout_providers.dart';
 import 'program_providers.dart';
 import 'assignment_providers.dart';
@@ -116,6 +115,7 @@ class _ProgramBuilderScreenState extends ConsumerState<ProgramBuilderScreen> {
   }
 
   Future<void> _editDay(Program program, ProgramDay day) async {
+    _releaseName();
     final result = await showModalBottomSheet<_DayEdit>(
       context: context,
       backgroundColor: Colors.transparent,
@@ -138,6 +138,7 @@ class _ProgramBuilderScreenState extends ConsumerState<ProgramBuilderScreen> {
     Exercise exercise, {
     ProgramExercise? planned,
   }) async {
+    _releaseName();
     final result = await showModalBottomSheet<_PlanEdit>(
       context: context,
       backgroundColor: Colors.transparent,
@@ -173,7 +174,12 @@ class _ProgramBuilderScreenState extends ConsumerState<ProgramBuilderScreen> {
     );
   }
 
+  /// Otherwise the name gets the focus back when the sheet or the picker
+  /// closes, and its keyboard covers the list.
+  void _releaseName() => FocusManager.instance.primaryFocus?.unfocus();
+
   Future<void> _addExercise(Program program, ProgramDay day) async {
+    _releaseName();
     final exercise = await context.push<Exercise>(Routes.exercisePicker);
     if (exercise == null || !mounted) return;
     await _editExercise(program, day, exercise);
@@ -657,9 +663,6 @@ class _PlanSheetState extends State<_PlanSheet> {
   late double? _weightKg =
       widget.planned?.sets.firstOrNull?.weightKg ?? widget.last?.weightKg;
 
-  /// With nothing to start from, the weight is typed rather than stepped to.
-  late bool _typing = !_timed && _weightKg == null;
-
   bool get _timed => widget.exercise.measure == Measure.time;
 
   @override
@@ -682,18 +685,7 @@ class _PlanSheetState extends State<_PlanSheet> {
     final l10n = AppLocalizations.of(context)!;
     final c = context.pb;
     final exercise = widget.exercise;
-    final step = _timed ? secondsStep : 1;
-    final weightLabel = exercise.usesBodyWeight
-        ? l10n.entryExtraWeight
-        : l10n.entryWeight;
     final last = widget.last;
-    Widget weightStep(double kg) => PbPill(
-      tooltip: kg > 0
-          ? l10n.entryIncrease(weightLabel)
-          : l10n.entryDecrease(weightLabel),
-      onTap: () => setState(() => _weightKg = stepWeight(_weightKg ?? 0, kg)),
-      child: Text('${kg > 0 ? '+' : '−'}${formatNumber(context, kg.abs())}'),
-    );
     return _Sheet(
       children: [
         Column(
@@ -719,89 +711,34 @@ class _PlanSheetState extends State<_PlanSheet> {
               ),
           ],
         ),
-        NumberField(
-          label: l10n.entrySets,
-          value: '$_setCount',
-          style: PbText.numLg,
-          onStep: (d) =>
-              setState(() => _setCount = (_setCount + d).clamp(1, 20)),
-        ),
-        NumberField(
-          label: _timed ? l10n.entryTime : l10n.entryReps,
-          value: '$_count',
-          unit: _timed ? l10n.unitSec : null,
-          style: PbText.numLg,
-          onStep: (d) =>
-              setState(() => _count = (_count + d * step).clamp(step, 999)),
-        ),
-        if (_typing)
-          WeightKeypad(
-            label: weightLabel,
-            weightKg: _weightKg,
-            quickAdd: const [],
-            onDone: (kg) {
-              _weightKg = kg ?? _weightKg ?? 0;
-              _close();
-            },
-          )
-        else ...[
-          if (!_timed) ...[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  weightLabel,
-                  style: PbText.label.copyWith(color: c.inkMuted),
-                ),
-                // The number itself opens the keypad, as in a workout.
-                Semantics(
-                  button: true,
-                  child: InkWell(
-                    onTap: () => setState(() => _typing = true),
-                    borderRadius: BorderRadius.circular(PbRadius.sm),
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        minWidth: PbSize.touchMin,
-                        minHeight: PbSize.touchMin,
-                      ),
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: Alignment.bottomLeft,
-                        child: NumberValue(
-                          value: formatNumber(context, _weightKg ?? 0),
-                          unit: l10n.unitKg,
-                          style: PbText.numLg,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            // Additions in the upper row, the same steps down below them.
-            for (final sign in const [1, -1])
-              Row(
-                spacing: PbSpace.s2,
-                children: [
-                  for (final kg in planWeightStepsKg)
-                    Expanded(child: weightStep(sign * kg)),
-                ],
-              ),
-          ],
-          TextField(
+        SummaryEntry(
+          setCount: _setCount,
+          values: _timed
+              ? SetValues(seconds: _count)
+              : SetValues(reps: _count, weightKg: _weightKg ?? 0),
+          measure: exercise.measure,
+          usesBodyWeight: exercise.usesBodyWeight,
+          knownPlanningWeight: !_timed && _weightKg != null,
+          submitLabel: l10n.welcomeDone,
+          onSubmit: (setCount, values) {
+            _setCount = setCount;
+            _count = values.reps ?? values.seconds!;
+            _weightKg = values.weightKg;
+            _close();
+          },
+          details: TextField(
             controller: _note,
             textCapitalization: TextCapitalization.sentences,
             style: PbText.body.copyWith(color: c.ink),
             decoration: InputDecoration(labelText: l10n.builderNote),
           ),
-          FilledButton(onPressed: _close, child: Text(l10n.welcomeDone)),
-          if (widget.planned != null)
-            TextButton(
-              onPressed: () => _close(remove: true),
-              style: TextButton.styleFrom(foregroundColor: c.danger),
-              child: Text(l10n.builderRemoveExercise),
-            ),
-        ],
+        ),
+        if (widget.planned != null)
+          TextButton(
+            onPressed: () => _close(remove: true),
+            style: TextButton.styleFrom(foregroundColor: c.danger),
+            child: Text(l10n.builderRemoveExercise),
+          ),
       ],
     );
   }

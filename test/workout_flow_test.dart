@@ -15,6 +15,7 @@ import 'package:progressbar_app/features/auth/auth_controller.dart';
 import 'package:progressbar_app/features/exercises/exercise_catalog_provider.dart';
 import 'package:progressbar_app/features/firestore_provider.dart';
 import 'package:progressbar_app/features/people/people_providers.dart';
+import 'package:progressbar_app/features/workout/entry_panel.dart';
 import 'package:progressbar_app/widgets/qr_code.dart';
 import 'package:progressbar_app/widgets/step_button.dart';
 
@@ -87,6 +88,26 @@ void main() {
     await settle(tester);
   }
 
+  Future<void> typeNumber(WidgetTester tester, String value) async {
+    for (final key in value.split('')) {
+      await tap(tester, find.widgetWithText(PbPill, key));
+    }
+  }
+
+  Future<void> record(
+    WidgetTester tester, {
+    String? sets,
+    String? count,
+    String? weight,
+  }) async {
+    if (sets != null) await typeNumber(tester, sets);
+    await tap(tester, find.widgetWithText(FilledButton, 'Continue'));
+    if (count != null) await typeNumber(tester, count);
+    await tap(tester, find.widgetWithText(FilledButton, 'Continue'));
+    if (weight != null) await typeNumber(tester, weight);
+    await tap(tester, find.text('Record'));
+  }
+
   Future<Map<String, dynamic>> onlyWorkout() async =>
       (await db.collection('users/user-1/workouts').get()).docs.single.data();
 
@@ -100,7 +121,7 @@ void main() {
     await tester.enterText(find.byType(TextField), 'bench press');
     await settle(tester);
     await tap(tester, find.textContaining('Bench Press').first);
-    expect(find.text('Record'), findsOneWidget);
+    expect(find.widgetWithText(FilledButton, 'Continue'), findsOneWidget);
   }
 
   testWidgets('a workout without a program is recorded and finished', (
@@ -109,14 +130,13 @@ void main() {
     await startWithBenchPress(tester);
     expect(find.text('0 of 1', findRichText: true), findsOneWidget);
 
-    await tap(tester, find.byTooltip('More: Weight'));
-    await tap(tester, find.byTooltip('More: Weight'));
-    await tap(tester, find.byTooltip('Less: Reps'));
-    await tap(tester, find.text('Record'));
+    await record(tester, count: '9', weight: '5');
 
     expect(find.text('3 × 9 × 5 kg', findRichText: true), findsOneWidget);
     expect(find.text('1 of 1', findRichText: true), findsOneWidget);
     expect(find.text('Everything is recorded'), findsOneWidget);
+    expect(find.text('Recorded'), findsOneWidget);
+    expect(find.text('Outside plan'), findsNothing);
     // Summary entry is stored set by set.
     final sets = (await onlyWorkout())['exercises'][0]['sets'] as List;
     expect(sets.length, 3);
@@ -161,7 +181,7 @@ void main() {
 
     await tap(tester, find.text('Total only'));
     expect(profiles.profileOf('user-1')!.entryMode, EntryMode.summary);
-    expect(find.text('Record'), findsOneWidget);
+    expect(find.widgetWithText(FilledButton, 'Continue'), findsOneWidget);
   });
 
   testWidgets('cancelling removes the workout and returns home', (
@@ -186,7 +206,7 @@ void main() {
     expect(find.text('Workout in progress'), findsOneWidget);
     expect(find.text('Workout without a program'), findsNothing);
     await tap(tester, find.text('Continue'));
-    expect(find.text('Record'), findsOneWidget);
+    expect(find.widgetWithText(FilledButton, 'Continue'), findsOneWidget);
   });
 
   testWidgets('a program is built, started and its plan copied', (
@@ -213,14 +233,18 @@ void main() {
     await tester.enterText(find.byType(TextField), 'bench press');
     await settle(tester);
     await tap(tester, find.textContaining('Bench Press').first);
-    // Never recorded, so there is no weight to start from: it is typed.
+    // A new plan opens the keypad at sets, then reps, then weight.
     expect(find.textContaining('Not recorded before'), findsOneWidget);
     expect(find.text('Note for the trainee'), findsNothing);
+    await tap(tester, find.widgetWithText(FilledButton, 'Continue'));
+    await tap(tester, find.widgetWithText(FilledButton, 'Continue'));
     await tap(tester, find.widgetWithText(PbPill, '7'));
     await tap(tester, find.byTooltip('Decimal point'));
     await tap(tester, find.widgetWithText(PbPill, '5'));
     await tap(tester, find.text('Done'));
     expect(find.text('3 × 10 × 7.5 kg', findRichText: true), findsOneWidget);
+    // The program name does not take the keyboard back and cover the list.
+    expect(tester.testTextInput.isVisible, isFalse);
     // The keypad saves and closes the whole sheet in one tap. Reopen the
     // saved plan to adjust its steps and set count.
     expect(find.text('Note for the trainee'), findsNothing);
@@ -230,7 +254,10 @@ void main() {
     await tap(tester, find.text('+0.5'));
     await tap(tester, find.text('−5'));
     await tap(tester, find.text('−1'));
-    await tap(tester, find.byTooltip('More: Sets'));
+    await tap(tester, find.byKey(const ValueKey('entry-sets')));
+    await typeNumber(tester, '4');
+    await tap(tester, find.widgetWithText(FilledButton, 'Continue'));
+    await tap(tester, find.widgetWithText(FilledButton, 'Continue'));
     await tap(tester, find.text('Done'));
     expect(find.text('4 × 10 × 2 kg', findRichText: true), findsOneWidget);
 
@@ -251,7 +278,7 @@ void main() {
     // The workout opens with the plan and the day's name.
     expect(find.text('Day 1'), findsOneWidget);
     expect(find.text('4 × 10 × 2 kg', findRichText: true), findsOneWidget);
-    await tap(tester, find.text('Record'));
+    await record(tester);
     expect(find.text('on plan'), findsOneWidget);
 
     final workout = await onlyWorkout();
@@ -273,7 +300,7 @@ void main() {
     tester,
   ) async {
     await startWithBenchPress(tester);
-    await tap(tester, find.text('Record'));
+    await record(tester);
     await tap(tester, find.widgetWithText(FilledButton, 'Finish'));
     // With results recorded the workout is finished, not thrown away; the
     // day it counts for is today unless changed.
@@ -300,9 +327,7 @@ void main() {
       isNull,
     );
     await tap(tester, find.byIcon(Icons.edit_outlined));
-    await tap(tester, find.byTooltip('More: Weight'));
-    await tap(tester, find.byTooltip('Less: Sets'));
-    await tap(tester, find.text('Record'));
+    await record(tester, sets: '2', weight: '2,5');
     expect(find.text('2 × 10 × 2.5 kg', findRichText: true), findsOneWidget);
     // Not stored until saved.
     expect((await onlyWorkout())['editedAt'], isNull);
@@ -349,11 +374,8 @@ void main() {
       await tester.enterText(find.byType(TextField), 'bench press');
       await settle(tester);
       await tap(tester, find.textContaining('Bench Press').first);
-      // The second workout opens with the first one's result.
-      for (var i = 0; i < presses; i++) {
-        await tap(tester, find.byTooltip('More: Weight'));
-      }
-      await tap(tester, find.text('Record'));
+      // The second draft suggests the previous result; typing replaces it.
+      await record(tester, weight: presses == 2 ? '5' : '12,5');
       await tap(tester, find.widgetWithText(FilledButton, 'Finish'));
       await tap(tester, find.widgetWithText(FilledButton, 'Finish').last);
     }
@@ -670,13 +692,88 @@ void main() {
     await tap(tester, find.text('Start workout'));
     // No scrolling by hand: the button must be under the finger every time.
     for (var recorded = 0; recorded < 9; recorded++) {
-      final record = find.widgetWithText(FilledButton, 'Record').hitTestable();
-      expect(record, findsOneWidget, reason: 'after $recorded recorded');
-      await tester.tap(record);
+      for (final label in ['Continue', 'Continue', 'Record']) {
+        final button = find.widgetWithText(FilledButton, label).hitTestable();
+        expect(button, findsOneWidget, reason: 'after $recorded recorded');
+        await tester.tap(button);
+        await settle(tester);
+      }
       await settle(tester);
     }
     expect(find.text('Everything is recorded'), findsOneWidget);
   });
+
+  for (final mode in EntryMode.values) {
+    testWidgets('selecting and recording cards keeps program order in $mode', (
+      tester,
+    ) async {
+      await openApp(tester);
+      final exercises = catalog.values
+          .where((e) => e.measure == Measure.reps && !e.usesBodyWeight)
+          .take(3)
+          .toList();
+      await tester.runAsync(
+        () => FirestoreProgramRepository(db).save(
+          Program(
+            id: 'order',
+            authorId: 'user-1',
+            name: 'Order test',
+            days: [
+              ProgramDay(
+                id: 'day',
+                name: 'Day 1',
+                exercises: [
+                  for (final (i, exercise) in exercises.indexed)
+                    ProgramExercise(
+                      id: 'pe$i',
+                      exerciseId: exercise.id,
+                      sets: const [SetValues(reps: 8, weightKg: 20)],
+                    ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+      await settle(tester);
+      await tap(tester, find.text('Order test'));
+      await tap(tester, find.text('Start workout'));
+      if (mode == EntryMode.perSet) {
+        await tap(tester, find.text('Add each set'));
+      }
+      void expectOrder() {
+        final positions = [
+          for (final exercise in exercises)
+            tester.getTopLeft(find.text(exercise.nameFor('en'))).dy,
+        ];
+        expect(positions, orderedEquals([...positions]..sort()));
+      }
+
+      expectOrder();
+      for (final index in [2, 1]) {
+        await tap(tester, find.text(exercises[index].nameFor('en')));
+        expect(
+          find.descendant(
+            of: find.byType(EntryPanel),
+            matching: find.text(exercises[index].nameFor('en')),
+          ),
+          findsOneWidget,
+        );
+        expectOrder();
+        if (mode == EntryMode.summary) {
+          await record(tester, weight: '7,5');
+        } else {
+          await tap(tester, find.text('Record set 1'));
+        }
+        expectOrder();
+      }
+      final stored = (await onlyWorkout())['exercises'] as List;
+      expect(stored.map((e) => e['exerciseId']), exercises.map((e) => e.id));
+      expect(stored.first['sets'][0]['fact'], isNull);
+      expect(stored[1]['sets'][0]['fact'], isNotNull);
+      expect(stored[2]['sets'][0]['fact'], isNotNull);
+    });
+  }
 
   testWidgets('a plan starts from the weight lifted last time', (tester) async {
     await openApp(tester);
@@ -743,5 +840,79 @@ void main() {
     await tap(tester, find.text('Done'));
     expect(find.text('Note for the trainee'), findsNothing);
     expect(find.text('3 × 10 × 61 kg', findRichText: true), findsOneWidget);
+  });
+
+  testWidgets('summary entry finishes an exercise added beyond the plan', (
+    tester,
+  ) async {
+    await openApp(tester);
+    final exercises = catalog.values
+        .where((e) => e.measure == Measure.reps && !e.usesBodyWeight)
+        .take(2)
+        .toList();
+    await tester.runAsync(
+      () => FirestoreProgramRepository(db).save(
+        Program(
+          id: 'extra-test',
+          authorId: 'user-1',
+          name: 'Extra exercise test',
+          days: [
+            ProgramDay(
+              id: 'day',
+              name: 'Day 1',
+              exercises: [
+                ProgramExercise(
+                  id: 'planned',
+                  exerciseId: exercises.first.id,
+                  sets: const [SetValues(reps: 8, weightKg: 40)],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+    await settle(tester);
+    await tap(tester, find.text('Extra exercise test'));
+    await tap(tester, find.text('Start workout'));
+    await tap(tester, find.text('Add exercise'));
+    final extra = exercises.last;
+    await tester.enterText(find.byType(TextField), extra.nameFor('en'));
+    await settle(tester);
+    await tap(tester, find.text(extra.nameFor('en')).last);
+    expect(find.text('Outside plan'), findsOneWidget);
+    expect(find.text('Recorded'), findsNothing);
+
+    for (var step = 0; step < 2; step++) {
+      await tap(tester, find.widgetWithText(FilledButton, 'Continue'));
+      final stored = await onlyWorkout();
+      expect(stored['exercises'][1]['sets'], isEmpty);
+      expect(find.text('0 of 2', findRichText: true), findsOneWidget);
+    }
+    await typeNumber(tester, '7,5');
+    await tap(tester, find.text('Record'));
+    expect(find.text('1 of 2', findRichText: true), findsOneWidget);
+    expect(find.text('3 × 10 × 7.5 kg', findRichText: true), findsOneWidget);
+    expect(find.text('Outside plan'), findsOneWidget);
+    expect(find.text('Recorded'), findsOneWidget);
+    final stored = await onlyWorkout();
+    final planned = stored['exercises'][0]['sets'] as List;
+    final added = stored['exercises'][1]['sets'] as List;
+    expect(planned.single['plan']['weightKg'], 40);
+    expect(planned.single['fact'], isNull);
+    expect(added.length, 3);
+    expect(added.map((s) => s['plan']), everyElement(isNull));
+    expect(added.map((s) => s['fact']['weightKg']), everyElement(7.5));
+
+    // Reopening a recorded extra exercise corrects its result, not the plan.
+    await tap(tester, find.text(extra.nameFor('en')));
+    await record(tester, sets: '2', count: '12', weight: '5');
+    expect(find.text('1 of 2', findRichText: true), findsOneWidget);
+    expect(find.text('2 × 12 × 5 kg', findRichText: true), findsOneWidget);
+    expect(find.text('Recorded'), findsOneWidget);
+    final corrected = (await onlyWorkout())['exercises'] as List;
+    expect(corrected.first['sets'], planned);
+    expect((corrected.last['sets'] as List).length, 2);
+    expect(corrected.last['sets'][0]['fact']['reps'], 12);
   });
 }

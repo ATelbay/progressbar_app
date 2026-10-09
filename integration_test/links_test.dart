@@ -254,8 +254,10 @@ void main() {
       await shot('07-assigned-builder');
       await db.disableNetwork();
       await tap(find.text(l.builderStart));
-      await wait(find.text(l.entryRecord));
+      await wait(find.text(l.entryContinue));
       await shot('08-assigned-offline-workout');
+      await tap(find.widgetWithText(FilledButton, l.entryContinue));
+      await tap(find.widgetWithText(FilledButton, l.entryContinue));
       await tap(find.widgetWithText(FilledButton, l.entryRecord));
       await tap(find.widgetWithText(FilledButton, l.workoutFinish));
       await wait(find.text(l.finishTitle));
@@ -287,7 +289,9 @@ void main() {
       await wait(find.text(l.builderStart));
       // Start again while deactivated: supervisor is absent, author is unchanged.
       await tap(find.text(l.builderStart));
-      await wait(find.text(l.entryRecord));
+      await wait(find.text(l.entryContinue));
+      await tap(find.widgetWithText(FilledButton, l.entryContinue));
+      await tap(find.widgetWithText(FilledButton, l.entryContinue));
       await tap(find.widgetWithText(FilledButton, l.entryRecord));
       await tap(find.widgetWithText(FilledButton, l.workoutFinish));
       await wait(find.text(l.finishTitle));

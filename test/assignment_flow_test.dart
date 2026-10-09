@@ -107,6 +107,8 @@ void main() {
     expect(find.text('Delete program'), findsNothing);
     expect(find.text('Assign to trainee'), findsNothing);
     await tap(tester, 'Start workout');
+    await tap(tester, 'Continue');
+    await tap(tester, 'Continue');
     await tap(tester, 'Record');
     await tap(tester, 'Finish');
     await tester.tap(find.widgetWithText(FilledButton, 'Finish').last);

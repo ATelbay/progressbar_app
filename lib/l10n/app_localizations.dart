@@ -460,6 +460,12 @@ abstract class AppLocalizations {
   /// **'Body weight {kg} kg comes from your profile.'**
   String entryBodyWeightNote(String kg);
 
+  /// No description provided for @entryContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get entryContinue;
+
   /// No description provided for @entryRecord.
   ///
   /// In en, this message translates to:
@@ -1532,6 +1538,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Waiting for the server. You can keep training: new results will be saved on this phone.'**
   String get workoutLocalReady;
+
+  /// No description provided for @workoutOutsidePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Outside plan'**
+  String get workoutOutsidePlan;
+
+  /// No description provided for @workoutExerciseRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded'**
+  String get workoutExerciseRecorded;
 
   /// No description provided for @workoutNotSent.
   ///

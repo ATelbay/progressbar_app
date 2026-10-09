@@ -21,7 +21,7 @@ import 'package:progressbar_app/features/auth/sign_in_screen.dart';
 import 'package:progressbar_app/features/exercises/exercise_picker_screen.dart';
 import 'package:progressbar_app/features/program/program_builder_screen.dart';
 import 'package:progressbar_app/features/profile/profile_screen.dart';
-import 'package:progressbar_app/features/workout/weight_keypad.dart';
+import 'package:progressbar_app/features/workout/number_keypad.dart';
 import 'package:progressbar_app/features/workout/workout_day_button.dart';
 import 'package:progressbar_app/features/workout/workout_screen.dart';
 import 'package:progressbar_app/firebase_options.dart';
@@ -142,12 +142,14 @@ void main() {
       if (index == 0) await mark('SHOT:04-picker');
       await tap(find.byType(GlassCard).at(index));
       await wait(find.text(l10n.entrySets));
-      // Nothing recorded yet, so the weight is typed on the keypad first.
+      // First sets and reps, then the weight on the same keypad.
+      await tap(find.widgetWithText(FilledButton, l10n.entryContinue));
+      await tap(find.widgetWithText(FilledButton, l10n.entryContinue));
       await tap(find.widgetWithText(PbPill, '6'));
       await tap(find.widgetWithText(PbPill, '0'));
       if (index == 0) await mark('SHOT:05-plan-keypad');
       await tap(find.widgetWithText(FilledButton, l10n.welcomeDone));
-      expect(find.byType(WeightKeypad), findsNothing);
+      expect(find.byType(NumberKeypad), findsNothing);
       if (index == 0) {
         await tap(find.byType(GlassCard).first);
         await wait(find.text(l10n.builderNote));
@@ -161,10 +163,12 @@ void main() {
     await tap(find.widgetWithText(FilledButton, l10n.builderStart));
 
     await wait(find.byType(WorkoutScreen));
-    await wait(find.text(l10n.entryRecord));
+    await wait(find.text(l10n.entryContinue));
     await mark('SHOT:07-workout');
     await mark('FONT:accessibility-large');
     await mark('SHOT:08-workout-large-font');
+    await tap(find.widgetWithText(FilledButton, l10n.entryContinue));
+    await tap(find.widgetWithText(FilledButton, l10n.entryContinue));
     final record = find.widgetWithText(FilledButton, l10n.entryRecord);
     await tester.ensureVisible(record);
     await tester.pump(const Duration(milliseconds: 300));
@@ -172,7 +176,9 @@ void main() {
     await mark('SHOT:08b-workout-large-record');
     await mark('FONT:large');
 
-    await tap(find.byTooltip(l10n.entryIncrease(l10n.entryWeight)));
+    for (final key in ['6', '2', ',', '5']) {
+      await tap(find.widgetWithText(PbPill, key));
+    }
     await tap(find.widgetWithText(FilledButton, l10n.entryRecord));
     await tap(find.text(l10n.entryEachSet));
     await wait(find.text(l10n.entryRecordSet(1)));
@@ -180,6 +186,8 @@ void main() {
     await mark('SHOT:09-per-set');
     await tap(find.text(l10n.entryRecordSet(1)));
     await tap(find.text(l10n.entrySummaryOnly));
+    await tap(find.widgetWithText(FilledButton, l10n.entryContinue));
+    await tap(find.widgetWithText(FilledButton, l10n.entryContinue));
     await tap(find.widgetWithText(FilledButton, l10n.entryRecord));
     await wait(find.text(l10n.workoutAllRecorded));
     await mark('SHOT:10-all-recorded');
@@ -252,7 +260,7 @@ void main() {
     await wait(find.text(l10n.builderNote));
     expect(find.textContaining('Last time:'), findsOneWidget);
     expect(find.text('62.5 kg', findRichText: true), findsOneWidget);
-    expect(find.byType(WeightKeypad), findsNothing);
+    expect(find.byType(NumberKeypad), findsNothing);
     await mark('SHOT:20-plan-last-weight');
     await tap(find.widgetWithText(FilledButton, l10n.welcomeDone));
     await tap(

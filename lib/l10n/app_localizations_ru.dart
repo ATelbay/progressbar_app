@@ -207,6 +207,9 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get entryContinue => 'Продолжить';
+
+  @override
   String get entryRecord => 'Записать';
 
   @override
@@ -854,6 +857,12 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get workoutLocalReady =>
       'Ждём связи с сервером. Можно тренироваться: новые результаты сохранятся на телефоне.';
+
+  @override
+  String get workoutOutsidePlan => 'Вне плана';
+
+  @override
+  String get workoutExerciseRecorded => 'Записано';
 
   @override
   String get workoutNotSent => 'не отправлено';

@@ -7,7 +7,9 @@ import '../../theme.dart';
 import '../../widgets/glass_panel.dart';
 import '../../widgets/step_button.dart';
 import '../format.dart';
+import 'exercise_labels.dart';
 import 'number_field.dart';
+import 'summary_entry.dart';
 import 'weight_keypad.dart';
 
 /// Where a result is typed in. Summary mode takes «sets × reps × weight» in
@@ -24,6 +26,7 @@ class EntryPanel extends StatefulWidget {
     required this.onRecordSet,
     required this.onExtraSet,
     required this.onModeChanged,
+    this.pending = false,
   });
 
   final Workout workout;
@@ -35,6 +38,7 @@ class EntryPanel extends StatefulWidget {
   final void Function(String setId, SetValues fact, double? rpe) onRecordSet;
   final void Function(SetValues fact, double? rpe) onExtraSet;
   final ValueChanged<EntryMode> onModeChanged;
+  final bool pending;
 
   @override
   State<EntryPanel> createState() => _EntryPanelState();
@@ -107,6 +111,14 @@ class _EntryPanelState extends State<EntryPanel> {
         spacing: PbSpace.s2,
         children: [
           Text(_exercise.name, style: PbText.heading.copyWith(color: c.ink)),
+          if (_exercise.hasFact ||
+              widget.pending ||
+              isOutsidePlan(widget.workout, _exercise))
+            ExerciseLabels(
+              workout: widget.workout,
+              exercise: _exercise,
+              pending: widget.pending,
+            ),
           if (_exercise.note case final note?)
             Text(note, style: PbText.caption.copyWith(color: c.inkMuted)),
           if (_typing)
@@ -173,21 +185,19 @@ class _EntryPanelState extends State<EntryPanel> {
         ),
     ];
     return [
-      NumberField(
-        label: l10n.entrySets,
-        value: '$_setCount',
-        style: PbText.numLg,
-        onStep: (d) => setState(() => _setCount = (_setCount + d).clamp(1, 20)),
-      ),
-      ..._valueFields(l10n),
-      if (hints.isNotEmpty)
-        Text(
-          hints.join(' '),
-          style: PbText.caption.copyWith(color: c.inkMuted),
-        ),
-      FilledButton(
-        onPressed: () => widget.onRecordSummary(_setCount, _values),
-        child: Text(l10n.entryRecord),
+      SummaryEntry(
+        setCount: _setCount,
+        values: _values,
+        measure: _exercise.measure,
+        usesBodyWeight: _exercise.usesBodyWeight,
+        submitLabel: l10n.entryRecord,
+        onSubmit: widget.onRecordSummary,
+        hint: hints.isEmpty
+            ? null
+            : Text(
+                hints.join(' '),
+                style: PbText.caption.copyWith(color: c.inkMuted),
+              ),
       ),
       TextButton(
         onPressed: () => widget.onModeChanged(EntryMode.perSet),

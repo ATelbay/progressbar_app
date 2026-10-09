@@ -556,6 +556,11 @@ double? parseWeight(String text) {
 bool hasPlan(Workout workout) =>
     workout.exercises.any((e) => e.sets.any((s) => !s.isExtra));
 
+/// An exercise added to a program workout, rather than copied from its plan.
+/// Extra sets inside a planned exercise do not make the exercise unplanned.
+bool isOutsidePlan(Workout workout, WorkoutExercise exercise) =>
+    workout.programId != null && exercise.sets.every((set) => set.isExtra);
+
 /// How a workout went against its plan: exercises that fell short and
 /// exercises left without any result.
 ({int below, int skipped}) planVerdict(Workout workout) {

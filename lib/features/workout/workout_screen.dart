@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,6 +17,7 @@ import '../auth/auth_controller.dart';
 import '../format.dart';
 import '../storage_status_providers.dart';
 import 'entry_panel.dart';
+import 'exercise_labels.dart';
 import 'workout_day_button.dart';
 import 'workout_providers.dart';
 
@@ -42,9 +44,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
   final _panelKey = GlobalKey();
   Object? _followed;
 
-  /// Recorded exercises pile up above the entry panel and push it down. When
-  /// what is being entered changes, the screen scrolls so that the panel and
-  /// its «record» button are in view again.
+  /// Keep the selected exercise and its record button in reach, while its
+  /// slot in the workout stays in the original order.
   void _followPanel(Object entering) {
     if (entering == _followed) return;
     _followed = entering;
@@ -114,6 +115,75 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
           : workouts.cancel(workout),
     );
   }
+
+  Widget _entryPanel(
+    Workout workout,
+    WorkoutExercise exercise,
+    List<Workout> earlier,
+    EntryMode mode,
+    int? lastSetCount,
+    IdGenerator newId, {
+    required bool pending,
+  }) => EntryPanel(
+    // A fresh panel for every exercise, mode and
+    // recorded set, so its numbers start over.
+    key: ValueKey((
+      exercise.id,
+      mode,
+      exercise.sets.where((s) => s.fact != null).length,
+    )),
+    workout: workout,
+    exercise: exercise,
+    earlier: earlier,
+    mode: mode,
+    lastSetCount: lastSetCount,
+    pending: pending,
+    onModeChanged: (mode) {
+      setState(() => _mode = mode);
+      _remember(mode: mode);
+    },
+    onRecordSummary: (setCount, fact) {
+      _save(
+        recordSummary(
+          workout,
+          exercise.id,
+          setCount: setCount,
+          fact: fact,
+          newId: newId,
+          now: _now,
+        ),
+      );
+      _remember(setCount: setCount);
+      setState(() => _pickedId = null);
+    },
+    onRecordSet: (setId, fact, rpe) {
+      final updated = recordSet(
+        workout,
+        exercise.id,
+        setId,
+        fact: fact,
+        rpe: rpe,
+        now: _now,
+      );
+      _save(updated);
+      final same = updated.exercises.firstWhere((e) => e.id == exercise.id);
+      // Stay on the exercise until its plan is done.
+      setState(() => _pickedId = nextSet(same) == null ? null : exercise.id);
+    },
+    onExtraSet: (fact, rpe) {
+      _save(
+        addExtraSet(
+          workout,
+          exercise.id,
+          fact: fact,
+          rpe: rpe,
+          newId: newId,
+          now: _now,
+        ),
+      );
+      setState(() => _pickedId = exercise.id);
+    },
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -196,117 +266,47 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                         ),
                         if (sync?.fromCache == true)
                           _OfflineNotice(pending: sync!.hasPendingWrites),
-                        // Per-set entry and the keypad are tall: recorded
-                        // exercises move below so «record» stays in reach.
-                        for (final exercise in workout.exercises)
-                          if (exercise.hasFact &&
-                              exercise.id != current?.id &&
-                              mode == EntryMode.summary)
-                            _ExerciseCard(
-                              exercise: exercise,
-                              pending: pending.contains(exercise.id),
-                              onTap: () =>
-                                  setState(() => _pickedId = exercise.id),
-                            ),
                       ],
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       spacing: PbSpace.s2,
                       children: [
-                        KeyedSubtree(
-                          key: _panelKey,
-                          child: current == null
-                              ? _NothingToRecord(
-                                  empty: total == 0,
-                                  onAdd: () => _addExercise(workout),
-                                  onFinish: () => _finish(workout),
-                                )
-                              : EntryPanel(
-                                  // A fresh panel for every exercise, mode and
-                                  // recorded set, so its numbers start over.
-                                  key: ValueKey((
-                                    current.id,
-                                    mode,
-                                    current.sets
-                                        .where((s) => s.fact != null)
-                                        .length,
-                                  )),
-                                  workout: workout,
-                                  exercise: current,
-                                  earlier: earlier,
-                                  mode: mode,
-                                  lastSetCount: profile?.lastSetCount,
-                                  onModeChanged: (mode) {
-                                    setState(() => _mode = mode);
-                                    _remember(mode: mode);
-                                  },
-                                  onRecordSummary: (setCount, fact) {
-                                    _save(
-                                      recordSummary(
-                                        workout,
-                                        current.id,
-                                        setCount: setCount,
-                                        fact: fact,
-                                        newId: newId,
-                                        now: _now,
-                                      ),
-                                    );
-                                    _remember(setCount: setCount);
-                                    setState(() => _pickedId = null);
-                                  },
-                                  onRecordSet: (setId, fact, rpe) {
-                                    final updated = recordSet(
+                        // Each exercise owns one slot throughout the workout.
+                        // Selecting it expands that slot without moving others.
+                        for (final exercise in workout.exercises)
+                          KeyedSubtree(
+                            key: ValueKey('workout-exercise-${exercise.id}'),
+                            child: exercise.id == current?.id
+                                ? KeyedSubtree(
+                                    key: _panelKey,
+                                    child: _entryPanel(
                                       workout,
-                                      current.id,
-                                      setId,
-                                      fact: fact,
-                                      rpe: rpe,
-                                      now: _now,
-                                    );
-                                    _save(updated);
-                                    final same = updated.exercises.firstWhere(
-                                      (e) => e.id == current.id,
-                                    );
-                                    // Stay on the exercise until its plan is done.
-                                    setState(
-                                      () => _pickedId = nextSet(same) == null
-                                          ? null
-                                          : current.id,
-                                    );
-                                  },
-                                  onExtraSet: (fact, rpe) {
-                                    _save(
-                                      addExtraSet(
-                                        workout,
-                                        current.id,
-                                        fact: fact,
-                                        rpe: rpe,
-                                        newId: newId,
-                                        now: _now,
-                                      ),
-                                    );
-                                    setState(() => _pickedId = current.id);
-                                  },
-                                ),
-                        ),
-                        if (current != null && pending.contains(current.id))
-                          Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: PbChip(
-                              l10n.workoutNotSent,
-                              color: c.warning,
+                                      exercise,
+                                      earlier,
+                                      mode,
+                                      profile?.lastSetCount,
+                                      newId,
+                                      pending: pending.contains(exercise.id),
+                                    ),
+                                  )
+                                : _ExerciseCard(
+                                    workout: workout,
+                                    exercise: exercise,
+                                    pending: pending.contains(exercise.id),
+                                    onTap: () =>
+                                        setState(() => _pickedId = exercise.id),
+                                  ),
+                          ),
+                        if (current == null)
+                          KeyedSubtree(
+                            key: _panelKey,
+                            child: _NothingToRecord(
+                              empty: total == 0,
+                              onAdd: () => _addExercise(workout),
+                              onFinish: () => _finish(workout),
                             ),
                           ),
-                        for (final exercise in workout.exercises)
-                          if (exercise.id != current?.id &&
-                              !(exercise.hasFact && mode == EntryMode.summary))
-                            _ExerciseCard(
-                              exercise: exercise,
-                              pending: pending.contains(exercise.id),
-                              onTap: () =>
-                                  setState(() => _pickedId = exercise.id),
-                            ),
                         if (current != null)
                           TextButton(
                             onPressed: () => _addExercise(workout),
@@ -328,11 +328,13 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
 /// A recorded exercise with its result, or a waiting one with its plan.
 class _ExerciseCard extends StatelessWidget {
   const _ExerciseCard({
+    required this.workout,
     required this.exercise,
     required this.onTap,
     required this.pending,
   });
 
+  final Workout workout;
   final WorkoutExercise exercise;
   final VoidCallback onTap;
   final bool pending;
@@ -342,61 +344,87 @@ class _ExerciseCard extends StatelessWidget {
     final c = context.pb;
     final fact = factSummary(exercise);
     final plan = planSummary(exercise);
-    final chip = fact == null
-        ? null
-        : deviationChip(context, compareExercise(exercise));
+    final line = fact != null || plan != null
+        ? summaryLine(
+            context,
+            fact ?? plan!,
+            measure: exercise.measure,
+            usesBodyWeight: exercise.usesBodyWeight,
+          )
+        : null;
+    final nameStyle = PbText.bodyStrong.copyWith(color: c.ink);
+    final resultStyle = fact != null
+        ? PbText.numSm
+        : PbText.caption.copyWith(color: c.inkMuted);
     return GlassCard(
       onTap: onTap,
-      child: Row(
-        spacing: PbSpace.s3,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: PbSpace.s1,
-              children: [
-                Text(
-                  exercise.name,
-                  style: PbText.bodyStrong.copyWith(color: c.ink),
-                ),
-                if (chip != null || pending)
-                  Wrap(
-                    spacing: PbSpace.s2,
-                    runSpacing: PbSpace.s1,
-                    children: [
-                      ?chip,
-                      if (pending)
-                        PbChip(
-                          AppLocalizations.of(context)!.workoutNotSent,
-                          color: c.warning,
-                        ),
-                    ],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final name = Text(exercise.name, style: nameStyle);
+          Widget heading = name;
+          if (line != null) {
+            final scaler = MediaQuery.textScalerOf(context);
+            final direction = Directionality.of(context);
+            final resultPainter = TextPainter(
+              text: TextSpan(text: line.text, style: resultStyle),
+              textDirection: direction,
+              textScaler: scaler,
+            )..layout();
+            final resultWidth = math.min(
+              resultPainter.width,
+              MediaQuery.sizeOf(context).width * 0.45,
+            );
+            resultPainter.dispose();
+            final namePainter =
+                TextPainter(
+                  text: TextSpan(text: exercise.name, style: nameStyle),
+                  textDirection: direction,
+                  textScaler: scaler,
+                  maxLines: 2,
+                )..layout(
+                  maxWidth: math.max(
+                    0,
+                    constraints.maxWidth - resultWidth - PbSpace.s3,
                   ),
-              ],
-            ),
-          ),
-          if (fact != null)
-            NumberText(
-              summaryLine(
-                context,
-                fact,
-                measure: exercise.measure,
-                usesBodyWeight: exercise.usesBodyWeight,
-              ),
-              style: PbText.numSm,
-              beside: true,
-            )
-          else if (plan != null)
-            Text(
-              summaryLine(
-                context,
-                plan,
-                measure: exercise.measure,
-                usesBodyWeight: exercise.usesBodyWeight,
-              ).text,
-              style: PbText.caption.copyWith(color: c.inkMuted),
-            ),
-        ],
+                );
+            final stack = namePainter.didExceedMaxLines;
+            namePainter.dispose();
+            final result = FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: AlignmentDirectional.centerStart,
+              child: fact != null
+                  ? NumberText(line, style: resultStyle)
+                  : Text(line.text, style: resultStyle),
+            );
+            heading = stack
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: PbSpace.s1,
+                    children: [name, result],
+                  )
+                : Row(
+                    spacing: PbSpace.s3,
+                    children: [
+                      Expanded(child: name),
+                      SizedBox(width: resultWidth, child: result),
+                    ],
+                  );
+          }
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: PbSpace.s1,
+            children: [
+              heading,
+              if (fact != null || pending || isOutsidePlan(workout, exercise))
+                ExerciseLabels(
+                  workout: workout,
+                  exercise: exercise,
+                  pending: pending,
+                  showComparison: true,
+                ),
+            ],
+          );
+        },
       ),
     );
   }

@@ -72,6 +72,71 @@ Workout start({Program? program, IdGenerator? newId, String? coach}) {
 }
 
 void main() {
+  group('outside the plan', () {
+    test(
+      'the same catalog exercise can be planned and added beyond the plan',
+      () {
+        final ids = counter();
+        var workout = start(newId: ids);
+        workout = addExercise(
+          workout,
+          bench,
+          languageCode: 'ru',
+          newId: ids,
+          now: monday,
+        );
+        final addedId = workout.exercises.last.id;
+        expect(isOutsidePlan(workout, workout.exercises.first), isFalse);
+        expect(isOutsidePlan(workout, workout.exercises.last), isTrue);
+        workout = recordSummary(
+          workout,
+          addedId,
+          setCount: 3,
+          fact: plan60x8,
+          newId: ids,
+          now: monday,
+        );
+        expect(isOutsidePlan(workout, workout.exercises.last), isTrue);
+        expect(workout.exercises.last.hasFact, isTrue);
+        expect(recordedCount(workout), 1);
+        expect(nextExercise(workout)?.id, workout.exercises.first.id);
+        workout = recordSummary(
+          workout,
+          workout.exercises.first.id,
+          setCount: 4,
+          fact: plan60x8,
+          newId: ids,
+          now: monday,
+        );
+        expect(workout.exercises.first.sets.last.isExtra, isTrue);
+        expect(isOutsidePlan(workout, workout.exercises.first), isFalse);
+      },
+    );
+
+    test(
+      'a workout without a program does not label all exercises outside a plan',
+      () {
+        final ids = counter();
+        var workout = startWorkout(
+          id: 'free',
+          traineeId: 'arman',
+          now: monday,
+          newId: ids,
+          catalog: catalog,
+          languageCode: 'ru',
+        );
+        workout = addExercise(
+          workout,
+          bench,
+          languageCode: 'ru',
+          newId: ids,
+          now: monday,
+        );
+        expect(isOutsidePlan(workout, workout.exercises.single), isFalse);
+      },
+    );
+  });
+
   group('startWorkout', () {
     test('copies the plan and leaves every fact empty', () {
       final w = start(coach: 'coach');

@@ -209,6 +209,9 @@ class AppLocalizationsKk extends AppLocalizations {
   }
 
   @override
+  String get entryContinue => 'Жалғастыру';
+
+  @override
   String get entryRecord => 'Жазу';
 
   @override
@@ -843,6 +846,12 @@ class AppLocalizationsKk extends AppLocalizations {
   @override
   String get workoutLocalReady =>
       'Сервермен байланыс күтілуде. Жаттығуды жалғастыра беріңіз: жаңа нәтижелер телефонда сақталады.';
+
+  @override
+  String get workoutOutsidePlan => 'Жоспардан тыс';
+
+  @override
+  String get workoutExerciseRecorded => 'Жазылды';
 
   @override
   String get workoutNotSent => 'жіберілмеген';
