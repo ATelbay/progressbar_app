@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Progress Bar — последовательный ввод результата</title>
+  <link rel="stylesheet" href="../pb.css">
+  <link rel="stylesheet" href="review.css">
+  <script src="review.js" defer></script>
+</head>
+<body class="pb review" data-theme="dusk">
+  <header class="review-header">
+    <div class="review-title">
+      <div>
+        <h1>Тренировка и планирование</h1>
+        <p>Progress Bar · варианты для обсуждения. Все изменения остаются внутри макета.</p>
+      </div>
+      <button class="pill" id="reset">Сбросить пример</button>
+    </div>
+    <div class="review-controls">
+      <nav class="review-tabs" aria-label="Макеты">
+        <button class="pill on" data-page="workout" aria-pressed="true">Тренировка</button>
+        <button class="pill" data-page="planning" aria-pressed="false">Планирование</button>
+      </nav>
+      <label>Тема <select id="theme"><option value="dusk">Закат</option><option value="dawn">Рассвет</option></select></label>
+      <label>Текст <select id="text-scale"><option value="1">100%</option><option value="1.3">130%</option><option value="1.6">160%</option></select></label>
+      <label>Программа <select id="ownership"><option value="own">Моя</option><option value="coach">Тренера</option></select></label>
+    </div>
+  </header>
+  <main>
+    <section id="workout-page" aria-label="Последовательный ввод результата">
+      <p class="scenario">Кастомная клавиатура открыта сразу. Введите подходы, нажмите нижнюю кнопку, затем повторения и вес. До последнего нажатия результат не записывается.</p>
+      <div class="comparison single">
+        <article class="variant">
+          <h2>Подходы → повторения → вес</h2>
+          <p>Активное число подчёркнуто. Одна нижняя кнопка: «Продолжить», на весе — «Записать итог».</p>
+          <div id="workout-a" class="phone pb" data-theme="dusk" aria-label="Кастомная клавиатура с переходом между полями"></div>
+        </article>
+      </div>
+      <div id="workout-b" class="phone pb" data-theme="dusk" hidden></div>
+      <div class="review-notes">
+        <p><strong>Ввод:</strong> клавиатура одна, меняется только активное поле. Можно сразу нажать на нужное число. «Продолжить» не сохраняет промежуточные результаты.</p>
+        <p><strong>«Добавить в план»:</strong> берёт записанный итог как начальные значения и просит подтверждение. Меняется только будущий план своей программы. У текущей тренировки остаётся исходная копия плана и пометка «Вне плана».</p>
+        <p><strong>Чужая программа:</strong> переключатель сверху позволяет посмотреть вариант для программы тренера. Действия изменения плана там нет. Поведение ещё обсуждается.</p>
+      </div>
+    </section>
+    <section id="planning-page" aria-label="Планирование упражнения" hidden>
+      <div class="planning-layout">
+        <article class="variant">
+          <h2>Ввод по очереди</h2>
+          <p>Все значения видны сразу. «Продолжить» переводит к следующему; «Готово» сохраняет весь лист.</p>
+          <label class="scenario-select">Пример <select id="plan-scenario">
+            <option value="new">Новый вес</option>
+            <option value="history">Есть прошлый результат</option>
+            <option value="saved">Уже сохранённый план</option>
+            <option value="time">Упражнение на время</option>
+            <option value="body">С собственным весом</option>
+          </select></label>
+          <div id="planning" class="phone pb" data-theme="dusk" aria-label="Ввод плана упражнения"></div>
+        </article>
+        <aside class="planning-notes">
+          <h2>Что проверить</h2>
+          <ol>
+            <li>Введите подходы, нажмите «Продолжить», затем повторения и вес.</li>
+            <li>Нажмите любое поле, чтобы исправить число. На весе одно «Готово» закрывает весь лист.</li>
+            <li>Выберите «Есть прошлый результат»: на весе доступны шаги ±0,5 / ±1 / ±5 кг. Касание числа открывает клавиатуру.</li>
+            <li>В примере «Новый вес» кнопок шага нет. Упражнение на время заканчивается вводом секунд.</li>
+          </ol>
+          <p>В макете предложена одна общая цифровая панель для всех чисел — развитие уже используемой панели веса. Заметка остаётся необязательной.</p>
+          <p>Начальные 3 подхода и 10 повторений взяты из текущей реализации. Эти значения по умолчанию ещё находятся в «К обсуждению».</p>
+          <p class="muted">Это HTML-прототип. Системная клавиатура, жесты и размеры Flutter требуют отдельной проверки на симуляторе и эмуляторе после реализации.</p>
+        </aside>
+      </div>
+    </section>
+  </main>
+  <footer class="review-footer">Макеты 08.10.2026 · Golos Text / Fira Sans Extra Condensed · цвета и материал из дизайн-системы Progress Bar</footer>
+</body>
+</html>

@@ -8,12 +8,493 @@
   "tabProfile": "Profile",
   "signInTitle": "Sign in",
   "signInPhoneLabel": "Phone number",
-  "signInContinue": "Continue",
   "homeStartFreeWorkout": "Workout without a program",
   "homeNewProgram": "New program",
   "programBuilderTitle": "Program",
   "workoutTitle": "Workout",
   "traineeTitle": "Trainee",
   "profileSignOut": "Sign out",
-  "comingSoon": "Nothing here yet"
+  "comingSoon": "Nothing here yet",
+  "signInTagline": "A training log. Your coach writes the plan, you log what happened.",
+  "signInGetCode": "Get code",
+  "signInSmsHint": "We'll text you a code. No password needed.",
+  "codeTitle": "Code from SMS",
+  "codeSentTo": "Sent to {phone}",
+  "codeLabel": "Six-digit code",
+  "codeContinue": "Continue",
+  "codeResend": "Send again",
+  "welcomeTitle": "Two quick questions",
+  "welcomeHint": "We ask once. You can change this later in your profile.",
+  "welcomeNameLabel": "Your name",
+  "welcomeBodyWeight": "Body weight",
+  "welcomeBodyWeightHint": "Used for pull-ups, dips and other body-weight exercises.",
+  "welcomeDone": "Done",
+  "unitKg": "kg",
+  "decreaseBodyWeight": "Decrease body weight",
+  "increaseBodyWeight": "Increase body weight",
+  "errorInvalidPhone": "That doesn't look like a phone number. Enter it with the country code, like +7 701 234 56 78.",
+  "errorInvalidCode": "Wrong code. Check the SMS and try again.",
+  "errorCodeExpired": "The code has expired. Request a new one.",
+  "errorTooManyRequests": "Too many attempts. Try again later.",
+  "errorNetwork": "No connection. Check the network and try again.",
+  "errorUnknown": "Couldn't sign in. Try again.",
+  "errorNameRequired": "Enter your name.",
+  "@codeSentTo": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "workoutFinish": "Finish",
+  "workoutProgressLabel": "Recorded {done} of {total} exercises",
+  "@workoutProgressLabel": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "workoutOfTotal": "of {total}",
+  "@workoutOfTotal": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "workoutAddExercise": "Add exercise",
+  "workoutAllRecorded": "Everything is recorded",
+  "workoutEmptyHint": "Add the first exercise.",
+  "chipAsPlanned": "on plan",
+  "chipBelowPlan": "below plan",
+  "chipAbovePlan": "above plan",
+  "chipNow": "now",
+  "entryPlan": "Plan",
+  "entryFact": "Done",
+  "entrySets": "Sets",
+  "entryReps": "Reps",
+  "entryWeight": "Weight",
+  "entryExtraWeight": "Extra weight",
+  "entryTime": "Time",
+  "unitSec": "s",
+  "setsCount": "{count} sets",
+  "@setsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "entryLastTime": "Last time: {result}",
+  "@entryLastTime": {
+    "placeholders": {
+      "result": {
+        "type": "String"
+      }
+    }
+  },
+  "entryBodyWeightNote": "Body weight {kg} kg comes from your profile.",
+  "@entryBodyWeightNote": {
+    "placeholders": {
+      "kg": {
+        "type": "String"
+      }
+    }
+  },
+  "entryContinue": "Continue",
+  "entryRecord": "Record",
+  "entryEachSet": "Add each set",
+  "entryRecordSet": "Record set {number}",
+  "@entryRecordSet": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "entryExtraSet": "Beyond plan",
+  "entrySummaryOnly": "Total only",
+  "entryEffort": "Effort, optional",
+  "entryDecrease": "Less: {what}",
+  "@entryDecrease": {
+    "placeholders": {
+      "what": {
+        "type": "String"
+      }
+    }
+  },
+  "entryIncrease": "More: {what}",
+  "@entryIncrease": {
+    "placeholders": {
+      "what": {
+        "type": "String"
+      }
+    }
+  },
+  "keyComma": "Decimal point",
+  "keyErase": "Erase",
+  "finishTitle": "Finish the workout?",
+  "finishBody": "Recorded {done} of {total} exercises. The rest stay without a result — a coach will see them as skipped.",
+  "@finishBody": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "finishBodyAll": "All exercises are recorded.",
+  "finishBack": "Back to the workout",
+  "finishCancel": "Cancel the workout",
+  "homeActiveLabel": "Workout in progress",
+  "homeContinue": "Continue",
+  "homeMyPrograms": "My programs",
+  "homeOwnProgram": "Your own program",
+  "homeDays": "{count} days",
+  "@homeDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeEmptyTitle": "The bar is empty for now",
+  "homeEmptyText": "Build your own program or start a workout without one.",
+  "errorStoreUnavailable": "No connection to the server yet. Go online once and try again.",
+  "pickerTitle": "Exercise",
+  "pickerSearch": "Search",
+  "pickerNothing": "Nothing found",
+  "groupAll": "All",
+  "groupChest": "Chest",
+  "groupBack": "Back",
+  "groupLegs": "Legs",
+  "groupShoulders": "Shoulders",
+  "groupArms": "Arms",
+  "groupCore": "Core",
+  "equipDumbbell": "dumbbells",
+  "equipBarbell": "barbell",
+  "equipMachine": "machine",
+  "equipCable": "cable",
+  "equipBodyOnly": "body weight",
+  "equipEzBar": "EZ bar",
+  "equipKettlebell": "kettlebell",
+  "effortMore": "Could do more",
+  "effortSome": "Some left",
+  "effortNone": "Nothing left",
+  "builderNameHint": "Program name",
+  "builderAddDay": "Add day",
+  "builderDayName": "Day name",
+  "builderDayDefault": "Day {number}",
+  "@builderDayDefault": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "builderNote": "Note for the trainee",
+  "builderLastTime": "Last time: {result}",
+  "@builderLastTime": {
+    "placeholders": {
+      "result": {
+        "type": "String"
+      }
+    }
+  },
+  "builderNoHistory": "Not recorded before — enter the weight",
+  "builderNotePrefix": "Note: {note}",
+  "@builderNotePrefix": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "builderRemoveExercise": "Remove from the day",
+  "builderRemoveDay": "Delete day",
+  "builderDeleteProgram": "Delete program",
+  "builderDeleteConfirm": "Delete «{name}»? Workouts already recorded stay in history.",
+  "@builderDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "builderDelete": "Delete",
+  "builderKeep": "Keep",
+  "builderStart": "Start workout",
+  "builderBodyWeight": "Body weight",
+  "builderTimed": "Timed",
+  "builderEmptyDay": "No exercises in this day yet.",
+  "builderActiveExists": "Finish the workout in progress first.",
+  "historyNoProgram": "No program",
+  "historyPlanPrefix": "plan {plan}",
+  "@historyPlanPrefix": {
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      }
+    }
+  },
+  "historyBelow": "{count, plural, one{{count} exercise below plan} other{{count} exercises below plan}}",
+  "@historyBelow": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "historySkipped": "{count, plural, one{{count} skipped} other{{count} skipped}}",
+  "@historySkipped": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "historyExercises": "{count, plural, one{{count} exercise} other{{count} exercises}}",
+  "@historyExercises": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "historyEdited": "edited after completion",
+  "historySkippedMark": "skipped",
+  "historyEdit": "Edit workout",
+  "historyEditExercise": "Edit: {name}",
+  "@historyEditExercise": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "historyEmptyTitle": "No workouts yet",
+  "historyEmptyText": "Every completed workout will appear here: what was planned and what was done.",
+  "historyToPrograms": "To programs",
+  "editNotice": "This workout is completed. After a change a coach will see it marked «edited after completion».",
+  "editSave": "Save changes",
+  "editDiscard": "Don't save",
+  "dayToday": "Today, {date}",
+  "@dayToday": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "dayPickerTitle": "Day of the workout",
+  "editDelete": "Delete workout",
+  "editDeleteConfirm": "Delete this workout? Its results will disappear from history and progress. This cannot be undone.",
+  "progressMaxWeight": "Heaviest weight",
+  "progressMaxTime": "Longest time",
+  "progressMaxReps": "Most reps",
+  "unitReps": "reps",
+  "progressChange": "{change} over {count, plural, one{{count} workout} other{{count} workouts}}",
+  "@progressChange": {
+    "placeholders": {
+      "change": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressEmptyTitle": "No points yet",
+  "progressEmptyText": "The chart appears after the first completed workout. One workout is one point: the best result of that day.",
+  "progressChartLabel": "Chart: from {from} on {fromDate} to {to} on {toDate}",
+  "@progressChartLabel": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "fromDate": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "toDate": {
+        "type": "String"
+      }
+    }
+  },
+  "profileSettings": "Settings",
+  "profileLanguage": "Language",
+  "profileTheme": "Theme",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "languageSystem": "Same as the phone",
+  "profileEntryMode": "Result entry",
+  "entryModeSummary": "In one line",
+  "entryModePerSet": "Set by set",
+  "profileCatalog": "Exercise catalog",
+  "profileEdit": "Edit name and body weight",
+  "exerciseOwn": "Your own exercise",
+  "exerciseName": "Name",
+  "exerciseMeasure": "Measured in",
+  "exerciseBodyWeight": "Uses body weight",
+  "exerciseBodyWeightHint": "Body weight is added to the load; you enter only the extra weight.",
+  "exerciseRestore": "Restore the original",
+  "exerciseSave": "Save",
+  "exerciseEdited": "edited",
+  "exerciseMine": "yours",
+  "peopleMyCoaches": "My coaches",
+  "peopleMyTrainees": "My trainees",
+  "peopleCoachActive": "Assigns programs",
+  "peopleCoachReadOnly": "Sees workouts, does not assign",
+  "chipActive": "active",
+  "chipReadOnly": "view only",
+  "peopleTraineeActive": "You are the active coach",
+  "peopleTraineeReadOnly": "View only",
+  "peopleInvite": "Invite",
+  "peopleEnterCode": "Enter an invitation code",
+  "peopleEmpty": "No one here yet. Invite a coach or a trainee, or enter the code you were given.",
+  "inviteRoleQuestion": "Who will you be for the person you invite?",
+  "inviteAsCoach": "I am the coach",
+  "inviteAsCoachHint": "I will write their programs and see their workouts.",
+  "inviteAsTrainee": "I am the trainee",
+  "inviteAsTraineeHint": "They will write my programs and see my workouts.",
+  "inviteCreate": "Create invitation",
+  "inviteTitle": "Invitation",
+  "inviteShowCoach": "You invite as a coach. Show the QR code or say the code.",
+  "inviteShowTrainee": "You invite as a trainee. Show the QR code or say the code.",
+  "inviteValid": "The code works once and for 7 days.",
+  "inviteCopy": "Copy code",
+  "inviteCopied": "Code copied",
+  "inviteShare": "Share link",
+  "inviteQrLabel": "Invitation QR code",
+  "inviteShareText": "Invitation to Progress Bar. Code: {code}\nOpen in the app: {link}",
+  "@inviteShareText": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "link": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteCodeLabel": "Invitation code",
+  "inviteFind": "Find",
+  "inviteFromCoach": "invites you as a coach",
+  "inviteFromTrainee": "invites you as a trainee",
+  "inviteCoachWill": "{name} will be able to assign you programs and see your workouts.",
+  "@inviteCoachWill": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteTraineeWill": "You will be able to assign programs to {name} and see their workouts.",
+  "@inviteTraineeWill": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteCurrentCoach": "Your active coach now is {name}. They will keep view-only access.",
+  "@inviteCurrentCoach": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteAccept": "Accept",
+  "inviteAcceptActive": "Accept and make active",
+  "inviteDecline": "Decline",
+  "inviteNotFound": "No such invitation. Check the code: it may have been used already or expired.",
+  "inviteOwn": "This is your own invitation.",
+  "inviteFailed": "That did not work. Check the connection and try again.",
+  "coachSheetTitle": "{name}, coach",
+  "@coachSheetTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "coachDeactivate": "Deactivate",
+  "coachDeactivateHint": "{name} will keep seeing your workouts but will not be able to assign programs.",
+  "@coachDeactivateHint": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "coachRemoveHint": "{name} will lose access completely. Your workouts stay with you.",
+  "@coachRemoveHint": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "coachKeep": "Change nothing",
+  "traineeMine": "Mine",
+  "traineeAll": "All",
+  "traineeReadOnly": "You are no longer the active coach. You can see workouts but cannot assign programs.",
+  "traineeUnavailable": "Access to this trainee is closed.",
+  "traineeEmpty": "No workouts in this tab yet.",
+  "assignedPrograms": "Assigned programs",
+  "assignProgram": "Assign program",
+  "assignTrainee": "Assign to trainee",
+  "assignEmptyPrograms": "Create your own program first.",
+  "assignEmptyTrainees": "No trainees you can assign a program to yet.",
+  "assignSuccess": "Program assigned",
+  "assignFailed": "Could not confirm the assignment. Check your connection and coach status, then try again.",
+  "assignedBy": "Assigned by {name}",
+  "assignedOn": "Assigned {date}",
+  "programReadOnly": "Coach program — you can view it and start a workout.",
+  "programUnavailable": "Program unavailable: it was deleted or access was closed.",
+  "dataLoadFailed": "Could not load data. Check your connection and try again.",
+  "retry": "Retry",
+  "workoutCoach": "Coach: {name}",
+  "workoutCoachUnknown": "Coach: name not recorded",
+  "workoutSolo": "Without a coach",
+  "workoutPendingMark": "not recorded yet",
+  "programMissingExercise": "An exercise is unavailable. This day cannot be started yet.",
+  "@assignedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@assignedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "workoutLocalSaved": "Waiting for the server. Results are saved on this phone and will be sent automatically, even if you close the app.",
+  "workoutLocalReady": "Waiting for the server. You can keep training: new results will be saved on this phone.",
+  "workoutOutsidePlan": "Outside plan",
+  "workoutExerciseRecorded": "Recorded",
+  "workoutNotSent": "not sent",
+  "saveWorkoutRejected": "The server refused the workout changes. Check your results: the last change was not saved.",
+  "saveProgramRejected": "The server refused the program changes. Check your plan: the last change was not saved.",
+  "saveExerciseRejected": "The server refused the exercise changes. The last change was not saved.",
+  "@workoutCoach": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

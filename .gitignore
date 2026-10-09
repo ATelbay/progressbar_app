@@ -49,3 +49,7 @@ app.*.map.json
 
 # Impeccable engine binary: platform-specific, restore with `npx impeccable install --project`
 .claude/skills/impeccable/scripts/bin/
+
+# Firestore rules tests
+/firestore_tests/node_modules/
+*-debug.log

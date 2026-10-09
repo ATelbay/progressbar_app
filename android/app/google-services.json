@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "592329183159",
+    "project_id": "progressbar-app",
+    "storage_bucket": "progressbar-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:592329183159:android:ec51ec90886cc5568f6232",
+        "android_client_info": {
+          "package_name": "com.atelbay.progressbar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVObA7LH68lvap5-8tFoJgkTEqKcOcopk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

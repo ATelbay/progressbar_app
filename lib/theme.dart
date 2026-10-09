@@ -15,6 +15,10 @@ ThemeData buildTheme(Brightness brightness) {
     brightness: brightness,
     primary: c.accent,
     onPrimary: c.onAccent,
+    // SnackBars use an inverse surface; their action needs its text accent.
+    inversePrimary: brightness == Brightness.light
+        ? PbColors.dusk.accentText
+        : PbColors.dawn.accentText,
     secondary: c.accentText,
     onSecondary: c.ground,
     error: c.danger,
