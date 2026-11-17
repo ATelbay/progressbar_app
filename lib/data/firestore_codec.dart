@@ -4,7 +4,11 @@ import '../domain/models.dart';
 
 /// Shape of the documents under `users/{uid}`. Bump when a stored field
 /// changes meaning, so older documents can be told apart.
-const schemaVersion = 1;
+const schemaVersion = 2;
+
+ExecutionMode _execution(Object? value) =>
+    ExecutionMode.values.where((mode) => mode.name == value).firstOrNull ??
+    ExecutionMode.ordinary;
 
 Map<String, dynamic> _map(Object? value) =>
     Map<String, dynamic>.from(value! as Map);
@@ -47,6 +51,9 @@ Map<String, Object?> programToMap(Program program) => {
               'id': exercise.id,
               'exerciseId': exercise.exerciseId,
               'note': exercise.note,
+              'executionMode': exercise.executionMode.name,
+              'groupId': exercise.groupId,
+              'dropStages': exercise.dropStages.map(_setValuesToMap).toList(),
               'sets': exercise.sets.map(_setValuesToMap).toList(),
             },
         ],
@@ -69,6 +76,11 @@ Program programFromMap(String id, Map<String, dynamic> data) => Program(
               id: exercise['id'] as String,
               exerciseId: exercise['exerciseId'] as String,
               note: exercise['note'] as String?,
+              executionMode: _execution(exercise['executionMode']),
+              groupId: exercise['groupId'] as String?,
+              dropStages: _maps(exercise['dropStages'])
+                  .map(_setValuesFromMap)
+                  .toList(),
               sets: _maps(exercise['sets']).map(_setValuesFromMap).toList(),
             ),
         ],
@@ -108,6 +120,7 @@ Map<String, Object?> workoutToMap(Workout workout) => {
   'editedAt': _timestamp(workout.editedAt),
   'comment': workout.comment,
   'bodyWeightKg': workout.bodyWeightKg,
+  'originalOrder': workout.originalOrder,
   'exercises': [
     for (final exercise in workout.exercises)
       {
@@ -117,6 +130,12 @@ Map<String, Object?> workoutToMap(Workout workout) => {
         'measure': exercise.measure.name,
         'usesBodyWeight': exercise.usesBodyWeight,
         'note': exercise.note,
+        'executionMode': exercise.executionMode.name,
+        'groupId': exercise.groupId,
+        'planExecutionMode': exercise.planExecutionMode?.name,
+        'planGroupId': exercise.planGroupId,
+        'executionComplete': exercise.executionComplete,
+        'skipped': exercise.skipped,
         'sets': [
           for (final set in exercise.sets)
             {
@@ -124,6 +143,15 @@ Map<String, Object?> workoutToMap(Workout workout) => {
               'plan': set.plan == null ? null : _setValuesToMap(set.plan!),
               'fact': set.fact == null ? null : _setValuesToMap(set.fact!),
               'rpe': set.rpe,
+              'dropComplete': set.dropComplete,
+              'drops': [
+                for (final d in set.drops)
+                  {
+                    'id': d.id,
+                    'plan': d.plan == null ? null : _setValuesToMap(d.plan!),
+                    'fact': d.fact == null ? null : _setValuesToMap(d.fact!),
+                  },
+              ],
             },
         ],
       },
@@ -145,7 +173,8 @@ Workout workoutFromMap(String id, Map<String, dynamic> data) => Workout(
   editedAt: _date(data['editedAt']),
   comment: data['comment'] as String?,
   bodyWeightKg: (data['bodyWeightKg'] as num?)?.toDouble(),
-  exercises: [
+  originalOrder: (data['originalOrder'] as List?)?.cast<String>(),
+  exercises: consistentSkips([
     for (final exercise in _maps(data['exercises']))
       WorkoutExercise(
         id: exercise['id'] as String,
@@ -154,6 +183,14 @@ Workout workoutFromMap(String id, Map<String, dynamic> data) => Workout(
         measure: Measure.values.byName(exercise['measure'] as String),
         usesBodyWeight: exercise['usesBodyWeight'] as bool,
         note: exercise['note'] as String?,
+        executionMode: _execution(exercise['executionMode']),
+        groupId: exercise['groupId'] as String?,
+        planExecutionMode: exercise['planExecutionMode'] == null
+            ? null
+            : _execution(exercise['planExecutionMode']),
+        planGroupId: exercise['planGroupId'] as String?,
+        executionComplete: exercise['executionComplete'] as bool? ?? false,
+        skipped: exercise['skipped'] as bool? ?? false,
         sets: [
           for (final set in _maps(exercise['sets']))
             WorkoutSet(
@@ -161,10 +198,19 @@ Workout workoutFromMap(String id, Map<String, dynamic> data) => Workout(
               plan: _optionalSetValues(set['plan']),
               fact: _optionalSetValues(set['fact']),
               rpe: (set['rpe'] as num?)?.toDouble(),
+              dropComplete: set['dropComplete'] as bool? ?? false,
+              drops: [
+                for (final d in _maps(set['drops']))
+                  DropStage(
+                    id: d['id'] as String,
+                    plan: _optionalSetValues(d['plan']),
+                    fact: _optionalSetValues(d['fact']),
+                  ),
+              ],
             ),
         ],
       ),
-  ],
+  ]),
 );
 
 /// A user's own exercise or their edit of a built-in one. The owner is the

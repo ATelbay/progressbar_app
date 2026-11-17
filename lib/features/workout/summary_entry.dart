@@ -10,6 +10,13 @@ import '../format.dart';
 import 'number_field.dart';
 import 'number_keypad.dart';
 
+/// Actions read the live numeric draft; opening controls never submits it.
+class SummaryEntryActions {
+  const SummaryEntryActions({this.add, this.finish});
+  final VoidCallback? add;
+  final VoidCallback? finish;
+}
+
 /// One numeric draft and one keypad, shared by planning and summary entry.
 class SummaryEntry extends StatefulWidget {
   const SummaryEntry({
@@ -23,6 +30,13 @@ class SummaryEntry extends StatefulWidget {
     this.knownPlanningWeight = false,
     this.hint,
     this.details,
+    this.showSetCount = true,
+    this.setCountLabel,
+    this.extraSubmitLabel,
+    this.onExtraSubmit,
+    this.finishSubmitLabel,
+    this.onFinishSubmit,
+    this.controls,
   });
 
   final int setCount;
@@ -36,6 +50,13 @@ class SummaryEntry extends StatefulWidget {
   final bool knownPlanningWeight;
   final Widget? hint;
   final Widget? details;
+  final bool showSetCount;
+  final String? setCountLabel;
+  final String? extraSubmitLabel;
+  final void Function(int, SetValues)? onExtraSubmit;
+  final String? finishSubmitLabel;
+  final void Function(int, SetValues)? onFinishSubmit;
+  final Widget Function(SummaryEntryActions actions)? controls;
 
   @override
   State<SummaryEntry> createState() => _SummaryEntryState();
@@ -47,7 +68,11 @@ class _SummaryEntryState extends State<SummaryEntry> {
     count: widget.values.reps ?? widget.values.seconds ?? 10,
     weightKg: widget.values.weightKg,
     timed: widget.measure == Measure.time,
-    active: widget.knownPlanningWeight ? null : SummaryField.sets,
+    active: widget.knownPlanningWeight
+        ? null
+        : widget.showSetCount
+        ? SummaryField.sets
+        : SummaryField.count,
   );
 
   void _select(SummaryField field) {
@@ -101,7 +126,7 @@ class _SummaryEntryState extends State<SummaryEntry> {
                     border: Border(
                       bottom: BorderSide(
                         color: selected ? c.accentText : c.lineStrong,
-                        width: selected ? 3 : 1,
+                        width: selected ? 2 : 1,
                       ),
                     ),
                   ),
@@ -136,7 +161,13 @@ class _SummaryEntryState extends State<SummaryEntry> {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: PbSpace.s3,
           children: [
-            Expanded(child: field(SummaryField.sets, l10n.entrySets)),
+            if (widget.showSetCount)
+              Expanded(
+                child: field(
+                  SummaryField.sets,
+                  widget.setCountLabel ?? l10n.entrySets,
+                ),
+              ),
             Expanded(
               child: field(
                 SummaryField.count,
@@ -188,6 +219,41 @@ class _SummaryEntryState extends State<SummaryEntry> {
                 },
           child: Text(_input.isLast ? widget.submitLabel : l10n.entryContinue),
         ),
+        if (widget.controls case final controls?)
+          controls(
+            SummaryEntryActions(
+              add:
+                  _input.isLast &&
+                      _input.canContinue &&
+                      widget.onExtraSubmit != null
+                  ? () => widget.onExtraSubmit!(_input.setCount, _input.values)
+                  : null,
+              finish:
+                  _input.isLast &&
+                      _input.canContinue &&
+                      widget.onFinishSubmit != null
+                  ? () => widget.onFinishSubmit!(_input.setCount, _input.values)
+                  : null,
+            ),
+          ),
+        if (widget.controls == null &&
+            _input.isLast &&
+            widget.onExtraSubmit != null)
+          OutlinedButton(
+            onPressed: !_input.canContinue
+                ? null
+                : () => widget.onExtraSubmit!(_input.setCount, _input.values),
+            child: Text(widget.extraSubmitLabel!),
+          ),
+        if (widget.controls == null &&
+            _input.isLast &&
+            widget.onFinishSubmit != null)
+          TextButton(
+            onPressed: !_input.canContinue
+                ? null
+                : () => widget.onFinishSubmit!(_input.setCount, _input.values),
+            child: Text(widget.finishSubmitLabel!),
+          ),
       ],
     );
   }

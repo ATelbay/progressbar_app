@@ -25,7 +25,7 @@ class _Glass extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.pb;
     final shape = BorderRadius.circular(radius);
-    // Reduce Transparency and similar settings swap glass for a solid surface.
+    // A solid surface supports the platform's increased-contrast setting.
     final solid = MediaQuery.highContrastOf(context);
     Widget content = Padding(padding: padding, child: child);
     if (onTap != null) {
@@ -42,21 +42,36 @@ class _Glass extends StatelessWidget {
             : c.glass,
         borderRadius: shape,
         border: outlined
-            ? Border.all(color: c.accentText, width: 2)
-            : Border.all(color: c.glassLine),
+            ? Border.all(color: c.accentText)
+            : Border.all(color: strong ? c.glassLine : c.line),
       ),
       child: content,
     );
-    if (solid) return panel;
-    return ClipRRect(
+    final clipped = ClipRRect(
       borderRadius: shape,
-      child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: PbSize.glassBlur / 2,
-          sigmaY: PbSize.glassBlur / 2,
-        ),
-        child: panel,
+      child: solid || !strong
+          ? panel
+          : BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: PbSize.glassBlur,
+                sigmaY: PbSize.glassBlur,
+              ),
+              child: panel,
+            ),
+    );
+    if (!strong) return clipped;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: shape,
+        boxShadow: [
+          BoxShadow(
+            color: c.glassShadow,
+            offset: const Offset(0, PbSize.shadowOffset),
+            blurRadius: PbSize.shadowBlur,
+          ),
+        ],
       ),
+      child: clipped,
     );
   }
 }
@@ -85,18 +100,20 @@ class GlassCard extends StatelessWidget {
     required this.child,
     this.current = false,
     this.onTap,
+    this.padding = const EdgeInsets.symmetric(
+      horizontal: PbSpace.s4,
+      vertical: PbSpace.s3,
+    ),
   });
 
   final Widget child;
+  final EdgeInsetsGeometry padding;
   final bool current;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) => _Glass(
-    padding: const EdgeInsets.symmetric(
-      horizontal: PbSpace.s4,
-      vertical: PbSpace.s3,
-    ),
+    padding: padding,
     radius: PbRadius.lg,
     strong: current,
     outlined: current,

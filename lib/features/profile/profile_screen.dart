@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,18 +17,6 @@ import '../workout/number_field.dart';
 
 /// Languages the interface is translated into, under their own names.
 const _languages = [('ru', 'Русский'), ('en', 'English'), ('kk', 'Қазақша')];
-
-double _textWidth(BuildContext context, String text, TextStyle style) {
-  final painter = TextPainter(
-    text: TextSpan(text: text, style: style),
-    textDirection: Directionality.of(context),
-    textScaler: MediaQuery.textScalerOf(context),
-    maxLines: 1,
-  )..layout();
-  final width = painter.width;
-  painter.dispose();
-  return width;
-}
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -121,43 +108,42 @@ class ProfileScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final c = context.pb;
     final profile = ref.watch(profileProvider).value;
-    final muted = PbText.body.copyWith(color: c.inkMuted);
 
     Widget setting(
       String title, {
       String? value,
       required VoidCallback onTap,
-    }) => GlassCard(
-      onTap: onTap,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final titleStyle = PbText.bodyStrong.copyWith(color: c.ink);
-          final label = Text(title, style: titleStyle);
-          if (value != null &&
-              _textWidth(context, title, titleStyle) +
-                      PbSpace.s3 +
-                      _textWidth(context, value, muted) >
-                  constraints.maxWidth) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: PbSpace.s1,
-              children: [
-                label,
-                Text(value, style: muted),
-              ],
-            );
-          }
-          return Row(
+    }) => Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          constraints: const BoxConstraints(minHeight: PbSize.touchMin),
+          padding: const EdgeInsets.symmetric(vertical: PbSpace.s3),
+          decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: c.line)),
+          ),
+          child: Row(
             spacing: PbSpace.s3,
             children: [
-              Expanded(child: label),
-              if (value != null)
-                Text(value, style: muted)
-              else
-                Icon(Icons.chevron_right, color: c.ink),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: PbSpace.s1,
+                  children: [
+                    Text(title, style: PbText.body.copyWith(color: c.ink)),
+                    if (value != null)
+                      Text(
+                        value,
+                        style: PbText.caption.copyWith(color: c.inkMuted),
+                      ),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right, color: c.inkMuted),
             ],
-          );
-        },
+          ),
+        ),
       ),
     );
 
@@ -209,13 +195,11 @@ class ProfileScreen extends ConsumerWidget {
                                   l10n.languageSystem,
                               onTap: () => _pickLanguage(context, ref, profile),
                             ),
-                            const SizedBox(height: PbSpace.s2),
                             setting(
                               l10n.profileTheme,
                               value: _themeName(l10n, profile.theme),
                               onTap: () => _pickTheme(context, ref, profile),
                             ),
-                            const SizedBox(height: PbSpace.s2),
                             setting(
                               l10n.profileEntryMode,
                               value: profile.entryMode == EntryMode.summary
@@ -224,7 +208,6 @@ class ProfileScreen extends ConsumerWidget {
                               onTap: () =>
                                   _pickEntryMode(context, ref, profile),
                             ),
-                            const SizedBox(height: PbSpace.s2),
                             setting(
                               l10n.profileCatalog,
                               onTap: () => context.push(Routes.exerciseCatalog),
@@ -257,97 +240,48 @@ class _Account extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final c = context.pb;
     final weight = profile.bodyWeightKg;
-    final nameStyle = PbText.heading.copyWith(color: c.ink);
-    final phoneStyle = PbText.caption.copyWith(color: c.inkMuted);
-    final weightStyle = PbText.label.copyWith(color: c.inkMuted);
-    final avatar = CircleAvatar(
-      radius: PbSize.actionHeight / 2,
-      backgroundColor: c.sunken,
-      foregroundColor: c.ink,
-      child: Text(
-        profile.name.characters.firstOrNull?.toUpperCase() ?? '',
-        style: PbText.heading,
-      ),
-    );
-    final name = Text(profile.name, style: nameStyle);
-    final phone = Text(profile.phone, style: phoneStyle);
-    final weightLabel = Text(l10n.welcomeBodyWeight, style: weightStyle);
-    final weightValue = weight == null
-        ? null
-        : NumberText(
-            NumberLine([
-              (formatNumber(context, weight), false),
-              (' ${l10n.unitKg}', true),
-            ]),
-            style: PbText.numMd,
-          );
-    return GestureDetector(
+    return GlassCard(
       onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: GlassPanel(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final identityWidth = math.max(
-              _textWidth(context, profile.name, nameStyle),
-              _textWidth(context, profile.phone, phoneStyle),
-            );
-            final weightWidth = weight == null
-                ? 0.0
-                : math.max(
-                    _textWidth(context, l10n.welcomeBodyWeight, weightStyle),
-                    _textWidth(
-                      context,
-                      '${formatNumber(context, weight)} ${l10n.unitKg}',
-                      PbText.numMd,
-                    ),
-                  );
-            final needed =
-                PbSize.actionHeight +
-                PbSpace.s3 +
-                identityWidth +
-                (weight == null ? 0 : PbSpace.s3 + weightWidth);
-            if (needed > constraints.maxWidth) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                spacing: PbSpace.s2,
-                children: [
-                  Row(
-                    spacing: PbSpace.s3,
-                    children: [
-                      avatar,
-                      Expanded(child: name),
-                    ],
-                  ),
-                  phone,
-                  if (weightValue != null)
-                    Wrap(
-                      alignment: WrapAlignment.spaceBetween,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      spacing: PbSpace.s3,
-                      children: [weightLabel, weightValue],
-                    ),
-                ],
-              );
-            }
-            return Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: PbSpace.s2,
+        children: [
+          Row(
+            spacing: PbSpace.s3,
+            children: [
+              Expanded(
+                child: Text(
+                  profile.name,
+                  style: PbText.heading.copyWith(color: c.ink),
+                ),
+              ),
+              Icon(Icons.edit_outlined, color: c.inkMuted),
+            ],
+          ),
+          Text(
+            profile.phone,
+            style: PbText.caption.copyWith(color: c.inkMuted),
+          ),
+          if (weight != null)
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
               spacing: PbSpace.s3,
               children: [
-                avatar,
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [name, phone],
-                  ),
+                Text(
+                  l10n.welcomeBodyWeight,
+                  style: PbText.caption.copyWith(color: c.inkMuted),
                 ),
-                if (weightValue != null)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [weightLabel, weightValue],
-                  ),
+                NumberText(
+                  NumberLine([
+                    (formatNumber(context, weight), false),
+                    (' ${l10n.unitKg}', true),
+                  ]),
+                  style: PbText.numMd,
+                ),
               ],
-            );
-          },
-        ),
+            ),
+        ],
       ),
     );
   }

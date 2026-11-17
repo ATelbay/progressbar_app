@@ -265,5 +265,120 @@
         "type": "String"
       }
     }
+  },
+  "executionOrdinary": "Қалыпты",
+  "executionSuperset": "Суперсет",
+  "executionDropSet": "Дроп-сет",
+  "executionStyle": "Орындау тәсілі",
+  "executionRounds": "Айналымдар",
+  "executionAddMember": "Суперсетке жаттығу қосу",
+  "executionAddDrop": "Тағы азайту",
+  "executionInitialStage": "Бастапқы жүктеме",
+  "executionDropStage": "Азайту {number}",
+  "@executionDropStage": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "executionRound": "{total} айналымның {current}-і",
+  "@executionRound": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "executionMember": "{total} жаттығудың {current}-і",
+  "@executionMember": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "executionRecordSuperset": "Суперсетті жазу",
+  "executionRecordDropSet": "Дроп-сетті жазу",
+  "executionRecordDrops": "Дроп-сеттерді жазу",
+  "executionFinishDrop": "Тәсілді осы жерде аяқтау",
+  "executionDifferentResults": "Нәтижелер әртүрлі — оларды тәсіл бойынша өзгертіңіз.",
+  "executionChooseMembers": "Суперсет жаттығулары",
+  "executionMinMembers": "Кемінде тағы бір жаттығу қосыңыз.",
+  "executionExtraRound": "Тағы айналым",
+  "executionPlanStagesHint": "Азайтуларды қазір жоспарлаңыз немесе жаттығу кезінде қосыңыз.",
+  "executionRemoveMember": "Топтан алып тастау",
+  "executionContinueRecord": "Жазуды жалғастыру",
+  "executionRemoveDrop": "Азайтуды алып тастау",
+  "executionDropNumber": "{total} дроп-сеттің {current}-і",
+  "@executionDropNumber": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "executionControlsSuperset": "Жаттығулар мен айналымдар",
+  "executionControlsDrop": "Сатылар мен тәсілдер",
+  "executionControlsHint": "Жазу орнын таңдаңыз. Жазылған нәтижелер сақталады.",
+  "historyHideDetails": "Мәліметтерді жасыру",
+  "workoutSkip": "Өткізіп жіберу",
+  "workoutUnskip": "Өткізуді болдырмау",
+  "workoutSkippedChip": "Өткізілді",
+  "workoutAllDone": "Барлығы жазылды не өткізілді",
+  "workoutProgressLabelSkipped": "{total} жаттығудың {done}-і жазылды, {skipped}-і өткізілді",
+  "finishBodySkipped": "{total} жаттығудың {done}-і жазылды, {skipped}-і өткізілді.",
+  "finishBodyRest": "Қалғандары нәтижесіз қалады — жаттықтырушы оларды өткізілген деп көреді.",
+  "progressSearch": "Жаттығуды табу",
+  "progressNothingFound": "Ештеңе табылмады",
+  "progressEstimatedMax": "Есептік максимум",
+  "progressEstimatedMaxHint": "Бір рет көтеруге болатын салмақ — ең жақсы тәсілдің салмағы мен қайталауы бойынша.",
+  "progressRepsAtTop": "Ең ауыр тәсілдегі қайталау",
+  "progressMetricMax": "Максимум",
+  "progressMetricWeight": "Салмақ",
+  "progressMetricReps": "Қайталау",
+  "progressGone": "Бұл жаттығу бойынша нәтиже енді жоқ.",
+  "progressBest": "Ең жақсы тәсіл: {set}",
+  "workoutOrderChanged": "Реті өзгертілді",
+  "workoutPlannedOrder": "Жоспардағы реті",
+  "workoutOriginalOrder": "Орын ауыстырғанға дейін",
+  "workoutOriginalOrderHint": "Алғаш рет орын ауыстырғанға дейінгі реті",
+  "workoutOrderAddedLater": "Кейін қосылған жаттығулар ағымдағы тізімде көрсетілген.",
+  "workoutOrderIncomplete": "Бастапқы реті толық сақталмаған",
+  "workoutOrderShow": "Жоспар",
+  "workoutOrderHide": "Жию",
+  "compareEstimate": "≈ {fact}, жоспар ≈ {plan}",
+  "finishRowRecorded": "Жазылды",
+  "finishRowSkipped": "Өткізіп жіберілді",
+  "finishRowEmpty": "Нәтиже жоқ",
+  "finishEmptyHint": "Жаттықтырушы нәтижесі жоқ жаттығуларды өткізіп жіберілген деп көреді.",
+  "progressNothingFoundHint": "Мұнда нәтижесі жазылған жаттығулар ғана көрсетіледі. Атауын тексеріңіз.",
+  "progressMetricLabel": "Көрсеткіш",
+  "@compareEstimate": {
+    "placeholders": {
+      "fact": {
+        "type": "String"
+      },
+      "plan": {
+        "type": "String"
+      }
+    }
+  },
+  "executionRoundCount": "{count} айналым",
+  "@executionRoundCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

@@ -868,4 +868,218 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get saveExerciseRejected =>
       'The server refused the exercise changes. The last change was not saved.';
+
+  @override
+  String get executionOrdinary => 'Regular';
+
+  @override
+  String get executionSuperset => 'Superset';
+
+  @override
+  String get executionDropSet => 'Drop set';
+
+  @override
+  String get executionStyle => 'Execution style';
+
+  @override
+  String get executionRounds => 'Rounds';
+
+  @override
+  String get executionAddMember => 'Add exercise to superset';
+
+  @override
+  String get executionAddDrop => 'Add reduction';
+
+  @override
+  String get executionInitialStage => 'Initial load';
+
+  @override
+  String executionDropStage(int number) {
+    return 'Reduction $number';
+  }
+
+  @override
+  String executionRound(int current, int total) {
+    return 'Round $current of $total';
+  }
+
+  @override
+  String executionMember(int current, int total) {
+    return 'Exercise $current of $total';
+  }
+
+  @override
+  String get executionRecordSuperset => 'Record superset';
+
+  @override
+  String get executionRecordDropSet => 'Record drop set';
+
+  @override
+  String get executionRecordDrops => 'Record drop sets';
+
+  @override
+  String get executionFinishDrop => 'Finish set here';
+
+  @override
+  String get executionDifferentResults => 'Results differ — edit them per set.';
+
+  @override
+  String get executionChooseMembers => 'Superset exercises';
+
+  @override
+  String get executionMinMembers => 'Add at least one more exercise.';
+
+  @override
+  String get executionExtraRound => 'Add round';
+
+  @override
+  String get executionPlanStagesHint =>
+      'Plan reductions now or add them during the workout.';
+
+  @override
+  String get executionRemoveMember => 'Remove from group';
+
+  @override
+  String get executionContinueRecord => 'Continue entry';
+
+  @override
+  String get executionRemoveDrop => 'Remove reduction';
+
+  @override
+  String executionDropNumber(int current, int total) {
+    return 'Drop set $current of $total';
+  }
+
+  @override
+  String get executionControlsSuperset => 'Exercises and rounds';
+
+  @override
+  String get executionControlsDrop => 'Stages and sets';
+
+  @override
+  String get executionControlsHint =>
+      'Choose where to record. Recorded results are kept.';
+
+  @override
+  String get historyHideDetails => 'Hide details';
+
+  @override
+  String get workoutSkip => 'Skip';
+
+  @override
+  String get workoutUnskip => 'Undo skip';
+
+  @override
+  String get workoutSkippedChip => 'Skipped';
+
+  @override
+  String get workoutAllDone => 'Everything is recorded or skipped';
+
+  @override
+  String workoutProgressLabelSkipped(int done, int total, int skipped) {
+    return 'Recorded $done of $total exercises, $skipped skipped';
+  }
+
+  @override
+  String finishBodySkipped(int done, int total, int skipped) {
+    return 'Recorded $done of $total exercises, $skipped skipped.';
+  }
+
+  @override
+  String get finishBodyRest =>
+      'The rest stay without a result — a coach will see them as skipped.';
+
+  @override
+  String get progressSearch => 'Find an exercise';
+
+  @override
+  String get progressNothingFound => 'Nothing found';
+
+  @override
+  String get progressEstimatedMax => 'Estimated one-rep max';
+
+  @override
+  String get progressEstimatedMaxHint =>
+      'What you could lift once, worked out from the weight and reps of the best set.';
+
+  @override
+  String get progressRepsAtTop => 'Reps in the heaviest set';
+
+  @override
+  String get progressMetricMax => 'Max';
+
+  @override
+  String get progressMetricWeight => 'Weight';
+
+  @override
+  String get progressMetricReps => 'Reps';
+
+  @override
+  String get progressGone => 'This exercise has no results any more.';
+
+  @override
+  String progressBest(String set) {
+    return 'Best set: $set';
+  }
+
+  @override
+  String get workoutOrderChanged => 'Order changed';
+
+  @override
+  String get workoutPlannedOrder => 'Planned order';
+
+  @override
+  String get workoutOriginalOrder => 'Before reordering';
+
+  @override
+  String get workoutOriginalOrderHint => 'Order before the first rearrangement';
+
+  @override
+  String get workoutOrderAddedLater =>
+      'Exercises added later appear in the current list.';
+
+  @override
+  String get workoutOrderIncomplete => 'The original order was not fully saved';
+
+  @override
+  String get workoutOrderShow => 'Planned';
+
+  @override
+  String get workoutOrderHide => 'Collapse';
+
+  @override
+  String compareEstimate(String fact, String plan) {
+    return '≈ $fact vs ≈ $plan';
+  }
+
+  @override
+  String get finishRowRecorded => 'Recorded';
+
+  @override
+  String get finishRowSkipped => 'Skipped';
+
+  @override
+  String get finishRowEmpty => 'No result';
+
+  @override
+  String get finishEmptyHint =>
+      'Your coach will see exercises without results as skipped.';
+
+  @override
+  String get progressNothingFoundHint =>
+      'Only exercises with recorded results appear here. Check the name.';
+
+  @override
+  String get progressMetricLabel => 'Metric';
+
+  @override
+  String executionRoundCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rounds',
+      one: '$count round',
+    );
+    return '$_temp0';
+  }
 }

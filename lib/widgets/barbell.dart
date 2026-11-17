@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme.dart';
 
-enum Plate { done, now, waiting }
+enum Plate { done, now, waiting, skipped }
 
 /// Workout progress drawn as a bar that fills with plates, one per exercise.
 class Barbell extends StatelessWidget {
@@ -21,26 +21,37 @@ class Barbell extends StatelessWidget {
   /// Shown after the bar, e.g. «2 из 5».
   final InlineSpan? count;
 
-  static const _height = 44.0, _plateWidth = 15.0, _barThickness = 6.0;
+  static const _height = PbSize.barHeight,
+      _plateWidth = PbSize.plateWidth,
+      _barThickness = PbSize.barThickness;
 
   @override
   Widget build(BuildContext context) {
     final c = context.pb;
+    // A skipped exercise is a plate left off: a low, faint one.
     Widget plate(Plate state) => DecoratedBox(
       decoration: BoxDecoration(
         color: switch (state) {
           Plate.done => c.accent,
-          Plate.now => Colors.transparent,
+          Plate.now => c.sunken,
           Plate.waiting => c.sunken,
+          Plate.skipped => c.line,
         },
-        borderRadius: BorderRadius.circular(PbRadius.sm),
+        borderRadius: BorderRadius.circular(
+          state == Plate.skipped ? PbRadius.plateSkipped : PbRadius.plate,
+        ),
         border: switch (state) {
-          Plate.done => null,
+          Plate.done || Plate.skipped => null,
           Plate.now => Border.all(color: c.accentText, width: 2),
           Plate.waiting => Border.all(color: c.lineStrong, width: 2),
         },
       ),
-      child: const SizedBox(width: _plateWidth, height: _height),
+      child: SizedBox(
+        width: _plateWidth,
+        height: state == Plate.skipped
+            ? PbSize.plateSkippedHeight
+            : PbSize.plateHeight,
+      ),
     );
     return Semantics(
       label: label,
@@ -73,8 +84,8 @@ class Barbell extends StatelessWidget {
                             ),
                           ),
                         Container(
-                          width: 10,
-                          height: 20,
+                          width: PbSize.barCapWidth,
+                          height: PbSize.barCapHeight,
                           decoration: BoxDecoration(
                             color: c.ink,
                             borderRadius: BorderRadius.circular(PbSpace.s1),
@@ -89,7 +100,12 @@ class Barbell extends StatelessWidget {
           ),
           if (count != null) ...[
             const SizedBox(width: PbSpace.s3),
-            Text.rich(count!, style: PbText.numMd.copyWith(color: c.ink)),
+            Flexible(
+              child: Text.rich(
+                count!,
+                style: PbText.numMd.copyWith(color: c.ink),
+              ),
+            ),
           ],
         ],
       ),

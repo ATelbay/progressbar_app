@@ -265,5 +265,120 @@
         "type": "String"
       }
     }
+  },
+  "executionOrdinary": "Обычное",
+  "executionSuperset": "Суперсет",
+  "executionDropSet": "Дроп-сет",
+  "executionStyle": "Способ выполнения",
+  "executionRounds": "Круги",
+  "executionAddMember": "Добавить упражнение в суперсет",
+  "executionAddDrop": "Ещё снижение",
+  "executionInitialStage": "Начальная нагрузка",
+  "executionDropStage": "Снижение {number}",
+  "@executionDropStage": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "executionRound": "Круг {current} из {total}",
+  "@executionRound": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "executionMember": "Упражнение {current} из {total}",
+  "@executionMember": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "executionRecordSuperset": "Записать суперсет",
+  "executionRecordDropSet": "Записать дроп-сет",
+  "executionRecordDrops": "Записать дроп-сеты",
+  "executionFinishDrop": "Закончить подход здесь",
+  "executionDifferentResults": "Результаты различаются — правьте их по подходам.",
+  "executionChooseMembers": "Упражнения суперсета",
+  "executionMinMembers": "Добавьте ещё хотя бы одно упражнение.",
+  "executionExtraRound": "Ещё круг",
+  "executionPlanStagesHint": "Задайте снижения сейчас или добавляйте их во время тренировки.",
+  "executionRemoveMember": "Убрать из группы",
+  "executionContinueRecord": "Продолжить запись",
+  "executionRemoveDrop": "Убрать снижение",
+  "executionDropNumber": "Дроп-сет {current} из {total}",
+  "@executionDropNumber": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "executionControlsSuperset": "Упражнения и круги",
+  "executionControlsDrop": "Ступени и подходы",
+  "executionControlsHint": "Выберите место записи. Записанные результаты сохранятся.",
+  "historyHideDetails": "Свернуть подробности",
+  "workoutSkip": "Пропустить",
+  "workoutUnskip": "Отменить пропуск",
+  "workoutSkippedChip": "Пропущено",
+  "workoutAllDone": "Всё записано или пропущено",
+  "workoutProgressLabelSkipped": "Записано {done} из {total} упражнений, пропущено {skipped}",
+  "finishBodySkipped": "Записано {done} из {total} упражнений, пропущено {skipped}.",
+  "finishBodyRest": "Остальные останутся без результата — тренер увидит их как пропущенные.",
+  "progressSearch": "Найти упражнение",
+  "progressNothingFound": "Ничего не нашлось",
+  "progressEstimatedMax": "Расчётный максимум",
+  "progressEstimatedMaxHint": "Сколько можно поднять на один раз — по весу и повторениям лучшего подхода.",
+  "progressRepsAtTop": "Повторений в самом тяжёлом подходе",
+  "progressMetricMax": "Максимум",
+  "progressMetricWeight": "Вес",
+  "progressMetricReps": "Повторения",
+  "progressGone": "По этому упражнению больше нет результатов.",
+  "progressBest": "Лучший подход: {set}",
+  "workoutOrderChanged": "Порядок изменён",
+  "workoutPlannedOrder": "Порядок по плану",
+  "workoutOriginalOrder": "До перестановки",
+  "workoutOriginalOrderHint": "Порядок до первой перестановки",
+  "workoutOrderAddedLater": "Упражнения, добавленные позже, показаны в текущем списке.",
+  "workoutOrderIncomplete": "Исходный порядок сохранён не полностью",
+  "workoutOrderShow": "По плану",
+  "workoutOrderHide": "Свернуть",
+  "compareEstimate": "≈ {fact} против ≈ {plan}",
+  "finishRowRecorded": "Записано",
+  "finishRowSkipped": "Пропущено",
+  "finishRowEmpty": "Без результата",
+  "finishEmptyHint": "Упражнения без результата тренер увидит как пропущенные.",
+  "progressNothingFoundHint": "Здесь только упражнения, по которым уже есть результаты. Проверьте название.",
+  "progressMetricLabel": "Показатель",
+  "@compareEstimate": {
+    "placeholders": {
+      "fact": {
+        "type": "String"
+      },
+      "plan": {
+        "type": "String"
+      }
+    }
+  },
+  "executionRoundCount": "{count, plural, one{{count} круг} few{{count} круга} many{{count} кругов} other{{count} круга}}",
+  "@executionRoundCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

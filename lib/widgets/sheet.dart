@@ -65,8 +65,9 @@ class ChoiceSheet<T> extends StatelessWidget {
             onPressed: () => Navigator.pop(context, (value,)),
             style: value == selected
                 ? OutlinedButton.styleFrom(
-                    foregroundColor: c.accentText,
-                    side: BorderSide(color: c.accentText, width: 2),
+                    foregroundColor: c.ink,
+                    backgroundColor: c.selection,
+                    side: BorderSide(color: c.lineStrong),
                   )
                 : null,
             child: Text(label),

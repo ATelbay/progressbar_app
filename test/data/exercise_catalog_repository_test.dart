@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:progressbar_app/data/exercise_catalog_repository.dart';
 import 'package:progressbar_app/domain/models.dart';
+import 'package:progressbar_app/domain/progress_logic.dart';
 import 'package:progressbar_app/domain/workout_logic.dart';
 import 'package:progressbar_app/features/exercises/exercise_catalog_provider.dart';
 
@@ -121,13 +122,35 @@ void main() {
       expect(totalLoadKg(workout, pullup, pullup.sets.single.fact!), 90);
       expect(totalLoadKg(workout, dip, dip.sets.single.fact!), 80);
       expect(totalLoadKg(workout, bench, bench.sets.single.fact!), 60);
-      final pullupPoint = progressFor(pullup.exerciseId, [workout]).single;
+      final pullupPoint = progressFor(
+        pullup.exerciseId,
+        [workout],
+        metric: ProgressMetric.bodyReps,
+      ).single;
       expect(pullupPoint.value, 5);
       expect(pullupPoint.extraKg, 10);
-      expect(progressFor(bench.exerciseId, [workout]).single.value, 60);
-      expect(progressFor('free-exercise-db/Plank', [workout]).single.value, 45);
       expect(
-        progressFor('free-exercise-db/Side_Bridge', [workout]).single.value,
+        progressFor(
+          bench.exerciseId,
+          [workout],
+          metric: ProgressMetric.weight,
+        ).single.value,
+        60,
+      );
+      expect(
+        progressFor(
+          'free-exercise-db/Plank',
+          [workout],
+          metric: ProgressMetric.time,
+        ).single.value,
+        45,
+      );
+      expect(
+        progressFor(
+          'free-exercise-db/Side_Bridge',
+          [workout],
+          metric: ProgressMetric.time,
+        ).single.value,
         30,
       );
       expect(workout.exercises[3].measure, Measure.time);

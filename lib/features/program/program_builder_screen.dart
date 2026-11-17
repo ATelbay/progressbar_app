@@ -19,7 +19,8 @@ import '../auth/auth_controller.dart';
 import '../exercises/personal_exercises_provider.dart';
 import '../format.dart';
 import '../people/people_providers.dart';
-import '../workout/summary_entry.dart';
+import '../execution_widgets.dart';
+import 'execution_plan_sheet.dart';
 import '../workout/workout_providers.dart';
 import 'program_providers.dart';
 import 'assignment_providers.dart';
@@ -139,38 +140,37 @@ class _ProgramBuilderScreenState extends ConsumerState<ProgramBuilderScreen> {
     ProgramExercise? planned,
   }) async {
     _releaseName();
-    final result = await showModalBottomSheet<_PlanEdit>(
+    final catalog = ref.read(userCatalogProvider).value ?? {};
+    final initial = planned == null
+        ? <ProgramExercise>[]
+        : planned.executionMode == ExecutionMode.superset &&
+              planned.groupId != null
+        ? day.exercises.where((e) => e.groupId == planned.groupId).toList()
+        : [planned];
+    if (initial.any((p) => !catalog.containsKey(p.exerciseId))) return;
+    final result = await showModalBottomSheet<ExecutionPlanResult>(
       context: context,
-      backgroundColor: Colors.transparent,
+      useSafeArea: true,
+      backgroundColor: context.pb.surface,
       barrierColor: context.pb.scrim,
       isScrollControlled: true,
-      builder: (_) => _PlanSheet(
+      builder: (_) => ExecutionPlanSheet(
         exercise: exercise,
-        planned: planned,
-        // What the author lifted last time is where the plan starts from.
-        last: planned != null
-            ? null
-            : lastRecorded(
-                exercise.id,
-                ref.read(completedWorkoutsProvider).value ?? const [],
-              ),
+        initial: initial,
+        catalog: catalog,
+        newId: ref.read(newIdProvider),
+        earlier: ref.read(completedWorkoutsProvider).value ?? const [],
+        onPick: () => context.push<Exercise>(Routes.exercisePicker),
       ),
     );
     if (result == null || !mounted) return;
-    final id = planned?.id ?? ref.read(newIdProvider)();
     _apply(
-      result.remove
-          ? removeExercise(program, day.id, id)
-          : putExercise(
-              program,
-              day.id,
-              ProgramExercise(
-                id: id,
-                exerciseId: exercise.id,
-                sets: uniformSets(result.setCount, result.values),
-                note: result.note.isEmpty ? null : result.note,
-              ),
-            ),
+      putExecutionPlan(
+        program,
+        day.id,
+        replacedIds: initial.map((e) => e.id).toList(),
+        members: result.remove ? [] : result.members,
+      ),
     );
   }
 
@@ -439,6 +439,20 @@ class _ProgramBuilderScreenState extends ConsumerState<ProgramBuilderScreen> {
                               name: exercise.nameFor(language),
                               exercise: exercise,
                               planned: planned,
+                              groupName: planned.groupId == null
+                                  ? null
+                                  : day.exercises
+                                        .where(
+                                          (member) =>
+                                              member.groupId == planned.groupId,
+                                        )
+                                        .map(
+                                          (member) =>
+                                              catalog[member.exerciseId]
+                                                  ?.nameFor(language) ??
+                                              l10n.programMissingExercise,
+                                        )
+                                        .join(' + '),
                               onTap: readOnly
                                   ? null
                                   : () => _editExercise(
@@ -496,11 +510,13 @@ class _PlannedCard extends StatelessWidget {
     required this.exercise,
     required this.planned,
     required this.onTap,
+    this.groupName,
   });
 
   final String name;
   final Exercise exercise;
   final ProgramExercise planned;
+  final String? groupName;
   final VoidCallback? onTap;
 
   @override
@@ -543,6 +559,19 @@ class _PlannedCard extends StatelessWidget {
                 ),
             ],
           ),
+          if (planned.executionMode != ExecutionMode.ordinary)
+            Text(
+              groupName == null
+                  ? executionLabel(l10n, planned.executionMode)
+                  : '${l10n.executionSuperset}: $groupName',
+              style: caption,
+            ),
+          if (planned.executionMode == ExecutionMode.dropSet)
+            for (final (i, stage) in planned.dropStages.indexed)
+              Text(
+                '${l10n.executionDropStage(i + 1)}: ${setLine(context, stage, measure: exercise.measure, usesBodyWeight: exercise.usesBodyWeight).text}',
+                style: caption,
+              ),
           if (planned.note case final note?)
             Text(l10n.builderNotePrefix(note), style: caption),
         ],
@@ -624,120 +653,6 @@ class _DaySheetState extends State<_DaySheet> {
             onPressed: () => _close(delete: true),
             style: TextButton.styleFrom(foregroundColor: c.danger),
             child: Text(l10n.builderRemoveDay),
-          ),
-      ],
-    );
-  }
-}
-
-typedef _PlanEdit = ({
-  int setCount,
-  SetValues values,
-  String note,
-  bool remove,
-});
-
-/// The plan for one exercise in one line: sets × reps or time × weight.
-class _PlanSheet extends StatefulWidget {
-  const _PlanSheet({required this.exercise, this.planned, this.last});
-
-  final Exercise exercise;
-  final ProgramExercise? planned;
-
-  /// The author's latest result in this exercise, when planning it anew.
-  final ({SetsSummary summary, double weightKg})? last;
-
-  @override
-  State<_PlanSheet> createState() => _PlanSheetState();
-}
-
-class _PlanSheetState extends State<_PlanSheet> {
-  late final _note = TextEditingController(text: widget.planned?.note ?? '');
-  late int _setCount = widget.planned?.sets.length ?? 3;
-  late int _count =
-      widget.planned?.sets.firstOrNull?.reps ??
-      widget.planned?.sets.firstOrNull?.seconds ??
-      (_timed ? 30 : 10);
-
-  /// Null until a weight is known: planned before, lifted before or typed.
-  late double? _weightKg =
-      widget.planned?.sets.firstOrNull?.weightKg ?? widget.last?.weightKg;
-
-  bool get _timed => widget.exercise.measure == Measure.time;
-
-  @override
-  void dispose() {
-    _note.dispose();
-    super.dispose();
-  }
-
-  void _close({bool remove = false}) => Navigator.pop(context, (
-    setCount: _setCount,
-    values: _timed
-        ? SetValues(seconds: _count, weightKg: _weightKg ?? 0)
-        : SetValues(reps: _count, weightKg: _weightKg ?? 0),
-    note: _note.text.trim(),
-    remove: remove,
-  ));
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final c = context.pb;
-    final exercise = widget.exercise;
-    final last = widget.last;
-    return _Sheet(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              exercise.nameFor(Localizations.localeOf(context).languageCode),
-              style: PbText.heading.copyWith(color: c.ink),
-            ),
-            if (widget.planned == null && !_timed)
-              Text(
-                last == null
-                    ? l10n.builderNoHistory
-                    : l10n.builderLastTime(
-                        summaryLine(
-                          context,
-                          last.summary,
-                          measure: exercise.measure,
-                          usesBodyWeight: exercise.usesBodyWeight,
-                        ).text,
-                      ),
-                style: PbText.caption.copyWith(color: c.inkMuted),
-              ),
-          ],
-        ),
-        SummaryEntry(
-          setCount: _setCount,
-          values: _timed
-              ? SetValues(seconds: _count)
-              : SetValues(reps: _count, weightKg: _weightKg ?? 0),
-          measure: exercise.measure,
-          usesBodyWeight: exercise.usesBodyWeight,
-          knownPlanningWeight: !_timed && _weightKg != null,
-          submitLabel: l10n.welcomeDone,
-          onSubmit: (setCount, values) {
-            _setCount = setCount;
-            _count = values.reps ?? values.seconds!;
-            _weightKg = values.weightKg;
-            _close();
-          },
-          details: TextField(
-            controller: _note,
-            textCapitalization: TextCapitalization.sentences,
-            style: PbText.body.copyWith(color: c.ink),
-            decoration: InputDecoration(labelText: l10n.builderNote),
-          ),
-        ),
-        if (widget.planned != null)
-          TextButton(
-            onPressed: () => _close(remove: true),
-            style: TextButton.styleFrom(foregroundColor: c.danger),
-            child: Text(l10n.builderRemoveExercise),
           ),
       ],
     );

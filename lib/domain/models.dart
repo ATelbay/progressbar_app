@@ -111,12 +111,17 @@ class SetValues {
   String toString() => 'SetValues($weightKg kg × ${reps ?? '${seconds}s'})';
 }
 
+enum ExecutionMode { ordinary, superset, dropSet }
+
 class ProgramExercise {
   const ProgramExercise({
     required this.id,
     required this.exerciseId,
     required this.sets,
     this.note,
+    this.executionMode = ExecutionMode.ordinary,
+    this.groupId,
+    this.dropStages = const [],
   });
 
   final String id;
@@ -127,6 +132,11 @@ class ProgramExercise {
 
   /// Coach's note shown to the trainee.
   final String? note;
+  final ExecutionMode executionMode;
+  final String? groupId;
+
+  /// Planned reductions after the initial load, repeated for each set.
+  final List<SetValues> dropStages;
 }
 
 class ProgramDay {
@@ -222,8 +232,22 @@ class Invitation {
   final DateTime createdAt;
 }
 
+class DropStage {
+  const DropStage({required this.id, this.plan, this.fact});
+  final String id;
+  final SetValues? plan;
+  final SetValues? fact;
+}
+
 class WorkoutSet {
-  const WorkoutSet({required this.id, this.plan, this.fact, this.rpe});
+  const WorkoutSet({
+    required this.id,
+    this.plan,
+    this.fact,
+    this.rpe,
+    this.drops = const [],
+    this.dropComplete = false,
+  });
 
   final String id;
 
@@ -235,6 +259,14 @@ class WorkoutSet {
 
   /// Perceived effort, 1–10 in steps of 0.5.
   final double? rpe;
+  final List<DropStage> drops;
+  final bool dropComplete;
+  Iterable<SetValues> get facts sync* {
+    if (fact != null) yield fact!;
+    for (final drop in drops) {
+      if (drop.fact != null) yield drop.fact!;
+    }
+  }
 
   bool get isExtra => plan == null;
 
@@ -243,6 +275,10 @@ class WorkoutSet {
     plan: plan,
     fact: fact,
     rpe: fact == null ? null : rpe,
+    drops: fact == null
+        ? [for (final d in drops) DropStage(id: d.id, plan: d.plan)]
+        : drops,
+    dropComplete: fact == null ? false : dropComplete,
   );
 }
 
@@ -257,6 +293,12 @@ class WorkoutExercise {
     required this.usesBodyWeight,
     required this.sets,
     this.note,
+    this.executionMode = ExecutionMode.ordinary,
+    this.groupId,
+    this.planExecutionMode,
+    this.planGroupId,
+    this.executionComplete = false,
+    this.skipped = false,
   });
 
   final String id;
@@ -266,10 +308,38 @@ class WorkoutExercise {
   final bool usesBodyWeight;
   final List<WorkoutSet> sets;
   final String? note;
+  final ExecutionMode executionMode;
+  final String? groupId;
+  final ExecutionMode? planExecutionMode;
+  final String? planGroupId;
+
+  /// A summary may deliberately record fewer rounds than were planned.
+  final bool executionComplete;
+
+  /// The trainee chose not to do it. Only an exercise without a result can be
+  /// skipped: recording one takes the mark off.
+  final bool skipped;
 
   bool get hasFact => sets.any((s) => s.fact != null);
 
-  WorkoutExercise withSets(List<WorkoutSet> sets) => WorkoutExercise(
+  WorkoutExercise withSets(List<WorkoutSet> sets, {bool? executionComplete}) =>
+      WorkoutExercise(
+        id: id,
+        exerciseId: exerciseId,
+        name: name,
+        measure: measure,
+        usesBodyWeight: usesBodyWeight,
+        sets: sets,
+        note: note,
+        executionMode: executionMode,
+        groupId: groupId,
+        planExecutionMode: planExecutionMode,
+        planGroupId: planGroupId,
+        executionComplete: executionComplete ?? this.executionComplete,
+        skipped: skipped && !sets.any((s) => s.fact != null),
+      );
+
+  WorkoutExercise withSkipped(bool skipped) => WorkoutExercise(
     id: id,
     exerciseId: exerciseId,
     name: name,
@@ -277,7 +347,31 @@ class WorkoutExercise {
     usesBodyWeight: usesBodyWeight,
     sets: sets,
     note: note,
+    executionMode: executionMode,
+    groupId: groupId,
+    planExecutionMode: planExecutionMode,
+    planGroupId: planGroupId,
+    executionComplete: executionComplete,
+    skipped: skipped,
   );
+}
+
+/// A superset is done or skipped as a whole: once any of its exercises has a
+/// result, none of them stays skipped. A skipped exercise never has a result.
+List<WorkoutExercise> consistentSkips(List<WorkoutExercise> exercises) {
+  final started = {
+    for (final e in exercises)
+      if (e.hasFact && e.executionMode == ExecutionMode.superset) ?e.groupId,
+  };
+  return [
+    for (final e in exercises)
+      e.skipped &&
+              (e.hasFact ||
+                  (e.executionMode == ExecutionMode.superset &&
+                      started.contains(e.groupId)))
+          ? e.withSkipped(false)
+          : e,
+  ];
 }
 
 class Workout {
@@ -297,6 +391,7 @@ class Workout {
     this.editedAt,
     this.comment,
     this.bodyWeightKg,
+    this.originalOrder,
   });
 
   final String id;
@@ -327,6 +422,11 @@ class Workout {
 
   /// Trainee's body weight at start, for body-weight exercises.
   final double? bodyWeightKg;
+
+  /// Exercises are kept in the order they were done. When the trainee first
+  /// rearranges them, the order before that is kept here (exercise ids);
+  /// null while the order was never changed.
+  final List<String>? originalOrder;
   final List<WorkoutExercise> exercises;
 
   bool get isCompleted => status == WorkoutStatus.completed;
@@ -338,6 +438,7 @@ class Workout {
     DateTime? performedOn,
     DateTime? editedAt,
     String? comment,
+    List<String>? originalOrder,
     List<WorkoutExercise>? exercises,
   }) => Workout(
     id: id,
@@ -354,6 +455,7 @@ class Workout {
     editedAt: editedAt ?? this.editedAt,
     comment: comment ?? this.comment,
     bodyWeightKg: bodyWeightKg,
-    exercises: exercises ?? this.exercises,
+    originalOrder: originalOrder ?? this.originalOrder,
+    exercises: exercises == null ? this.exercises : consistentSkips(exercises),
   );
 }

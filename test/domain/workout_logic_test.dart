@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:progressbar_app/domain/models.dart';
+import 'package:progressbar_app/domain/progress_logic.dart';
 import 'package:progressbar_app/domain/workout_logic.dart';
 
 const bench = Exercise(
@@ -353,36 +354,41 @@ void main() {
     WorkoutSet set(SetValues? plan, SetValues? fact) =>
         WorkoutSet(id: 's', plan: plan, fact: fact);
 
-    test('names the deviation', () {
-      expect(compareSet(set(plan60x8, plan60x8)).kind, DeviationKind.asPlanned);
-      expect(compareSet(set(plan60x8, null)).kind, DeviationKind.missing);
-      expect(compareSet(set(null, plan60x8)).kind, DeviationKind.extra);
+    SetDeviation compare(WorkoutSet value) {
+      final w = start();
+      return compareSet(value, workout: w, exercise: w.exercises.first);
+    }
 
-      final below = compareSet(
+    test('names the deviation', () {
+      expect(compare(set(plan60x8, plan60x8)).kind, DeviationKind.asPlanned);
+      expect(compare(set(plan60x8, null)).kind, DeviationKind.missing);
+      expect(compare(set(null, plan60x8)).kind, DeviationKind.extra);
+
+      final below = compare(
         set(plan60x8, const SetValues(reps: 6, weightKg: 55)),
       );
       expect(below.kind, DeviationKind.below);
       expect(below.weightKg, -5);
       expect(below.count, -2);
 
-      final above = compareSet(
+      final above = compare(
         set(plan60x8, const SetValues(reps: 8, weightKg: 62.5)),
       );
       expect(above.kind, DeviationKind.above);
       expect(above.weightKg, 2.5);
     });
 
-    test('heavier but fewer reps still counts as below plan', () {
-      final mixed = compareSet(
+    test('heavier with fewer reps compares the estimated strength', () {
+      final mixed = compare(
         set(plan60x8, const SetValues(reps: 6, weightKg: 65)),
       );
-      expect(mixed.kind, DeviationKind.below);
+      expect(mixed.kind, DeviationKind.above);
     });
 
     test('an exercise is below plan when any planned set is missing', () {
       final ids = counter();
       var w = start(newId: ids);
-      expect(compareExercise(w.exercises.first), DeviationKind.missing);
+      expect(compareExercise(w, w.exercises.first), DeviationKind.missing);
 
       w = recordSummary(
         w,
@@ -392,7 +398,7 @@ void main() {
         newId: ids,
         now: monday,
       );
-      expect(compareExercise(w.exercises.first), DeviationKind.below);
+      expect(compareExercise(w, w.exercises.first), DeviationKind.below);
 
       w = recordSummary(
         w,
@@ -402,7 +408,7 @@ void main() {
         newId: ids,
         now: monday,
       );
-      expect(compareExercise(w.exercises.first), DeviationKind.asPlanned);
+      expect(compareExercise(w, w.exercises.first), DeviationKind.asPlanned);
     });
   });
 
@@ -446,14 +452,17 @@ void main() {
         unfinished,
         nothingRecorded,
         first,
-      ]);
+      ], metric: ProgressMetric.weight);
       expect(points.map((p) => p.value), [57.5, 60]);
       expect(points.first.at, monday);
     });
 
     test('a timed exercise is tracked by its longest time', () {
       final w = finished(monday, const [], plankSec: 75);
-      expect(progressFor('plank', [w]).single.value, 75);
+      expect(
+        progressFor('plank', [w], metric: ProgressMetric.time).single.value,
+        75,
+      );
     });
 
     Workout pullUps(DateTime at, List<SetValues> facts, {double body = 78}) {
@@ -489,7 +498,10 @@ void main() {
         SetValues(reps: 9),
       ]);
 
-      final points = progressFor('pullup', [first, second]);
+      final points = progressFor('pullup', [
+        first,
+        second,
+      ], metric: ProgressMetric.bodyReps);
       expect(points.map((p) => p.value), [7, 9]);
       expect(points.map((p) => p.unit), everyElement(ProgressUnit.reps));
       expect(points.map((p) => p.extraKg), everyElement(0));
@@ -502,7 +514,9 @@ void main() {
         SetValues(reps: 4, weightKg: 10),
       ]);
 
-      final point = progressFor('pullup', [w]).single;
+      final point = progressFor('pullup', [
+        w,
+      ], metric: ProgressMetric.bodyReps).single;
       expect(point.value, 5);
       expect(point.extraKg, 10);
     });
@@ -791,14 +805,16 @@ void main() {
       return completeWorkout(w, now: monday.add(Duration(days: day)));
     }
 
-    final found = exercisesWithResults([
+    final found = progressOverview([
       done('a', 1, plankToo: true),
       done('b', 2, plankToo: false),
       start(),
     ]);
     expect(found.map((e) => e.exerciseId), ['bench', 'plank']);
     expect(found.first.name, 'Жим лёжа');
-    expect(exercisesWithResults([start()]), isEmpty);
+    expect(found.first.mainMetric, ProgressMetric.estimatedMax);
+    expect(found.last.mainMetric, ProgressMetric.time);
+    expect(progressOverview([start()]), isEmpty);
   });
 
   group('the day of a workout', () {
@@ -858,7 +874,12 @@ void main() {
         );
         final newer = completeWorkout(with_(70), now: now);
         List<double> values(List<Workout> workouts) => [
-          for (final point in progressFor('bench', workouts)) point.value,
+          for (final point in progressFor(
+            'bench',
+            workouts,
+            metric: ProgressMetric.weight,
+          ))
+            point.value,
         ];
         expect(values([older, newer]), [60, 70]);
 

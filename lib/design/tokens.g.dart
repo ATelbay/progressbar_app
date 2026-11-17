@@ -25,70 +25,76 @@ class PbColors extends ThemeExtension<PbColors> {
     required this.warning,
     required this.danger,
     required this.scrim,
+    required this.selection,
+    required this.glassShadow,
   });
 
   static const dusk = PbColors(
-    ground: Color(0xFF1B1114),
-    glow1: Color(0xFFFF6A45),
-    glow2: Color(0xFFC43D68),
-    glow3: Color(0xFFFFB23E),
-    glass: Color(0x9926161A),
-    glassStrong: Color(0xBD221418),
-    glassLine: Color(0x2EFFE2CE),
-    surface: Color(0xFF2A1A1E),
-    sunken: Color(0x1AFFF4EC),
-    ink: Color(0xFFFFF4EC),
-    inkMuted: Color(0xFFD9C4BA),
-    line: Color(0x1FFFF4EC),
-    lineStrong: Color(0x6BFFF4EC),
-    accent: Color(0xFFFFAB52),
-    onAccent: Color(0xFF2B1503),
-    accentText: Color(0xFFFFAB52),
-    success: Color(0xFF8FE3AD),
-    warning: Color(0xFFFFC566),
-    danger: Color(0xFFFFA093),
-    scrim: Color(0x8F000000),
+    ground: Color(0xFF22211F),
+    glow1: Color(0x38AD8263),
+    glow2: Color(0x269D7E74),
+    glow3: Color(0x2EC4A56A),
+    glass: Color(0xB334312D),
+    glassStrong: Color(0xD6302E2A),
+    glassLine: Color(0x24FFF7EB),
+    surface: Color(0xFF302E2A),
+    sunken: Color(0x0FF4EDE6),
+    ink: Color(0xFFF3EFE8),
+    inkMuted: Color(0xFFB8B1A6),
+    line: Color(0x1AF4EDE6),
+    lineStrong: Color(0x80DCD1BF),
+    accent: Color(0xFFE9B56C),
+    onAccent: Color(0xFF2C2113),
+    accentText: Color(0xFFE9B56C),
+    success: Color(0xFFABD0AF),
+    warning: Color(0xFFD9BE85),
+    danger: Color(0xFFE7AAA0),
+    scrim: Color(0x7A000000),
+    selection: Color(0x24F4EDE6),
+    glassShadow: Color(0x24000000),
   );
 
   static const dawn = PbColors(
-    ground: Color(0xFFFBEEE8),
-    glow1: Color(0xFFFF9F80),
-    glow2: Color(0xFFF7A8C4),
-    glow3: Color(0xFFFFD27A),
-    glass: Color(0x80FFFFFF),
-    glassStrong: Color(0xB8FFFFFF),
-    glassLine: Color(0xD9FFFFFF),
-    surface: Color(0xFFFFF7F3),
-    sunken: Color(0x122A1418),
-    ink: Color(0xFF2A1418),
-    inkMuted: Color(0xFF553739),
-    line: Color(0x1F2A1418),
-    lineStrong: Color(0x662A1418),
-    accent: Color(0xFFFF9838),
-    onAccent: Color(0xFF2B1503),
-    accentText: Color(0xFFA33A08),
-    success: Color(0xFF1A6B3C),
-    warning: Color(0xFF8A4700),
-    danger: Color(0xFFB3261E),
-    scrim: Color(0x5C2A1418),
+    ground: Color(0xFFF5F3EE),
+    glow1: Color(0x38C79F77),
+    glow2: Color(0x26C7ADA3),
+    glow3: Color(0x2ED5BA83),
+    glass: Color(0xB8FFFFFF),
+    glassStrong: Color(0xDEFFFFFF),
+    glassLine: Color(0xB3FFFFFF),
+    surface: Color(0xFFFCFAF6),
+    sunken: Color(0x0D493E30),
+    ink: Color(0xFF302C26),
+    inkMuted: Color(0xFF6D655B),
+    line: Color(0x1A493E30),
+    lineStrong: Color(0xB8655A4D),
+    accent: Color(0xFFE1A453),
+    onAccent: Color(0xFF2C2113),
+    accentText: Color(0xFF91510F),
+    success: Color(0xFF386A42),
+    warning: Color(0xFF805D1C),
+    danger: Color(0xFFA13D35),
+    scrim: Color(0x3D302C26),
+    selection: Color(0x1C705831),
+    glassShadow: Color(0x12584021),
   );
 
   /// Фон экрана под светом и стеклом.
   final Color ground;
 
-  /// Первое пятно света за стеклом: коралл. Крупный размытый круг в верхнем левом углу экрана. Текст прямо на свет не кладётся — только через стекло.
+  /// Мягкий тёплый свет за содержимым; непрозрачность включена в цвет.
   final Color glow1;
 
-  /// Второе пятно света: малина на закате, роза на рассвете. Справа, в средней трети экрана.
+  /// Мягкий тёплый свет за содержимым; непрозрачность включена в цвет.
   final Color glow2;
 
-  /// Третье пятно света: янтарь. Внизу экрана, под панелью ввода.
+  /// Мягкий тёплый свет за содержимым; непрозрачность включена в цвет.
   final Color glow3;
 
-  /// Основной материал. Карточки упражнений, строки списков, плашки. Всегда с размытием glass-blur и кромкой glass-line.
+  /// Спокойный полупрозрачный материал содержимого: карточки и строки списков.
   final Color glass;
 
-  /// Плотное стекло под крупными цифрами и вводом: панель ввода результата, шторки, панель вкладок, текущее упражнение.
+  /// Плотное размытое стекло для ввода, шторок и навигации.
   final Color glassStrong;
 
   /// Кромка стекла толщиной 1 px.
@@ -133,6 +139,12 @@ class PbColors extends ThemeExtension<PbColors> {
   /// Затемнение экрана под шторкой и диалогом.
   final Color scrim;
 
+  /// Спокойная подложка выбранного режима и вкладки; янтарная заливка остаётся у главного действия.
+  final Color selection;
+
+  /// Мягкая тень под плавающей панелью и навигацией.
+  final Color glassShadow;
+
   @override
   PbColors copyWith() => this;
 
@@ -160,6 +172,8 @@ class PbColors extends ThemeExtension<PbColors> {
       warning: Color.lerp(warning, other.warning, t)!,
       danger: Color.lerp(danger, other.danger, t)!,
       scrim: Color.lerp(scrim, other.scrim, t)!,
+      selection: Color.lerp(selection, other.selection, t)!,
+      glassShadow: Color.lerp(glassShadow, other.glassShadow, t)!,
     );
   }
 }
@@ -178,108 +192,97 @@ abstract final class PbRadius {
   static const double md = 16;
   static const double lg = 20;
   static const double xl = 28;
+  static const double plate = 5;
+  static const double plateSkipped = 4;
 }
 
 abstract final class PbSize {
   static const double touchMin = 48;
   static const double actionHeight = 56;
-  static const double glassBlur = 26;
+  static const double glassBlur = 16;
   static const double glowBlur = 48;
+  static const double shadowOffset = 6;
+  static const double shadowBlur = 20;
+  static const double tabBarHeight = 68;
+  static const double iconSm = 18;
+  static const double icon = 24;
+  static const double iconSearch = 20;
+  static const double stroke = 1;
+  static const double strokeStrong = 2;
+  static const double rowInset = 10;
+  static const double inlineGap = 6;
+  static const double tinyGap = 2;
+  static const double dragShadowOffset = 12;
+  static const double dragShadowBlur = 32;
+  static const double dragScaleIncrement = 0.02;
+  static const double sparkWidth = 56;
+  static const double sparkHeight = 24;
+  static const double sparkDot = 3;
+  static const double chartDot = 4;
+  static const double chartLastDot = 6;
+  static const double chartAxisWidth = 40;
+  static const double chartHeight = 172;
+  static const double chartTop = 12;
+  static const double chartDateHeight = 30;
+  static const double chartInset = 10;
+  static const double emptyChartWidth = 306;
+  static const double emptyChartHeight = 96;
+  static const double emptyChartDot = 6;
+  static const double orderNumberWidth = 16;
+  static const double barHeight = 44;
+  static const double barThickness = 2;
+  static const double plateWidth = 13;
+  static const double plateHeight = 28;
+  static const double plateSkippedHeight = 12;
+  static const double barCapWidth = 10;
+  static const double barCapHeight = 20;
 }
 
 abstract final class PbText {
   /// Значение, которое человек вводит прямо сейчас: вес в панели ввода результата.
-  static const numHero = TextStyle(
-    fontFamily: 'Fira Sans Extra Condensed',
-    fontSize: 72.0,
-    height: 1.000,
-    fontWeight: FontWeight.w800,
-    fontVariations: [FontVariation('wght', 800)],
-    fontFeatures: [FontFeature.tabularFigures()],
-  );
+  static const numHero = TextStyle(fontFamily: 'Fira Sans Extra Condensed', fontSize: 72.0, height: 1.000, fontWeight: FontWeight.w800, fontVariations: [FontVariation('wght', 800)], fontFeatures: [FontFeature.tabularFigures()],);
 
   /// Подходы и повторения в панели ввода; итог упражнения на экране тренировки.
-  static const numLg = TextStyle(
-    fontFamily: 'Fira Sans Extra Condensed',
-    fontSize: 44.0,
-    height: 1.000,
-    fontWeight: FontWeight.w700,
-    fontVariations: [FontVariation('wght', 700)],
-    fontFeatures: [FontFeature.tabularFigures()],
-  );
+  static const numLg = TextStyle(fontFamily: 'Fira Sans Extra Condensed', fontSize: 44.0, height: 1.000, fontWeight: FontWeight.w600, fontVariations: [FontVariation('wght', 600)], fontFeatures: [FontFeature.tabularFigures()],);
 
   /// Факт в строке «план и факт», значения на графике прогресса.
-  static const numMd = TextStyle(
-    fontFamily: 'Fira Sans Extra Condensed',
-    fontSize: 28.0,
-    height: 1.071,
-    fontWeight: FontWeight.w700,
-    fontVariations: [FontVariation('wght', 700)],
-    fontFeatures: [FontFeature.tabularFigures()],
-  );
+  static const numMd = TextStyle(fontFamily: 'Fira Sans Extra Condensed', fontSize: 28.0, height: 1.071, fontWeight: FontWeight.w600, fontVariations: [FontVariation('wght', 600)], fontFeatures: [FontFeature.tabularFigures()],);
 
   /// План в строке «план и факт», цифры в списках истории.
-  static const numSm = TextStyle(
-    fontFamily: 'Fira Sans Extra Condensed',
-    fontSize: 20.0,
-    height: 1.100,
-    fontWeight: FontWeight.w600,
-    fontVariations: [FontVariation('wght', 600)],
-    fontFeatures: [FontFeature.tabularFigures()],
-  );
+  static const numSm = TextStyle(fontFamily: 'Fira Sans Extra Condensed', fontSize: 20.0, height: 1.100, fontWeight: FontWeight.w600, fontVariations: [FontVariation('wght', 600)], fontFeatures: [FontFeature.tabularFigures()],);
+
+  /// Подписи оси графика прогресса.
+  static const numAxis = TextStyle(fontFamily: 'Fira Sans Extra Condensed', fontSize: 14.0, height: 1.286, fontWeight: FontWeight.w600, fontVariations: [FontVariation('wght', 600)], fontFeatures: [FontFeature.tabularFigures()],);
+
+  /// Спокойная строка плана под фактом в истории, макеты 2026-11-16.
+  static const numPlan = TextStyle(fontFamily: 'Fira Sans Extra Condensed', fontSize: 20.0, height: 1.100, fontWeight: FontWeight.w400, fontVariations: [FontVariation('wght', 400)], fontFeatures: [FontFeature.tabularFigures()],);
 
   /// Заголовок экрана.
-  static const title = TextStyle(
-    fontFamily: 'Golos Text',
-    fontSize: 26.0,
-    height: 1.154,
-    fontWeight: FontWeight.w700,
-    fontVariations: [FontVariation('wght', 700)],
-  );
+  static const title = TextStyle(fontFamily: 'Golos Text', fontSize: 26.0, height: 1.154, fontWeight: FontWeight.w600, fontVariations: [FontVariation('wght', 600)],);
 
   /// Название упражнения, заголовок карточки и шторки.
-  static const heading = TextStyle(
-    fontFamily: 'Golos Text',
-    fontSize: 20.0,
-    height: 1.300,
-    fontWeight: FontWeight.w700,
-    fontVariations: [FontVariation('wght', 700)],
-  );
+  static const heading = TextStyle(fontFamily: 'Golos Text', fontSize: 20.0, height: 1.300, fontWeight: FontWeight.w600, fontVariations: [FontVariation('wght', 600)],);
 
   /// Основной текст, строки списков.
-  static const body = TextStyle(
-    fontFamily: 'Golos Text',
-    fontSize: 17.0,
-    height: 1.412,
-    fontWeight: FontWeight.w400,
-    fontVariations: [FontVariation('wght', 400)],
-  );
+  static const body = TextStyle(fontFamily: 'Golos Text', fontSize: 17.0, height: 1.412, fontWeight: FontWeight.w400, fontVariations: [FontVariation('wght', 400)],);
 
   /// Подпись кнопки, выделенное слово в тексте.
-  static const bodyStrong = TextStyle(
-    fontFamily: 'Golos Text',
-    fontSize: 17.0,
-    height: 1.412,
-    fontWeight: FontWeight.w700,
-    fontVariations: [FontVariation('wght', 700)],
-  );
+  static const bodyStrong = TextStyle(fontFamily: 'Golos Text', fontSize: 17.0, height: 1.412, fontWeight: FontWeight.w600, fontVariations: [FontVariation('wght', 600)],);
 
   /// Подписи «План», «Факт», названия полей, подписи вкладок.
-  static const label = TextStyle(
-    fontFamily: 'Golos Text',
-    fontSize: 14.0,
-    height: 1.286,
-    fontWeight: FontWeight.w600,
-    fontVariations: [FontVariation('wght', 600)],
-    letterSpacing: 0.28,
-  );
+  static const label = TextStyle(fontFamily: 'Golos Text', fontSize: 14.0, height: 1.286, fontWeight: FontWeight.w500, fontVariations: [FontVariation('wght', 500)], letterSpacing: 0.0,);
 
   /// Подсказки и служебные пометки.
-  static const caption = TextStyle(
-    fontFamily: 'Golos Text',
-    fontSize: 14.0,
-    height: 1.429,
-    fontWeight: FontWeight.w500,
-    fontVariations: [FontVariation('wght', 500)],
-  );
+  static const caption = TextStyle(fontFamily: 'Golos Text', fontSize: 14.0, height: 1.429, fontWeight: FontWeight.w400, fontVariations: [FontVariation('wght', 400)],);
+
+  /// Подпись нижней навигации.
+  static const navLabel = TextStyle(fontFamily: 'Golos Text', fontSize: 12.0, height: 1.333, fontWeight: FontWeight.w500, fontVariations: [FontVariation('wght', 500)],);
+
+}
+
+abstract final class PbMotion {
+  static const tabSwitch = Duration(milliseconds: 240);
+  static const pageEnter = Duration(milliseconds: 360);
+  static const pageExit = Duration(milliseconds: 280);
+  static const reducedTransition = Duration(milliseconds: 120);
 }

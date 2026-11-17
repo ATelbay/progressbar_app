@@ -12,9 +12,6 @@ class GlowBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.pb;
-    final strength = Theme.of(context).brightness == Brightness.dark
-        ? 0.6
-        : 0.85;
     Widget glow(Color color, Alignment at, double size) => Align(
       alignment: at,
       child: FractionallySizedBox(
@@ -25,10 +22,7 @@ class GlowBackground extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: RadialGradient(
-                colors: [
-                  color.withValues(alpha: strength),
-                  color.withValues(alpha: 0),
-                ],
+                colors: [color, color.withValues(alpha: 0)],
               ),
             ),
           ),

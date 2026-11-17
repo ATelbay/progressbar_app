@@ -10,9 +10,9 @@ void main() {
 
     expect(dark.extension<PbColors>(), PbColors.dusk);
     expect(light.extension<PbColors>(), PbColors.dawn);
-    expect(dark.scaffoldBackgroundColor, const Color(0xFF1B1114));
-    expect(light.scaffoldBackgroundColor, const Color(0xFFFBEEE8));
-    expect(dark.colorScheme.primary, const Color(0xFFFFAB52));
+    expect(dark.scaffoldBackgroundColor, const Color(0xFF22211F));
+    expect(light.scaffoldBackgroundColor, const Color(0xFFF5F3EE));
+    expect(dark.colorScheme.primary, const Color(0xFFE9B56C));
   });
 
   test('numerals use the condensed face with tabular figures', () {

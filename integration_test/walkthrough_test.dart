@@ -119,13 +119,24 @@ void main() {
     final codes = (jsonDecode(body)['verificationCodes'] as List)
         .where((c) => c['phoneNumber'] == phone)
         .toList();
+    // While a screen slides in, the one it covers is still on screen: type
+    // into the field of the new one.
     await tester.enterText(
-      find.byType(TextField),
+      find.descendant(
+        of: find.byType(CodeScreen),
+        matching: find.byType(TextField),
+      ),
       codes.last['code'] as String,
     );
 
     await wait(find.byType(ProfileSetupScreen));
-    await tester.enterText(find.byType(TextField), 'Арман');
+    await tester.enterText(
+      find.descendant(
+        of: find.byType(ProfileSetupScreen),
+        matching: find.byType(TextField),
+      ),
+      'Арман',
+    );
     await mark('SHOT:02-welcome');
     await tap(find.byType(FilledButton));
     await wait(find.text(l10n.homeEmptyTitle));
@@ -180,7 +191,7 @@ void main() {
       await tap(find.widgetWithText(PbPill, key));
     }
     await tap(find.widgetWithText(FilledButton, l10n.entryRecord));
-    await tap(find.text(l10n.entryEachSet));
+    await tap(find.text(l10n.entryModePerSet));
     await wait(find.text(l10n.entryRecordSet(1)));
     await tap(find.text(l10n.effortSome));
     await mark('SHOT:09-per-set');
@@ -205,7 +216,16 @@ void main() {
     await wait(find.text('Сила'));
     await mark('SHOT:13-history');
     await tap(find.text(l10n.tabProgress));
+    await wait(find.byType(GlassCard));
     await mark('SHOT:14-progress');
+    await tap(find.byType(GlassCard).first);
+    await wait(find.text(l10n.progressEstimatedMax));
+    await mark('SHOT:14b-progress-chart');
+    await tap(find.text(l10n.progressMetricWeight));
+    await wait(find.text(l10n.progressMaxWeight));
+    await mark('SHOT:14c-progress-weight');
+    await tap(find.byType(StepButton).first);
+    await wait(find.text(l10n.tabProgress));
     await tap(find.text(l10n.tabProfile));
     await wait(find.text(l10n.profileCatalog));
     await mark('SHOT:15-profile');

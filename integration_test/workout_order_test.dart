@@ -156,7 +156,7 @@ void main() {
       await select(ids[2]);
       expectOrder();
       await mark('SHOT:01-selected-third');
-      await tap(find.text(l().entryEachSet));
+      await tap(find.text(l().entryModePerSet));
       await select(ids[1]);
       expectOrder();
       await tap(find.text(l().entryRecordSet(1)));

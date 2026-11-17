@@ -867,4 +867,214 @@ class AppLocalizationsKk extends AppLocalizations {
   @override
   String get saveExerciseRejected =>
       'Сервер жаттығу түріндегі өзгерістерді қабылдамады. Соңғы өзгеріс сақталмады.';
+
+  @override
+  String get executionOrdinary => 'Қалыпты';
+
+  @override
+  String get executionSuperset => 'Суперсет';
+
+  @override
+  String get executionDropSet => 'Дроп-сет';
+
+  @override
+  String get executionStyle => 'Орындау тәсілі';
+
+  @override
+  String get executionRounds => 'Айналымдар';
+
+  @override
+  String get executionAddMember => 'Суперсетке жаттығу қосу';
+
+  @override
+  String get executionAddDrop => 'Тағы азайту';
+
+  @override
+  String get executionInitialStage => 'Бастапқы жүктеме';
+
+  @override
+  String executionDropStage(int number) {
+    return 'Азайту $number';
+  }
+
+  @override
+  String executionRound(int current, int total) {
+    return '$total айналымның $current-і';
+  }
+
+  @override
+  String executionMember(int current, int total) {
+    return '$total жаттығудың $current-і';
+  }
+
+  @override
+  String get executionRecordSuperset => 'Суперсетті жазу';
+
+  @override
+  String get executionRecordDropSet => 'Дроп-сетті жазу';
+
+  @override
+  String get executionRecordDrops => 'Дроп-сеттерді жазу';
+
+  @override
+  String get executionFinishDrop => 'Тәсілді осы жерде аяқтау';
+
+  @override
+  String get executionDifferentResults =>
+      'Нәтижелер әртүрлі — оларды тәсіл бойынша өзгертіңіз.';
+
+  @override
+  String get executionChooseMembers => 'Суперсет жаттығулары';
+
+  @override
+  String get executionMinMembers => 'Кемінде тағы бір жаттығу қосыңыз.';
+
+  @override
+  String get executionExtraRound => 'Тағы айналым';
+
+  @override
+  String get executionPlanStagesHint =>
+      'Азайтуларды қазір жоспарлаңыз немесе жаттығу кезінде қосыңыз.';
+
+  @override
+  String get executionRemoveMember => 'Топтан алып тастау';
+
+  @override
+  String get executionContinueRecord => 'Жазуды жалғастыру';
+
+  @override
+  String get executionRemoveDrop => 'Азайтуды алып тастау';
+
+  @override
+  String executionDropNumber(int current, int total) {
+    return '$total дроп-сеттің $current-і';
+  }
+
+  @override
+  String get executionControlsSuperset => 'Жаттығулар мен айналымдар';
+
+  @override
+  String get executionControlsDrop => 'Сатылар мен тәсілдер';
+
+  @override
+  String get executionControlsHint =>
+      'Жазу орнын таңдаңыз. Жазылған нәтижелер сақталады.';
+
+  @override
+  String get historyHideDetails => 'Мәліметтерді жасыру';
+
+  @override
+  String get workoutSkip => 'Өткізіп жіберу';
+
+  @override
+  String get workoutUnskip => 'Өткізуді болдырмау';
+
+  @override
+  String get workoutSkippedChip => 'Өткізілді';
+
+  @override
+  String get workoutAllDone => 'Барлығы жазылды не өткізілді';
+
+  @override
+  String workoutProgressLabelSkipped(int done, int total, int skipped) {
+    return '$total жаттығудың $done-і жазылды, $skipped-і өткізілді';
+  }
+
+  @override
+  String finishBodySkipped(int done, int total, int skipped) {
+    return '$total жаттығудың $done-і жазылды, $skipped-і өткізілді.';
+  }
+
+  @override
+  String get finishBodyRest =>
+      'Қалғандары нәтижесіз қалады — жаттықтырушы оларды өткізілген деп көреді.';
+
+  @override
+  String get progressSearch => 'Жаттығуды табу';
+
+  @override
+  String get progressNothingFound => 'Ештеңе табылмады';
+
+  @override
+  String get progressEstimatedMax => 'Есептік максимум';
+
+  @override
+  String get progressEstimatedMaxHint =>
+      'Бір рет көтеруге болатын салмақ — ең жақсы тәсілдің салмағы мен қайталауы бойынша.';
+
+  @override
+  String get progressRepsAtTop => 'Ең ауыр тәсілдегі қайталау';
+
+  @override
+  String get progressMetricMax => 'Максимум';
+
+  @override
+  String get progressMetricWeight => 'Салмақ';
+
+  @override
+  String get progressMetricReps => 'Қайталау';
+
+  @override
+  String get progressGone => 'Бұл жаттығу бойынша нәтиже енді жоқ.';
+
+  @override
+  String progressBest(String set) {
+    return 'Ең жақсы тәсіл: $set';
+  }
+
+  @override
+  String get workoutOrderChanged => 'Реті өзгертілді';
+
+  @override
+  String get workoutPlannedOrder => 'Жоспардағы реті';
+
+  @override
+  String get workoutOriginalOrder => 'Орын ауыстырғанға дейін';
+
+  @override
+  String get workoutOriginalOrderHint =>
+      'Алғаш рет орын ауыстырғанға дейінгі реті';
+
+  @override
+  String get workoutOrderAddedLater =>
+      'Кейін қосылған жаттығулар ағымдағы тізімде көрсетілген.';
+
+  @override
+  String get workoutOrderIncomplete => 'Бастапқы реті толық сақталмаған';
+
+  @override
+  String get workoutOrderShow => 'Жоспар';
+
+  @override
+  String get workoutOrderHide => 'Жию';
+
+  @override
+  String compareEstimate(String fact, String plan) {
+    return '≈ $fact, жоспар ≈ $plan';
+  }
+
+  @override
+  String get finishRowRecorded => 'Жазылды';
+
+  @override
+  String get finishRowSkipped => 'Өткізіп жіберілді';
+
+  @override
+  String get finishRowEmpty => 'Нәтиже жоқ';
+
+  @override
+  String get finishEmptyHint =>
+      'Жаттықтырушы нәтижесі жоқ жаттығуларды өткізіп жіберілген деп көреді.';
+
+  @override
+  String get progressNothingFoundHint =>
+      'Мұнда нәтижесі жазылған жаттығулар ғана көрсетіледі. Атауын тексеріңіз.';
+
+  @override
+  String get progressMetricLabel => 'Көрсеткіш';
+
+  @override
+  String executionRoundCount(int count) {
+    return '$count айналым';
+  }
 }
