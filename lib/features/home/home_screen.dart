@@ -12,7 +12,6 @@ import '../../widgets/barbell.dart';
 import '../../widgets/glass_panel.dart';
 import '../../widgets/glow_background.dart';
 import '../auth/auth_controller.dart';
-import '../format.dart';
 import '../people/people_providers.dart';
 import '../program/program_providers.dart';
 import '../program/assignment_providers.dart';
@@ -114,12 +113,7 @@ class HomeScreen extends ConsumerWidget {
                               for (final assignment in assignments)
                                 _AssignedCard(assignment),
                               for (final program in programs)
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    bottom: PbSpace.s2,
-                                  ),
-                                  child: _ProgramCard(program),
-                                ),
+                                _ProgramCard(program),
                             ],
                           ],
                         ),
@@ -179,7 +173,7 @@ class _ActiveWorkout extends StatelessWidget {
           ),
           Barbell(
             plates: platesOf(workout, currentId: nextExercise(workout)?.id),
-            label: l10n.workoutProgressLabel(done, total),
+            label: workoutProgressText(l10n, workout),
             count: TextSpan(
               text: '$done',
               children: [
@@ -210,34 +204,48 @@ class _ProgramCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final c = context.pb;
-    return GlassCard(
-      onTap: () => context.push(
-        coachName == null
-            ? '${Routes.programBuilder}/${program.id}'
-            : '${Routes.assignedProgram}/${program.authorId}/${program.id}',
-      ),
-      child: Row(
-        spacing: PbSpace.s3,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  program.name,
-                  style: PbText.bodyStrong.copyWith(color: c.ink),
-                ),
-                Text(
-                  coachName == null
-                      ? l10n.homeOwnProgram
-                      : l10n.assignedBy(coachName!),
-                  style: PbText.caption.copyWith(color: c.inkMuted),
-                ),
-              ],
-            ),
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        onTap: () => context.push(
+          coachName == null
+              ? '${Routes.programBuilder}/${program.id}'
+              : '${Routes.assignedProgram}/${program.authorId}/${program.id}',
+        ),
+        child: Container(
+          constraints: const BoxConstraints(minHeight: PbSize.touchMin),
+          padding: const EdgeInsets.symmetric(vertical: PbSpace.s3),
+          decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: c.line)),
           ),
-          PbChip(l10n.homeDays(program.days.length)),
-        ],
+          child: Row(
+            spacing: PbSpace.s3,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      program.name,
+                      style: PbText.body.copyWith(color: c.ink),
+                    ),
+                    Text(
+                      coachName == null
+                          ? l10n.homeOwnProgram
+                          : l10n.assignedBy(coachName!),
+                      style: PbText.caption.copyWith(color: c.inkMuted),
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                l10n.homeDays(program.days.length),
+                style: PbText.caption.copyWith(color: c.inkMuted),
+              ),
+              Icon(Icons.chevron_right, color: c.inkMuted),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -292,23 +300,20 @@ class _AssignedCard extends ConsumerWidget {
             .firstOrNull
             ?.coachName ??
         '';
-    return Padding(
-      padding: const EdgeInsets.only(bottom: PbSpace.s2),
-      child: source.when(
-        skipLoadingOnReload: false,
-        data: (program) => program == null
-            ? Text(l.programUnavailable)
-            : _ProgramCard(program, coachName: name),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, _) => Column(
-          children: [
-            Text(l.programUnavailable),
-            TextButton(
-              onPressed: () => ref.invalidate(sharedProgramProvider(key)),
-              child: Text(l.retry),
-            ),
-          ],
-        ),
+    return source.when(
+      skipLoadingOnReload: false,
+      data: (program) => program == null
+          ? Text(l.programUnavailable)
+          : _ProgramCard(program, coachName: name),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (_, _) => Column(
+        children: [
+          Text(l.programUnavailable),
+          TextButton(
+            onPressed: () => ref.invalidate(sharedProgramProvider(key)),
+            child: Text(l.retry),
+          ),
+        ],
       ),
     );
   }

@@ -14,7 +14,7 @@ mkdir -p "$2"
 out=${2:A}
 log="$out/run.log"
 : > "$log"
-rtk proxy flutter test "$test_file" -d "$device" > "$log" 2>&1 &
+rtk proxy flutter --no-version-check test --no-pub "$test_file" -d "$device" > "$log" 2>&1 &
 run=$!
 seen=0
 while kill -0 $run 2>/dev/null; do

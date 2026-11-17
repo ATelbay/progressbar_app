@@ -1,4 +1,6 @@
+import 'execution_logic.dart';
 import 'models.dart';
+import 'strength_estimate.dart';
 
 typedef IdGenerator = String Function();
 
@@ -70,6 +72,9 @@ Workout startWorkout({
           newId,
           plan: planned.sets,
           note: planned.note,
+          executionMode: planned.executionMode,
+          groupId: planned.groupId,
+          dropStages: planned.dropStages,
         ),
     ],
   );
@@ -93,6 +98,9 @@ WorkoutExercise _snapshot(
   IdGenerator newId, {
   List<SetValues> plan = const [],
   String? note,
+  ExecutionMode executionMode = ExecutionMode.ordinary,
+  String? groupId,
+  List<SetValues> dropStages = const [],
 }) => WorkoutExercise(
   id: newId(),
   exerciseId: exercise.id,
@@ -100,7 +108,18 @@ WorkoutExercise _snapshot(
   measure: exercise.measure,
   usesBodyWeight: exercise.usesBodyWeight,
   note: note,
-  sets: [for (final p in plan) WorkoutSet(id: newId(), plan: p)],
+  executionMode: executionMode,
+  groupId: groupId,
+  planExecutionMode: plan.isEmpty ? null : executionMode,
+  planGroupId: groupId,
+  sets: [
+    for (final p in plan)
+      WorkoutSet(
+        id: newId(),
+        plan: p,
+        drops: [for (final d in dropStages) DropStage(id: newId(), plan: d)],
+      ),
+  ],
 );
 
 /// Summary entry: «[setCount] sets of [fact]». It is only a way of typing; the
@@ -118,6 +137,9 @@ Workout recordSummary(
   if (setCount < 1) throw ArgumentError.value(setCount, 'setCount');
   _checkValues(fact);
   return _updateExercise(workout, workoutExerciseId, now, (exercise) {
+    if (exercise.executionMode == ExecutionMode.dropSet) {
+      throw StateError('Use drop-set entry to preserve its stages');
+    }
     final planned = exercise.sets.where((s) => !s.isExtra).toList();
     final extras = exercise.sets.where((s) => s.isExtra).toList();
     return [
@@ -286,29 +308,75 @@ class SetDeviation {
   final int count;
 }
 
-/// Below plan if either weight or count fell short, even when the other one
-/// went up; above plan only when nothing fell short and something went up.
-SetDeviation compareSet(WorkoutSet set) {
+/// Context is mandatory: body weight comes only from this workout's snapshot.
+SetDeviation compareSet(
+  WorkoutSet set, {
+  required Workout workout,
+  required WorkoutExercise exercise,
+}) {
   final plan = set.plan, fact = set.fact;
   if (plan == null) return const SetDeviation(DeviationKind.extra);
   if (fact == null) return const SetDeviation(DeviationKind.missing);
   final weight = fact.weightKg - plan.weightKg;
   final count =
       (fact.reps ?? fact.seconds ?? 0) - (plan.reps ?? plan.seconds ?? 0);
-  final kind = weight < 0 || count < 0
-      ? DeviationKind.below
-      : weight > 0 || count > 0
-      ? DeviationKind.above
-      : DeviationKind.asPlanned;
-  return SetDeviation(kind, weightKg: weight, count: count);
+  final int comparison;
+  if (exercise.measure == Measure.time) {
+    comparison = weight < 0 || count < 0
+        ? -1
+        : weight > 0 || count > 0
+        ? 1
+        : 0;
+  } else {
+    final planLoad = totalLoadKg(workout, exercise, plan);
+    final factLoad = totalLoadKg(workout, exercise, fact);
+    comparison = planLoad == 0 && factLoad == 0
+        ? (fact.reps ?? 0).compareTo(plan.reps ?? 0)
+        : _comparisonEstimate(
+            workout,
+            exercise,
+            fact,
+          ).compareTo(_comparisonEstimate(workout, exercise, plan));
+  }
+  return SetDeviation(
+    comparison < 0
+        ? DeviationKind.below
+        : comparison > 0
+        ? DeviationKind.above
+        : DeviationKind.asPlanned,
+    weightKg: weight,
+    count: count,
+  );
 }
 
-/// Worst case across the planned sets of an exercise: any missing or
-/// below-plan set makes the whole exercise below plan.
-DeviationKind compareExercise(WorkoutExercise exercise) {
-  final kinds = exercise.sets
-      .where((s) => !s.isExtra)
-      .map((s) => compareSet(s).kind)
+double _comparisonEstimate(
+  Workout workout,
+  WorkoutExercise exercise,
+  SetValues values,
+) =>
+    estimatedMaxKg(
+      SetValues(
+        reps: values.reps,
+        weightKg: totalLoadKg(workout, exercise, values),
+      ),
+    ) ??
+    0;
+
+Iterable<WorkoutSet> _plannedStages(WorkoutExercise exercise) sync* {
+  for (final set in exercise.sets) {
+    if (set.plan != null) yield set;
+    for (final drop in set.drops) {
+      if (drop.plan != null) {
+        yield WorkoutSet(id: drop.id, plan: drop.plan, fact: drop.fact);
+      }
+    }
+  }
+}
+
+/// Missing planned stages cannot be compensated by extra work.
+DeviationKind compareExercise(Workout workout, WorkoutExercise exercise) {
+  final kinds = _plannedStages(exercise)
+      .map((s) => compareSet(s, workout: workout, exercise: exercise).kind)
       .toSet();
   if (kinds.isEmpty) return DeviationKind.extra;
   if (kinds.every((k) => k == DeviationKind.missing)) {
@@ -322,66 +390,39 @@ DeviationKind compareExercise(WorkoutExercise exercise) {
   return DeviationKind.asPlanned;
 }
 
-enum ProgressUnit { kilograms, seconds, reps }
-
-class ProgressPoint {
-  const ProgressPoint(this.at, this.value, this.unit, {this.extraKg = 0});
-
-  final DateTime at;
-  final double value;
-  final ProgressUnit unit;
-
-  /// For a body-weight exercise: the extra weight the best set was done with.
-  final double extraKg;
+/// Explains a trade-off only for the first set that determines above/below.
+/// Missing stages, time, equal estimates and changes in one direction need no explanation.
+({double factKg, double planKg})? planComparisonEstimate(
+  Workout workout,
+  WorkoutExercise exercise,
+) {
+  if (exercise.measure != Measure.reps) return null;
+  final kind = compareExercise(workout, exercise);
+  if (kind != DeviationKind.above && kind != DeviationKind.below) return null;
+  final deciding = _plannedStages(exercise)
+      .where(
+        (s) => compareSet(s, workout: workout, exercise: exercise).kind == kind,
+      )
+      .firstOrNull;
+  if (deciding == null || deciding.fact == null) return null;
+  final plan = deciding.plan!, fact = deciding.fact!;
+  final weight = fact.weightKg - plan.weightKg;
+  final reps = (fact.reps ?? 0) - (plan.reps ?? 0);
+  if (!((weight > 0 && reps < 0) || (weight < 0 && reps > 0))) return null;
+  if (totalLoadKg(workout, exercise, plan) == 0 &&
+      totalLoadKg(workout, exercise, fact) == 0) {
+    return null;
+  }
+  return (
+    factKg: _comparisonEstimate(workout, exercise, fact),
+    planKg: _comparisonEstimate(workout, exercise, plan),
+  );
 }
 
 /// Load actually moved in a set. Body weight counts only for exercises that
 /// use it (pull-ups, dips); for everything else it is just the bar weight.
 double totalLoadKg(Workout workout, WorkoutExercise exercise, SetValues set) =>
     set.weightKg + (exercise.usesBodyWeight ? workout.bodyWeightKg ?? 0 : 0);
-
-/// One point per completed workout that has a recorded set of the exercise.
-/// A weighted exercise is tracked by its heaviest weight and a timed one by
-/// its longest time. A body-weight exercise is tracked by reps: the most reps
-/// done at the heaviest extra weight of that workout.
-List<ProgressPoint> progressFor(String exerciseId, Iterable<Workout> workouts) {
-  final points = <ProgressPoint>[];
-  for (final workout in workouts.where((w) => w.isCompleted)) {
-    ProgressPoint? best;
-    for (final exercise in workout.exercises) {
-      if (exercise.exerciseId != exerciseId) continue;
-      for (final fact in exercise.sets.map((s) => s.fact).nonNulls) {
-        final point = _pointFor(performedAt(workout), exercise, fact);
-        if (best == null ||
-            point.extraKg > best.extraKg ||
-            (point.extraKg == best.extraKg && point.value > best.value)) {
-          best = point;
-        }
-      }
-    }
-    if (best != null) points.add(best);
-  }
-  return points..sort((a, b) => a.at.compareTo(b.at));
-}
-
-ProgressPoint _pointFor(DateTime at, WorkoutExercise exercise, SetValues fact) {
-  if (exercise.measure == Measure.time) {
-    return ProgressPoint(
-      at,
-      (fact.seconds ?? 0).toDouble(),
-      ProgressUnit.seconds,
-    );
-  }
-  if (exercise.usesBodyWeight) {
-    return ProgressPoint(
-      at,
-      (fact.reps ?? 0).toDouble(),
-      ProgressUnit.reps,
-      extraKg: fact.weightKg,
-    );
-  }
-  return ProgressPoint(at, fact.weightKg, ProgressUnit.kilograms);
-}
 
 /// What to pre-fill in the entry panel: the latest recorded result for the
 /// exercise, falling back to the plan.
@@ -437,9 +478,122 @@ const maxWeightKg = 999.75;
 int recordedCount(Workout workout) =>
     workout.exercises.where((e) => e.hasFact).length;
 
-/// The exercise to record next: the first one without a result.
-WorkoutExercise? nextExercise(Workout workout) =>
-    workout.exercises.where((e) => !e.hasFact).firstOrNull;
+/// Exercises the trainee chose not to do.
+int skippedCount(Workout workout) =>
+    workout.exercises.where((e) => e.skipped).length;
+
+/// The exercise to record next: the first one without a result that was not
+/// skipped.
+WorkoutExercise? nextExercise(Workout workout) => workout.exercises
+    .where(
+      (e) =>
+          !e.skipped &&
+          (e.executionMode == ExecutionMode.ordinary
+              ? !e.hasFact
+              : !e.executionComplete &&
+                    (e.sets.isEmpty ||
+                        e.sets.any(
+                          (s) => e.executionMode == ExecutionMode.dropSet
+                              ? !s.dropComplete
+                              : s.fact == null,
+                        ))),
+    )
+    .firstOrNull;
+
+/// The exercises done together with [workoutExerciseId]: its superset, or
+/// just itself.
+List<WorkoutExercise> _groupOf(Workout workout, String workoutExerciseId) {
+  final group = executionGroups(workout.exercises)
+      .where((g) => g.any((e) => e.id == workoutExerciseId))
+      .firstOrNull;
+  if (group == null) {
+    throw StateError('No exercise $workoutExerciseId in workout ${workout.id}');
+  }
+  return group;
+}
+
+Workout _markSkipped(Workout workout, String workoutExerciseId, bool skipped) {
+  final ids = {for (final e in _groupOf(workout, workoutExerciseId)) e.id};
+  return workout.copyWith(
+    exercises: [
+      for (final e in workout.exercises)
+        ids.contains(e.id) ? e.withSkipped(skipped) : e,
+    ],
+  );
+}
+
+/// Marks an exercise as not done, with the rest of its superset. Only an
+/// exercise without a result can be skipped; the plan stays as it was.
+Workout skipExercise(
+  Workout workout,
+  String workoutExerciseId, {
+  required DateTime now,
+}) {
+  if (_groupOf(workout, workoutExerciseId).any((e) => e.hasFact)) {
+    throw StateError('A recorded exercise cannot be skipped');
+  }
+  return _markSkipped(_touch(workout, now), workoutExerciseId, true);
+}
+
+/// Takes the skip off an exercise and the rest of its superset.
+Workout unskipExercise(
+  Workout workout,
+  String workoutExerciseId, {
+  required DateTime now,
+}) => _markSkipped(_touch(workout, now), workoutExerciseId, false);
+
+/// Exercise groups as [groupKey]s, in the order of the workout.
+List<String> groupOrder(Workout workout) => [
+  for (final group in executionGroups(workout.exercises)) groupKey(group),
+];
+
+/// A group is known by its first exercise; moving groups keeps the order
+/// inside a superset, so the key does not change.
+String groupKey(List<WorkoutExercise> group) => group.first.id;
+
+/// Puts the exercise groups in the order of [keys]. Groups missing from
+/// [keys] keep their place relative to each other at the end; unknown keys
+/// are ignored. The order before the first change is kept in
+/// [Workout.originalOrder].
+Workout arrangeGroups(
+  Workout workout,
+  List<String> keys, {
+  required DateTime now,
+}) {
+  final groups = executionGroups(workout.exercises);
+  final byKey = {for (final g in groups) groupKey(g): g};
+  final placed = [
+    for (final key in keys) ?byKey[key],
+    for (final g in groups)
+      if (!keys.contains(groupKey(g))) g,
+  ];
+  final exercises = [for (final g in placed) ...g];
+  final unchanged = exercises.indexed.every(
+    (entry) => entry.$2.id == workout.exercises[entry.$1].id,
+  );
+  if (unchanged) return workout;
+  return _touch(workout, now).copyWith(
+    originalOrder:
+        workout.originalOrder ?? [for (final e in workout.exercises) e.id],
+    exercises: exercises,
+  );
+}
+
+/// Moves the group at [from] so that it ends up at [to], both indexes of
+/// [executionGroups]. A superset moves as a whole.
+Workout moveExerciseGroup(
+  Workout workout,
+  int from,
+  int to, {
+  required DateTime now,
+}) {
+  final keys = groupOrder(workout);
+  if (from < 0 || from >= keys.length) throw RangeError.index(from, keys);
+  if (to < 0 || to >= keys.length) throw RangeError.index(to, keys);
+  final moved = keys.removeAt(from);
+  keys.insert(to, moved);
+  return arrangeGroups(workout, keys, now: now);
+}
 
 /// The set to record next in per-set entry: the first one without a fact.
 WorkoutSet? nextSet(WorkoutExercise exercise) =>
@@ -488,8 +642,8 @@ SetsSummary? lastResult(
       final summary = factSummary(past);
       if (summary == null) continue;
       final heaviest = past.sets
-          .map((s) => s.fact?.weightKg)
-          .nonNulls
+          .expand((s) => s.facts)
+          .map((v) => v.weightKg)
           .reduce((a, b) => a > b ? a : b);
       return (summary: summary, weightKg: heaviest);
     }
@@ -564,25 +718,80 @@ bool isOutsidePlan(Workout workout, WorkoutExercise exercise) =>
 /// How a workout went against its plan: exercises that fell short and
 /// exercises left without any result.
 ({int below, int skipped}) planVerdict(Workout workout) {
-  final kinds = workout.exercises.map(compareExercise);
+  final kinds = workout.exercises.map((e) => compareExercise(workout, e));
   return (
     below: kinds.where((k) => k == DeviationKind.below).length,
     skipped: kinds.where((k) => k == DeviationKind.missing).length,
   );
 }
 
-/// Exercises that have a result in a completed workout, most recently done
-/// first, each under the name it was last recorded with.
-List<({String exerciseId, String name})> exercisesWithResults(
-  Iterable<Workout> workouts,
-) {
-  final sorted = workouts.where((w) => w.isCompleted).toList()
-    ..sort((a, b) => performedAt(b).compareTo(performedAt(a)));
-  final seen = <String>{};
-  return [
-    for (final workout in sorted)
-      for (final exercise in workout.exercises)
-        if (exercise.hasFact && seen.add(exercise.exerciseId))
-          (exerciseId: exercise.exerciseId, name: exercise.name),
-  ];
+/// Read-only interpretation of the first reorder snapshot, never today's program.
+class WorkoutOrderInfo {
+  const WorkoutOrderInfo({
+    required this.available,
+    required this.changed,
+    required this.originalGroups,
+    required this.plannedGroups,
+    required this.incomplete,
+    required this.hasAddedLater,
+  });
+  final bool available, changed, incomplete, hasAddedLater;
+  final List<List<WorkoutExercise>> originalGroups, plannedGroups;
+  bool get showOriginal =>
+      plannedGroups.isEmpty ||
+      originalGroups.expand((g) => g).any((e) => !_hasSavedPlan(e));
 }
+
+WorkoutOrderInfo workoutOrderInfo(Workout workout) {
+  final snapshot = workout.originalOrder ?? const <String>[];
+  final byId = {for (final e in workout.exercises) e.id: e};
+  final ids = snapshot.toSet().where(byId.containsKey).toList();
+  final known = ids.toSet();
+  final original = [for (final id in ids) byId[id]!];
+  final originalGroups = executionGroups(original);
+  final currentGroups = executionGroups([
+    for (final e in workout.exercises)
+      if (known.contains(e.id)) e,
+  ]);
+  final before = [
+    for (final g in originalGroups)
+      for (final e in g) e.id,
+  ];
+  final current = [
+    for (final g in currentGroups)
+      for (final e in g) e.id,
+  ];
+  final planned = <List<WorkoutExercise>>[];
+  final supersets = <String, List<WorkoutExercise>>{};
+  for (final e in original.where((e) => _hasSavedPlan(e))) {
+    if (e.planExecutionMode == ExecutionMode.superset &&
+        e.planGroupId != null) {
+      final group = supersets[e.planGroupId];
+      if (group != null) {
+        group.add(e);
+        continue;
+      }
+      final created = [e];
+      supersets[e.planGroupId!] = created;
+      planned.add(created);
+    } else {
+      planned.add([e]);
+    }
+  }
+  return WorkoutOrderInfo(
+    available: snapshot.isNotEmpty,
+    changed:
+        before.length >= 2 && before.indexed.any((v) => v.$2 != current[v.$1]),
+    originalGroups: originalGroups,
+    plannedGroups: planned,
+    incomplete:
+        snapshot.any((id) => !byId.containsKey(id)) ||
+        workout.exercises.any((e) => _hasSavedPlan(e) && !known.contains(e.id)),
+    hasAddedLater: workout.exercises.any(
+      (e) => !_hasSavedPlan(e) && !known.contains(e.id),
+    ),
+  );
+}
+
+bool _hasSavedPlan(WorkoutExercise e) =>
+    e.sets.any((s) => s.plan != null || s.drops.any((d) => d.plan != null));

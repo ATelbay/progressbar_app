@@ -1,0 +1,25 @@
+{
+  "scope": "Representative Pencil token composites, not native Flutter or global spatial contrast bounds.",
+  "themes": {
+    "dusk": {
+      "ink": 10.9,
+      "ink-muted": 5.87,
+      "accent-text": 6.72,
+      "success": 7.36,
+      "warning": 6.93,
+      "danger": 6.34,
+      "line-strong": 3.31,
+      "on-accent": 8.46
+    },
+    "dawn": {
+      "ink": 12.94,
+      "ink-muted": 5.35,
+      "accent-text": 5.78,
+      "success": 5.92,
+      "warning": 5.59,
+      "danger": 6.05,
+      "line-strong": 3.36,
+      "on-accent": 7.22
+    }
+  }
+}

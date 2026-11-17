@@ -20,6 +20,13 @@ const customExercisePrefix = 'custom/';
 
 bool isBuiltInExercise(String id) => id.startsWith(builtInExercisePrefix);
 
+/// Whether [name] matches what was typed in a search field: case and «ё»
+/// do not matter.
+bool matchesSearch(String name, String query) {
+  String key(String text) => text.trim().toLowerCase().replaceAll('ё', 'е');
+  return key(name).contains(key(query));
+}
+
 /// The catalog a user actually sees: a personal entry with a built-in ID
 /// replaces that exercise, any other personal entry is added.
 Map<String, Exercise> mergeCatalog(

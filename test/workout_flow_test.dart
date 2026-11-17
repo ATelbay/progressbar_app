@@ -1,21 +1,30 @@
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:flutter/gestures.dart' show kLongPressTimeout;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart'
+    show CustomSemanticsAction, SemanticsAction;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:progressbar_app/app.dart';
+import 'package:progressbar_app/l10n/app_localizations.dart';
+import 'package:progressbar_app/features/home/home_screen.dart';
 import 'package:progressbar_app/data/exercise_catalog_repository.dart';
 import 'package:progressbar_app/data/firestore_codec.dart';
 import 'package:progressbar_app/data/link_repository.dart';
 import 'package:progressbar_app/data/program_repository.dart';
+import 'package:progressbar_app/data/workout_repository.dart';
 import 'package:progressbar_app/domain/link_logic.dart';
 import 'package:progressbar_app/domain/models.dart';
+import 'package:progressbar_app/domain/workout_logic.dart';
 import 'package:progressbar_app/features/auth/auth_controller.dart';
 import 'package:progressbar_app/features/exercises/exercise_catalog_provider.dart';
 import 'package:progressbar_app/features/firestore_provider.dart';
 import 'package:progressbar_app/features/people/people_providers.dart';
 import 'package:progressbar_app/features/workout/entry_panel.dart';
+import 'package:progressbar_app/features/workout/execution_entry_panel.dart';
+import 'package:progressbar_app/widgets/barbell.dart';
 import 'package:progressbar_app/widgets/qr_code.dart';
 import 'package:progressbar_app/widgets/step_button.dart';
 
@@ -159,7 +168,7 @@ void main() {
     tester,
   ) async {
     await startWithBenchPress(tester);
-    await tap(tester, find.text('Add each set'));
+    await tap(tester, find.text('Set by set'));
     expect(profiles.profileOf('user-1')!.entryMode, EntryMode.perSet);
     expect(find.text('Record set 1'), findsOneWidget);
 
@@ -207,6 +216,10 @@ void main() {
     expect(find.text('Workout without a program'), findsNothing);
     await tap(tester, find.text('Continue'));
     expect(find.widgetWithText(FilledButton, 'Continue'), findsOneWidget);
+    final before = await onlyWorkout();
+    await tap(tester, find.byTooltip('Back'));
+    expect(find.text('Workout in progress'), findsOneWidget);
+    expect(await onlyWorkout(), before);
   });
 
   testWidgets('a program is built, started and its plan copied', (
@@ -315,6 +328,11 @@ void main() {
     expect(find.text('3 × 10 × 0 kg', findRichText: true), findsOneWidget);
     expect(find.text('edited after completion'), findsNothing);
 
+    await tap(tester, find.text('Hide details'));
+    expect(find.text('3 × 10 × 0 kg', findRichText: true), findsNothing);
+    await tap(tester, find.text('No program'));
+    expect(find.text('3 × 10 × 0 kg', findRichText: true), findsOneWidget);
+
     await tap(tester, find.byTooltip('Edit workout'));
     expect(find.textContaining('This workout is completed'), findsOneWidget);
     // Nothing changed yet, so there is nothing to save.
@@ -362,7 +380,62 @@ void main() {
     expect(find.text('The bar is empty for now'), findsOneWidget);
   });
 
-  testWidgets('progress shows a point per finished workout', (tester) async {
+  testWidgets(
+    'history reveals drop plan beside fact including missing stages',
+    (tester) async {
+      await openApp(tester);
+      final done = DateTime(2026, 10, 17, 18);
+      final workout = Workout(
+        id: 'drop-history',
+        traineeId: 'user-1',
+        status: WorkoutStatus.completed,
+        startedAt: done,
+        completedAt: done,
+        exercises: const [
+          WorkoutExercise(
+            id: 'leg-press',
+            exerciseId: 'leg-press',
+            name: 'Leg press',
+            measure: Measure.reps,
+            usesBodyWeight: false,
+            executionMode: ExecutionMode.dropSet,
+            sets: [
+              WorkoutSet(
+                id: 'set',
+                plan: SetValues(reps: 10, weightKg: 100),
+                fact: SetValues(reps: 9, weightKg: 100),
+                dropComplete: true,
+                drops: [
+                  DropStage(
+                    id: 'reduction',
+                    plan: SetValues(reps: 8, weightKg: 75),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      );
+      await tester.runAsync(
+        () => db
+            .doc('users/user-1/workouts/drop-history')
+            .set(workoutToMap(workout)),
+      );
+      await settle(tester);
+      await tap(tester, find.text('History'));
+      expect(find.text('100 kg × 9\n—'), findsNothing);
+      await tap(tester, find.text('Leg press'));
+      expect(find.text('100 kg × 10\n75 kg × 8'), findsOneWidget);
+      expect(find.text('100 kg × 9\n—'), findsOneWidget);
+      await tap(tester, find.text('Leg press').first);
+      expect(find.text('100 kg × 9\n—'), findsNothing);
+      expect(await onlyWorkout(), workoutToMap(workout));
+    },
+  );
+
+  testWidgets('progress lists exercises and opens a chart per metric', (
+    tester,
+  ) async {
     await openApp(tester);
     await tap(tester, find.text('Progress'));
     expect(find.text('No points yet'), findsOneWidget);
@@ -380,12 +453,92 @@ void main() {
       await tap(tester, find.widgetWithText(FilledButton, 'Finish').last);
     }
 
+    // 3 × 10 × 5 kg, then 3 × 10 × 12.5 kg: estimated at 6.5 and 16.5 kg.
     await tap(tester, find.text('Progress'));
+    expect(find.text('12.5 kg × 10'), findsOneWidget);
+    expect(find.text('≈ 16.5 kg', findRichText: true), findsOneWidget);
+    expect(find.text('+10 kg'), findsOneWidget);
+    // Search stays available with a single exercise.
+    expect(find.byType(TextField), findsOneWidget);
+
+    await tap(tester, find.textContaining('Bench Press'));
+    expect(find.text('Estimated one-rep max'), findsOneWidget);
+    expect(find.text('+10 kg over 2 workouts'), findsOneWidget);
+    expect(find.text('Best set: 12.5 kg × 10'), findsOneWidget);
+    // Every point under the chart, the oldest last.
+    await tester.dragUntilVisible(
+      find.text('≈ 6.5 kg'),
+      find.byType(ListView),
+      const Offset(0, -200),
+    );
+    expect(find.text('5 kg × 10', findRichText: true), findsOneWidget);
+
+    await tap(tester, find.text('Weight'));
     expect(find.text('Heaviest weight'), findsOneWidget);
-    // 5 kg, then 5 + 7.5 kg: the latest twice, in the panel and in the list.
-    expect(find.text('12.5 kg', findRichText: true), findsNWidgets(2));
-    expect(find.text('5 kg', findRichText: true), findsOneWidget);
     expect(find.text('+7.5 kg over 2 workouts'), findsOneWidget);
+    await tap(tester, find.text('Reps'));
+    expect(find.text('Reps in the heaviest set'), findsOneWidget);
+    expect(find.text('10 reps', findRichText: true), findsOneWidget);
+
+    // The choice stays when the chart is opened again.
+    await tap(tester, find.byTooltip('Back'));
+    expect(find.text('≈ 16.5 kg', findRichText: true), findsOneWidget);
+    await tap(tester, find.textContaining('Bench Press'));
+    expect(find.text('Reps in the heaviest set'), findsOneWidget);
+  });
+
+  testWidgets('progress finds an exercise by name', (tester) async {
+    await openApp(tester);
+    final picked = catalog.values
+        .where((e) => e.measure == Measure.reps && !e.usesBodyWeight)
+        .take(3)
+        .toList();
+    final ids = <String>[];
+    var n = 0;
+    var workout = startWorkout(
+      id: 'past',
+      traineeId: 'user-1',
+      now: DateTime(2026, 10, 1, 18),
+      newId: () => 'id${n++}',
+      catalog: catalog,
+      languageCode: 'en',
+    );
+    for (final exercise in picked) {
+      workout = addExercise(
+        workout,
+        exercise,
+        languageCode: 'en',
+        newId: () => 'id${n++}',
+        now: workout.startedAt,
+      );
+      ids.add(workout.exercises.last.id);
+      workout = addExtraSet(
+        workout,
+        ids.last,
+        fact: const SetValues(reps: 5, weightKg: 50),
+        newId: () => 'id${n++}',
+        now: workout.startedAt,
+      );
+    }
+    workout = completeWorkout(workout, now: workout.startedAt);
+    await tester.runAsync(
+      () => db.doc('users/user-1/workouts/past').set(workoutToMap(workout)),
+    );
+    await settle(tester);
+
+    await tap(tester, find.text('Progress'));
+    for (final exercise in picked) {
+      expect(find.text(exercise.nameFor('en')), findsOneWidget);
+    }
+    final target = picked.last.nameFor('en');
+    await tester.enterText(find.byType(TextField), target.toUpperCase());
+    await settle(tester);
+    expect(find.text(target), findsOneWidget);
+    expect(find.text(picked.first.nameFor('en')), findsNothing);
+
+    await tester.enterText(find.byType(TextField), 'no such exercise');
+    await settle(tester);
+    expect(find.text('Nothing found'), findsOneWidget);
   });
 
   testWidgets(
@@ -429,6 +582,33 @@ void main() {
       expect(find.text('Exercise catalog'), findsOneWidget);
     },
   );
+
+  testWidgets('large Kazakh navigation labels stay inside the panel', (
+    tester,
+  ) async {
+    tester.platformDispatcher.textScaleFactorTestValue = 2;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    await openApp(tester);
+    await profiles.save(
+      profiles.profileOf('user-1')!.copyWith(languageCode: () => 'kk'),
+    );
+    await settle(tester);
+    final bar = find.byType(NavigationBar);
+    final bounds = tester.getRect(bar);
+    for (final label in [
+      'Басты бет',
+      'Тарих',
+      'Прогресс',
+      'Адамдар',
+      'Профиль',
+    ]) {
+      final text = find.descendant(of: bar, matching: find.text(label));
+      final rect = tester.getRect(text);
+      expect(rect.top, greaterThanOrEqualTo(bounds.top));
+      expect(rect.bottom, lessThanOrEqualTo(bounds.bottom));
+    }
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('the catalog takes own exercises and edits of built-in ones', (
     tester,
@@ -739,7 +919,7 @@ void main() {
       await tap(tester, find.text('Order test'));
       await tap(tester, find.text('Start workout'));
       if (mode == EntryMode.perSet) {
-        await tap(tester, find.text('Add each set'));
+        await tap(tester, find.text('Set by set'));
       }
       void expectOrder() {
         final positions = [
@@ -774,6 +954,353 @@ void main() {
       expect(stored[2]['sets'][0]['fact'], isNotNull);
     });
   }
+
+  /// Saves a program of one day with [exercises], each planned once, and
+  /// starts it. Exercises with the same group form a superset.
+  Future<void> startPlanned(
+    WidgetTester tester,
+    List<(Exercise, String?)> exercises, {
+    SetValues plan = const SetValues(reps: 8, weightKg: 20),
+  }) async {
+    await tester.runAsync(
+      () => FirestoreProgramRepository(db).save(
+        Program(
+          id: 'planned',
+          authorId: 'user-1',
+          name: 'Planned test',
+          days: [
+            ProgramDay(
+              id: 'day',
+              name: 'Day 1',
+              exercises: [
+                for (final (i, (exercise, group)) in exercises.indexed)
+                  ProgramExercise(
+                    id: 'pe$i',
+                    exerciseId: exercise.id,
+                    sets: [plan],
+                    executionMode: group == null
+                        ? ExecutionMode.ordinary
+                        : ExecutionMode.superset,
+                    groupId: group,
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+    await settle(tester);
+    await tap(tester, find.text('Planned test'));
+    await tap(tester, find.text('Start workout'));
+  }
+
+  List<Exercise> weighted(int count) => catalog.values
+      .where((e) => e.measure == Measure.reps && !e.usesBodyWeight)
+      .take(count)
+      .toList();
+
+  Finder inPanel(String name) =>
+      find.descendant(of: find.byType(EntryPanel), matching: find.text(name));
+
+  testWidgets('a skipped exercise moves on, can be taken back and is counted', (
+    tester,
+  ) async {
+    await openApp(tester);
+    final exercises = weighted(3);
+    final names = [for (final e in exercises) e.nameFor('en')];
+    await startPlanned(tester, [for (final e in exercises) (e, null)]);
+    expect(inPanel(names[0]), findsOneWidget);
+
+    await tap(tester, find.text('Skip'));
+    var stored = (await onlyWorkout())['exercises'] as List;
+    expect(stored.map((e) => e['skipped']), [true, false, false]);
+    expect(inPanel(names[1]), findsOneWidget);
+    expect(find.text('Skipped'), findsOneWidget);
+    expect(
+      tester.widget<Barbell>(find.byType(Barbell)).label,
+      'Recorded 0 of 3 exercises, 1 skipped',
+    );
+    expect(tester.widget<Barbell>(find.byType(Barbell)).plates, [
+      Plate.skipped,
+      Plate.now,
+      Plate.waiting,
+    ]);
+
+    // Opened again, it can be taken back without recording anything.
+    await tap(tester, find.text(names[0]));
+    expect(inPanel(names[0]), findsOneWidget);
+    await tap(tester, find.text('Undo skip'));
+    stored = (await onlyWorkout())['exercises'] as List;
+    expect(stored.first['skipped'], isFalse);
+    expect(find.text('Skipped'), findsNothing);
+    expect(inPanel(names[0]), findsOneWidget);
+
+    await tap(tester, find.text('Skip'));
+    await record(tester, weight: '7,5');
+    await record(tester, weight: '7,5');
+    expect(find.text('Everything is recorded or skipped'), findsOneWidget);
+    await tap(tester, find.widgetWithText(FilledButton, 'Finish'));
+    expect(find.text('2 of 3'), findsWidgets);
+    expect(find.text('Skipped'), findsWidgets);
+    expect(find.text(names[0]), findsWidgets);
+    await tap(tester, find.widgetWithText(FilledButton, 'Finish').last);
+    stored = (await onlyWorkout())['exercises'] as List;
+    expect(stored.map((e) => e['skipped']), [true, false, false]);
+    expect(stored.first['sets'][0]['plan'], isNotNull);
+
+    await tap(tester, find.text('History'));
+    expect(find.text('1 skipped'), findsOneWidget);
+  });
+
+  testWidgets('a superset is skipped as a whole from its panel', (
+    tester,
+  ) async {
+    await openApp(tester);
+    final exercises = weighted(3);
+    await startPlanned(tester, [
+      (exercises[0], 'pair'),
+      (exercises[1], 'pair'),
+      (exercises[2], null),
+    ]);
+    expect(find.byType(ExecutionEntryPanel), findsOneWidget);
+    await tap(tester, find.text('Skip'));
+    final stored = (await onlyWorkout())['exercises'] as List;
+    expect(stored.map((e) => e['skipped']), [true, true, false]);
+    expect(inPanel(exercises[2].nameFor('en')), findsOneWidget);
+    expect(find.text('Skipped'), findsNWidgets(2));
+  });
+
+  testWidgets('a long press moves a card; the open exercise stays open', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(800, 1600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await openApp(tester);
+    final exercises = weighted(3);
+    final names = [for (final e in exercises) e.nameFor('en')];
+    await startPlanned(tester, [for (final e in exercises) (e, null)]);
+    final before = [
+      for (final e in (await onlyWorkout())['exercises'] as List) e['id'],
+    ];
+
+    // The third card is held, then dragged above the second one.
+    final from = tester.getCenter(find.text(names[2]));
+    final above = tester.getTopLeft(find.text(names[1])).dy;
+    final gesture = await tester.startGesture(from);
+    await tester.pump(kLongPressTimeout + const Duration(milliseconds: 100));
+    for (var i = 1; i <= 10; i++) {
+      await gesture.moveTo(
+        Offset(from.dx, from.dy + (above - from.dy) * i / 10),
+      );
+      await tester.pump(const Duration(milliseconds: 16));
+    }
+    await gesture.up();
+    await settle(tester);
+
+    final stored = await onlyWorkout();
+    expect((stored['exercises'] as List).map((e) => e['exerciseId']), [
+      exercises[0].id,
+      exercises[2].id,
+      exercises[1].id,
+    ]);
+    expect(stored['originalOrder'], before);
+    expect(inPanel(names[0]), findsOneWidget);
+    final positions = [
+      for (final name in [names[0], names[2], names[1]])
+        tester.getTopLeft(find.text(name)).dy,
+    ];
+    expect(positions, orderedEquals([...positions]..sort()));
+
+    // The next exercise follows the new order.
+    await record(tester, weight: '7,5');
+    expect(inPanel(names[2]), findsOneWidget);
+  });
+
+  /// A workout of [count] exercises, all recorded, that is longer than the
+  /// screen; the workout screen is open on it.
+  Future<List<String>> openLongWorkout(WidgetTester tester, int count) async {
+    await openApp(tester);
+    var n = 0;
+    String id() => 'id${n++}';
+    final program = Program(
+      id: 'long',
+      authorId: 'user-1',
+      name: 'Long',
+      days: [
+        ProgramDay(
+          id: 'day',
+          name: 'Day 1',
+          exercises: [
+            for (final (i, exercise) in weighted(count).indexed)
+              ProgramExercise(
+                id: 'pe$i',
+                exerciseId: exercise.id,
+                sets: const [SetValues(reps: 8, weightKg: 20)],
+              ),
+          ],
+        ),
+      ],
+    );
+    var workout = startWorkout(
+      id: 'long-workout',
+      traineeId: 'user-1',
+      now: DateTime(2026, 11, 15, 18),
+      newId: id,
+      catalog: catalog,
+      languageCode: 'en',
+      program: program,
+      day: program.days.single,
+    );
+    for (final exercise in workout.exercises) {
+      workout = recordSummary(
+        workout,
+        exercise.id,
+        setCount: 1,
+        fact: const SetValues(reps: 8, weightKg: 20),
+        newId: id,
+        now: workout.startedAt,
+      );
+    }
+    await tester.runAsync(() => FirestoreWorkoutRepository(db).start(workout));
+    await settle(tester);
+    await tap(tester, find.text('Continue'));
+    expect(find.text('Everything is recorded'), findsOneWidget);
+    return [for (final e in workout.exercises) e.id];
+  }
+
+  ScrollPosition screenScroll(WidgetTester tester) => tester
+      .state<ScrollableState>(
+        find
+            .ancestor(
+              of: find.byType(ReorderableList),
+              matching: find.byType(Scrollable),
+            )
+            .first,
+      )
+      .position;
+
+  testWidgets('a card held still at the edge scrolls on and lands there', (
+    tester,
+  ) async {
+    final ids = await openLongWorkout(tester, 10);
+    final screen = screenScroll(tester);
+    screen.jumpTo(0);
+    await tester.pump();
+    final bottom = tester.getBottomLeft(find.byType(Scaffold).last).dy;
+
+    final from = tester.getCenter(
+      find.byKey(ValueKey('workout-exercise-${ids.first}')),
+    );
+    final gesture = await tester.startGesture(from);
+    await tester.pump(kLongPressTimeout + const Duration(milliseconds: 100));
+    final edge = Offset(from.dx, bottom - 4);
+    for (var i = 1; i <= 10; i++) {
+      await gesture.moveTo(Offset.lerp(from, edge, i / 10)!);
+      await tester.pump(const Duration(milliseconds: 16));
+    }
+    // The finger stays where it is while the screen scrolls under it.
+    for (var i = 0; i < 300; i++) {
+      await tester.pump(const Duration(milliseconds: 16));
+    }
+    expect(screen.pixels, screen.maxScrollExtent);
+    await gesture.up();
+    await settle(tester);
+
+    final stored = [
+      for (final e in (await onlyWorkout())['exercises'] as List) e['id'],
+    ];
+    expect(stored.indexOf(ids.first), greaterThanOrEqualTo(ids.length - 2));
+  });
+
+  testWidgets('a cancelled drag stops scrolling the screen', (tester) async {
+    final ids = await openLongWorkout(tester, 10);
+    final screen = screenScroll(tester);
+    screen.jumpTo(0);
+    await tester.pump();
+    final bottom = tester.getBottomLeft(find.byType(Scaffold).last).dy;
+
+    final from = tester.getCenter(
+      find.byKey(ValueKey('workout-exercise-${ids.first}')),
+    );
+    final gesture = await tester.startGesture(from);
+    await tester.pump(kLongPressTimeout + const Duration(milliseconds: 100));
+    await gesture.moveTo(Offset(from.dx, bottom - 4));
+    await tester.pump(const Duration(milliseconds: 200));
+    await gesture.cancel();
+    await tester.pump(const Duration(milliseconds: 500));
+    final stopped = screen.pixels;
+    expect(stopped, lessThan(screen.maxScrollExtent));
+    for (var i = 0; i < 60; i++) {
+      await tester.pump(const Duration(milliseconds: 16));
+    }
+    expect(screen.pixels, stopped);
+
+    // An ordinary touch near the edge afterwards does not scroll either.
+    final touch = await tester.startGesture(Offset(from.dx, bottom - 30));
+    await touch.moveBy(const Offset(0, 4));
+    await tester.pump(const Duration(milliseconds: 500));
+    await touch.up();
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(screen.pixels, closeTo(stopped, 8));
+    expect([
+      for (final e in (await onlyWorkout())['exercises'] as List) e['id'],
+    ], ids);
+  });
+
+  testWidgets('a superset panel keeps an order changed while it is open', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await openApp(tester);
+    final exercises = weighted(3);
+    await startPlanned(tester, [
+      (exercises[0], 'pair'),
+      (exercises[1], 'pair'),
+      (exercises[2], null),
+    ]);
+    expect(find.byType(ExecutionEntryPanel), findsOneWidget);
+    final ids = [
+      for (final e in (await onlyWorkout())['exercises'] as List)
+        e['id'] as String,
+    ];
+
+    // A screen reader moves the last exercise to the start.
+    final node = tester.getSemantics(
+      find.byKey(ValueKey('workout-exercise-${ids[2]}')),
+    );
+    final action = node.getSemanticsData().customSemanticsActionIds!.firstWhere(
+      (id) => CustomSemanticsAction.getAction(id)!.label == 'Move to the start',
+    );
+    node.owner!.performAction(node.id, SemanticsAction.customAction, action);
+    await settle(tester);
+    List<String?> order(Map<String, dynamic> workout) => [
+      for (final e in workout['exercises'] as List) e['id'] as String?,
+    ];
+    expect(order(await onlyWorkout()), [ids[2], ids[0], ids[1]]);
+    expect(find.byType(ExecutionEntryPanel), findsOneWidget);
+
+    // Recording the superset writes the panel's copy of the workout; the new
+    // order stays.
+    for (var member = 0; member < 2; member++) {
+      if (member == 0) {
+        await tap(tester, find.widgetWithText(FilledButton, 'Continue'));
+      }
+      await tap(tester, find.widgetWithText(FilledButton, 'Continue'));
+      await tap(
+        tester,
+        find.widgetWithText(
+          FilledButton,
+          member == 0 ? 'Continue' : 'Record superset',
+        ),
+      );
+    }
+    final stored = await onlyWorkout();
+    expect(order(stored), [ids[2], ids[0], ids[1]]);
+    final members = (stored['exercises'] as List).skip(1);
+    expect(members.map((e) => e['sets'][0]['fact']), everyElement(isNotNull));
+    expect(inPanel(exercises[2].nameFor('en')), findsOneWidget);
+    semantics.dispose();
+  });
 
   testWidgets('a plan starts from the weight lifted last time', (tester) async {
     await openApp(tester);
@@ -915,4 +1442,312 @@ void main() {
     expect((corrected.last['sets'] as List).length, 2);
     expect(corrected.last['sets'][0]['fact']['reps'], 12);
   });
+  testWidgets(
+    'a free superset adds its next exercise directly from execution setup',
+    (tester) async {
+      await startWithBenchPress(tester);
+      final first = (await onlyWorkout())['exercises'][0]['exerciseId'];
+      final extra = catalog.values.firstWhere(
+        (e) => e.id != first && e.measure == Measure.reps,
+      );
+      await tap(tester, find.text('Execution style'));
+      await tap(tester, find.text('Superset'));
+      await tap(tester, find.text('Add exercise to superset'));
+      await tester.enterText(find.byType(TextField), extra.nameFor('en'));
+      await settle(tester);
+      await tap(tester, find.text(extra.nameFor('en')).last);
+      await tap(tester, find.widgetWithText(FilledButton, 'Done'));
+      expect(find.byType(ExecutionEntryPanel), findsOneWidget);
+      final stored = await onlyWorkout();
+      final members = stored['exercises'] as List;
+      expect(members.length, 2);
+      expect(members.map((e) => e['executionMode']), everyElement('superset'));
+      expect(members.map((e) => e['groupId']).toSet().length, 1);
+      expect(members.map((e) => (e['sets'] as List).length), [3, 3]);
+      for (var member = 0; member < 2; member++) {
+        if (member == 0) {
+          await tap(tester, find.widgetWithText(FilledButton, 'Continue'));
+        }
+        await tap(tester, find.widgetWithText(FilledButton, 'Continue'));
+        await tap(
+          tester,
+          find.widgetWithText(
+            FilledButton,
+            member == 0 ? 'Continue' : 'Record superset',
+          ),
+        );
+      }
+      expect(find.text('Everything is recorded'), findsOneWidget);
+      final restored = await onlyWorkout();
+      expect(
+        (restored['exercises'] as List).map((e) => e['executionComplete']),
+        everyElement(true),
+      );
+    },
+  );
+  testWidgets(
+    'handle starts before long press and preserves draft and semantics',
+    (tester) async {
+      await openApp(tester);
+      final exercises = weighted(3);
+      await startPlanned(tester, [for (final e in exercises) (e, null)]);
+      await typeNumber(tester, '2');
+      final original = [
+        for (final e in (await onlyWorkout())['exercises'] as List)
+          e['id'] as String,
+      ];
+      final handle = find.byKey(ValueKey('workout-drag-handle-${original[2]}'));
+      await tester.ensureVisible(handle);
+      await tester.pump();
+      final size = tester.getSize(handle);
+      expect(size.width, greaterThanOrEqualTo(48));
+      expect(size.height, greaterThanOrEqualTo(48));
+      expect(
+        find.byKey(ValueKey('workout-drag-handle-${original[0]}')),
+        findsNothing,
+      );
+      await tester.tap(handle);
+      await settle(tester);
+      expect((await onlyWorkout())['originalOrder'], isNull);
+      expect(inPanel(exercises[0].nameFor('en')), findsOneWidget);
+      final semantics = tester.ensureSemantics();
+      final node = tester.getSemantics(
+        find.byKey(ValueKey('workout-exercise-${original[2]}')),
+      );
+      expect(node.getSemanticsData().customSemanticsActionIds, isNotEmpty);
+      final from = tester.getCenter(handle);
+      final target = tester
+          .getTopLeft(find.byKey(ValueKey('workout-exercise-${original[1]}')))
+          .dy;
+      final gesture = await tester.startGesture(from);
+      await gesture.moveBy(const Offset(0, -20));
+      await tester.pump(const Duration(milliseconds: 20));
+      for (var i = 1; i <= 10; i++) {
+        await gesture.moveTo(
+          Offset(from.dx, from.dy + (target - from.dy) * i / 10),
+        );
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      await gesture.up();
+      await settle(tester);
+      final saved = await onlyWorkout();
+      expect((saved['exercises'] as List).map((e) => e['id']), [
+        original[0],
+        original[2],
+        original[1],
+      ]);
+      expect(saved['originalOrder'], original);
+      await record(tester, weight: '20');
+      expect(
+        ((await onlyWorkout())['exercises'][0]['sets'] as List)
+            .where((s) => s['fact'] != null)
+            .length,
+        2,
+      );
+      semantics.dispose();
+    },
+  );
+
+  testWidgets('immediate handle auto scroll stops on cancel', (tester) async {
+    final ids = await openLongWorkout(tester, 10);
+    final scroll = screenScroll(tester);
+    scroll.jumpTo(0);
+    await tester.pump();
+    final from = tester.getCenter(
+      find.byKey(ValueKey('workout-drag-handle-${ids.first}')),
+    );
+    final gesture = await tester.startGesture(from);
+    await gesture.moveBy(const Offset(0, 20));
+    await tester.pump(const Duration(milliseconds: 20));
+    await gesture.moveTo(
+      Offset(from.dx, tester.getBottomLeft(find.byType(Scaffold).last).dy - 4),
+    );
+    for (var i = 0; i < 10; i++) {
+      await tester.pump(const Duration(milliseconds: 20));
+    }
+    expect(scroll.pixels, greaterThan(0));
+    await gesture.cancel();
+    await tester.pump(const Duration(milliseconds: 500));
+    final stopped = scroll.pixels;
+    await tester.pump(const Duration(seconds: 1));
+    expect(scroll.pixels, stopped);
+  });
+
+  testWidgets('owner comparison travels through entry, history and edit', (
+    tester,
+  ) async {
+    await openApp(tester);
+    final exercise = weighted(1).single;
+    await startPlanned(tester, [
+      (exercise, null),
+    ], plan: const SetValues(reps: 12, weightKg: 60));
+    await record(tester, count: '10', weight: '80');
+    expect(find.text('above plan'), findsOneWidget);
+    await tap(tester, find.widgetWithText(FilledButton, 'Finish'));
+    await tap(tester, find.widgetWithText(FilledButton, 'Finish').last);
+    await tap(tester, find.text('History'));
+    expect(find.text('above plan'), findsOneWidget);
+    expect(find.text('≈ 106.5 kg vs ≈ 84 kg'), findsOneWidget);
+    expect(find.textContaining('below plan'), findsNothing);
+    await tap(tester, find.byTooltip('Edit workout'));
+    expect(find.text('≈ 106.5 kg vs ≈ 84 kg'), findsOneWidget);
+    final saved = await onlyWorkout();
+    expect(saved['exercises'][0]['sets'][0]['plan'], {
+      'reps': 12,
+      'seconds': null,
+      'weightKg': 60.0,
+    });
+  });
+
+  testWidgets('body comparison receives the workout snapshot through labels', (
+    tester,
+  ) async {
+    await openApp(tester);
+    final body = catalog.values.firstWhere(
+      (e) => e.measure == Measure.reps && e.usesBodyWeight,
+    );
+    await startPlanned(tester, [(body, null)], plan: const SetValues(reps: 12));
+    await profiles.save(
+      profiles.profileOf('user-1')!.copyWith(bodyWeightKg: 120),
+    );
+    await settle(tester);
+    await record(tester, count: '6', weight: '10');
+    expect(find.text('below plan'), findsOneWidget);
+    expect((await onlyWorkout())['bodyWeightKg'], 80);
+  });
+
+  testWidgets(
+    'order block stays read-only through history editing and discard',
+    (tester) async {
+      final seeded = FakeFirebaseFirestore();
+      final es = weighted(3);
+      var n = 0;
+      final p = Program(
+        id: 'p',
+        authorId: 'user-1',
+        name: 'P',
+        days: [
+          ProgramDay(
+            id: 'd',
+            name: 'D',
+            exercises: [
+              for (final (i, e) in es.indexed)
+                ProgramExercise(
+                  id: 'pe$i',
+                  exerciseId: e.id,
+                  sets: const [SetValues(reps: 8, weightKg: 20)],
+                ),
+            ],
+          ),
+        ],
+      );
+      var w = startWorkout(
+        id: 'history-order',
+        traineeId: 'user-1',
+        now: DateTime.now(),
+        newId: () => 'id${n++}',
+        catalog: catalog,
+        languageCode: 'en',
+        program: p,
+        day: p.days.single,
+      );
+      w = moveExerciseGroup(w, 2, 0, now: DateTime.now());
+      w = recordSummary(
+        w,
+        w.exercises[1].id,
+        setCount: 1,
+        fact: const SetValues(reps: 6, weightKg: 25),
+        newId: () => 'extra',
+        now: DateTime.now(),
+      );
+      w = completeWorkout(w, now: DateTime.now());
+      await tester.runAsync(() => FirestoreWorkoutRepository(seeded).save(w));
+      await openApp(tester, seeded: seeded);
+      await tap(tester, find.text('History'));
+      expect(find.text('Order changed'), findsOneWidget);
+      await tap(tester, find.text('Order changed'));
+      expect(find.text('Planned order'), findsOneWidget);
+      final snapshot = (await onlyWorkout())['originalOrder'];
+      await tap(tester, find.byTooltip('Edit workout'));
+      await tap(tester, find.text('Order changed'));
+      expect(find.text('Planned order'), findsOneWidget);
+      expect(find.byType(ReorderableList), findsNothing);
+      await tap(tester, find.text("Don't save"));
+      expect((await onlyWorkout())['originalOrder'], snapshot);
+    },
+  );
+  for (final language in ['ru', 'en', 'kk']) {
+    for (final theme in [ThemeChoice.light, ThemeChoice.dark]) {
+      testWidgets(
+        'handles and superset fit $language $theme with text scale 2',
+        (tester) async {
+          await openApp(tester);
+          await profiles.save(
+            profiles
+                .profileOf('user-1')!
+                .copyWith(languageCode: () => language, theme: theme),
+          );
+          await settle(tester);
+          tester.platformDispatcher.textScaleFactorTestValue = 2;
+          addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+          final es = weighted(3);
+          // Start through the repository so the check targets the workout layout.
+          var n = 0;
+          final p = Program(
+            id: 'p',
+            authorId: 'user-1',
+            name: 'P',
+            days: [
+              ProgramDay(
+                id: 'd',
+                name: 'D',
+                exercises: [
+                  for (final (i, e) in es.indexed)
+                    ProgramExercise(
+                      id: 'pe$i',
+                      exerciseId: e.id,
+                      sets: const [SetValues(reps: 999, weightKg: 999.75)],
+                      executionMode: i > 0
+                          ? ExecutionMode.superset
+                          : ExecutionMode.ordinary,
+                      groupId: i > 0 ? 'pair' : null,
+                    ),
+                ],
+              ),
+            ],
+          );
+          final w = startWorkout(
+            id: 'large',
+            traineeId: 'user-1',
+            now: DateTime.now(),
+            newId: () => 'id${n++}',
+            catalog: catalog,
+            languageCode: language,
+            program: p,
+            day: p.days.single,
+          );
+          await tester.runAsync(() => FirestoreWorkoutRepository(db).start(w));
+          await settle(tester);
+          final l = AppLocalizations.of(
+            tester.element(find.byType(HomeScreen)),
+          )!;
+          await tap(tester, find.text(l.homeContinue));
+          expect(
+            find.byKey(ValueKey('workout-drag-handle-${w.exercises[1].id}')),
+            findsOneWidget,
+          );
+          expect(
+            find.byKey(ValueKey('workout-drag-handle-${w.exercises[2].id}')),
+            findsNothing,
+          );
+          expect(
+            find.byKey(ValueKey('workout-drag-handle-${w.exercises[0].id}')),
+            findsNothing,
+          );
+          expect(find.byType(EntryPanel), findsOneWidget);
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
+  }
 }

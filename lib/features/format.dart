@@ -141,7 +141,6 @@ class PbChip extends StatelessWidget {
         child: Text(
           text,
           style: PbText.label.copyWith(
-            fontSize: 13,
             letterSpacing: 0,
             color: color ?? c.inkMuted,
           ),

@@ -86,11 +86,10 @@ class _ExercisePickerScreenState extends ConsumerState<ExercisePickerScreen> {
     final c = context.pb;
     final language = Localizations.localeOf(context).languageCode;
     final catalog = ref.watch(userCatalogProvider).value;
-    final query = _query.trim().toLowerCase();
     final found = [
       for (final exercise in catalog?.values ?? const <Exercise>[])
         if ((_area == null || areaOf(exercise.muscleGroup) == _area) &&
-            exercise.nameFor(language).toLowerCase().contains(query))
+            matchesSearch(exercise.nameFor(language), _query))
           exercise,
     ]..sort((a, b) => a.nameFor(language).compareTo(b.nameFor(language)));
 

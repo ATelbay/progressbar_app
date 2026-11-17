@@ -878,4 +878,221 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get saveExerciseRejected =>
       'Сервер не принял изменения упражнения. Последнее изменение не сохранено.';
+
+  @override
+  String get executionOrdinary => 'Обычное';
+
+  @override
+  String get executionSuperset => 'Суперсет';
+
+  @override
+  String get executionDropSet => 'Дроп-сет';
+
+  @override
+  String get executionStyle => 'Способ выполнения';
+
+  @override
+  String get executionRounds => 'Круги';
+
+  @override
+  String get executionAddMember => 'Добавить упражнение в суперсет';
+
+  @override
+  String get executionAddDrop => 'Ещё снижение';
+
+  @override
+  String get executionInitialStage => 'Начальная нагрузка';
+
+  @override
+  String executionDropStage(int number) {
+    return 'Снижение $number';
+  }
+
+  @override
+  String executionRound(int current, int total) {
+    return 'Круг $current из $total';
+  }
+
+  @override
+  String executionMember(int current, int total) {
+    return 'Упражнение $current из $total';
+  }
+
+  @override
+  String get executionRecordSuperset => 'Записать суперсет';
+
+  @override
+  String get executionRecordDropSet => 'Записать дроп-сет';
+
+  @override
+  String get executionRecordDrops => 'Записать дроп-сеты';
+
+  @override
+  String get executionFinishDrop => 'Закончить подход здесь';
+
+  @override
+  String get executionDifferentResults =>
+      'Результаты различаются — правьте их по подходам.';
+
+  @override
+  String get executionChooseMembers => 'Упражнения суперсета';
+
+  @override
+  String get executionMinMembers => 'Добавьте ещё хотя бы одно упражнение.';
+
+  @override
+  String get executionExtraRound => 'Ещё круг';
+
+  @override
+  String get executionPlanStagesHint =>
+      'Задайте снижения сейчас или добавляйте их во время тренировки.';
+
+  @override
+  String get executionRemoveMember => 'Убрать из группы';
+
+  @override
+  String get executionContinueRecord => 'Продолжить запись';
+
+  @override
+  String get executionRemoveDrop => 'Убрать снижение';
+
+  @override
+  String executionDropNumber(int current, int total) {
+    return 'Дроп-сет $current из $total';
+  }
+
+  @override
+  String get executionControlsSuperset => 'Упражнения и круги';
+
+  @override
+  String get executionControlsDrop => 'Ступени и подходы';
+
+  @override
+  String get executionControlsHint =>
+      'Выберите место записи. Записанные результаты сохранятся.';
+
+  @override
+  String get historyHideDetails => 'Свернуть подробности';
+
+  @override
+  String get workoutSkip => 'Пропустить';
+
+  @override
+  String get workoutUnskip => 'Отменить пропуск';
+
+  @override
+  String get workoutSkippedChip => 'Пропущено';
+
+  @override
+  String get workoutAllDone => 'Всё записано или пропущено';
+
+  @override
+  String workoutProgressLabelSkipped(int done, int total, int skipped) {
+    return 'Записано $done из $total упражнений, пропущено $skipped';
+  }
+
+  @override
+  String finishBodySkipped(int done, int total, int skipped) {
+    return 'Записано $done из $total упражнений, пропущено $skipped.';
+  }
+
+  @override
+  String get finishBodyRest =>
+      'Остальные останутся без результата — тренер увидит их как пропущенные.';
+
+  @override
+  String get progressSearch => 'Найти упражнение';
+
+  @override
+  String get progressNothingFound => 'Ничего не нашлось';
+
+  @override
+  String get progressEstimatedMax => 'Расчётный максимум';
+
+  @override
+  String get progressEstimatedMaxHint =>
+      'Сколько можно поднять на один раз — по весу и повторениям лучшего подхода.';
+
+  @override
+  String get progressRepsAtTop => 'Повторений в самом тяжёлом подходе';
+
+  @override
+  String get progressMetricMax => 'Максимум';
+
+  @override
+  String get progressMetricWeight => 'Вес';
+
+  @override
+  String get progressMetricReps => 'Повторения';
+
+  @override
+  String get progressGone => 'По этому упражнению больше нет результатов.';
+
+  @override
+  String progressBest(String set) {
+    return 'Лучший подход: $set';
+  }
+
+  @override
+  String get workoutOrderChanged => 'Порядок изменён';
+
+  @override
+  String get workoutPlannedOrder => 'Порядок по плану';
+
+  @override
+  String get workoutOriginalOrder => 'До перестановки';
+
+  @override
+  String get workoutOriginalOrderHint => 'Порядок до первой перестановки';
+
+  @override
+  String get workoutOrderAddedLater =>
+      'Упражнения, добавленные позже, показаны в текущем списке.';
+
+  @override
+  String get workoutOrderIncomplete => 'Исходный порядок сохранён не полностью';
+
+  @override
+  String get workoutOrderShow => 'По плану';
+
+  @override
+  String get workoutOrderHide => 'Свернуть';
+
+  @override
+  String compareEstimate(String fact, String plan) {
+    return '≈ $fact против ≈ $plan';
+  }
+
+  @override
+  String get finishRowRecorded => 'Записано';
+
+  @override
+  String get finishRowSkipped => 'Пропущено';
+
+  @override
+  String get finishRowEmpty => 'Без результата';
+
+  @override
+  String get finishEmptyHint =>
+      'Упражнения без результата тренер увидит как пропущенные.';
+
+  @override
+  String get progressNothingFoundHint =>
+      'Здесь только упражнения, по которым уже есть результаты. Проверьте название.';
+
+  @override
+  String get progressMetricLabel => 'Показатель';
+
+  @override
+  String executionRoundCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count круга',
+      many: '$count кругов',
+      few: '$count круга',
+      one: '$count круг',
+    );
+    return '$_temp0';
+  }
 }

@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:progressbar_app/app.dart';
 import 'package:progressbar_app/data/firestore_codec.dart';
+import 'package:progressbar_app/data/workout_repository.dart';
+import 'package:progressbar_app/domain/workout_logic.dart';
 import 'package:progressbar_app/domain/models.dart';
 import 'package:progressbar_app/features/auth/auth_controller.dart';
 import 'package:progressbar_app/features/exercises/exercise_catalog_provider.dart';
@@ -205,4 +207,63 @@ void main() {
       isTrue,
     );
   });
+  testWidgets(
+    'coach order mark works for current, completed, all and read-only',
+    (tester) async {
+      await open(tester, 'coach');
+      WorkoutExercise e(String id, {bool skipped = false}) => WorkoutExercise(
+        id: id,
+        exerciseId: 'same',
+        name: id,
+        measure: Measure.reps,
+        usesBodyWeight: false,
+        skipped: skipped,
+        sets: const [
+          WorkoutSet(id: 's', plan: SetValues(reps: 12, weightKg: 60)),
+        ],
+      );
+      var current = Workout(
+        id: 'active-order',
+        traineeId: 'trainee',
+        supervisorCoachId: 'coach',
+        supervisorCoachName: 'Sergey',
+        status: WorkoutStatus.inProgress,
+        startedAt: DateTime(2026, 11, 16),
+        exercises: [e('first'), e('second', skipped: true)],
+      );
+      current = moveExerciseGroup(current, 1, 0, now: DateTime(2026, 11, 16));
+      final complete = Workout(
+        id: 'done-order',
+        traineeId: 'trainee',
+        status: WorkoutStatus.completed,
+        startedAt: DateTime(2026, 11, 15),
+        completedAt: DateTime(2026, 11, 15),
+        originalOrder: current.originalOrder,
+        exercises: current.exercises,
+      );
+      await tester.runAsync(() async {
+        final store = FirestoreWorkoutRepository(db);
+        await store.save(complete);
+        await store.start(current);
+      });
+      await settle(tester);
+      await tap(tester, 'People');
+      await tap(tester, 'Aigerim');
+      expect(find.text('Order changed'), findsOneWidget);
+      expect(find.text('below plan'), findsNothing);
+      expect(find.text('not recorded yet'), findsOneWidget);
+      expect(find.text('skipped'), findsOneWidget);
+      expect(find.byType(ReorderableList), findsNothing);
+      await tap(tester, 'Order changed');
+      expect(find.text('Planned order'), findsOneWidget);
+      await tap(tester, 'All');
+      expect(find.text('Order changed'), findsNWidgets(2));
+      await db.doc('links/coach_trainee').update({'status': 'readOnly'});
+      await settle(tester);
+      expect(find.text('Order changed'), findsNWidgets(2));
+      await db.doc('links/coach_trainee').update({'status': 'removed'});
+      await settle(tester);
+      expect(find.text('Order changed'), findsNothing);
+    },
+  );
 }

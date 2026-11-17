@@ -496,5 +496,153 @@
         "type": "String"
       }
     }
+  },
+  "executionOrdinary": "Regular",
+  "executionSuperset": "Superset",
+  "executionDropSet": "Drop set",
+  "executionStyle": "Execution style",
+  "executionRounds": "Rounds",
+  "executionAddMember": "Add exercise to superset",
+  "executionAddDrop": "Add reduction",
+  "executionInitialStage": "Initial load",
+  "executionDropStage": "Reduction {number}",
+  "@executionDropStage": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "executionRound": "Round {current} of {total}",
+  "@executionRound": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "executionMember": "Exercise {current} of {total}",
+  "@executionMember": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "executionRecordSuperset": "Record superset",
+  "executionRecordDropSet": "Record drop set",
+  "executionRecordDrops": "Record drop sets",
+  "executionFinishDrop": "Finish set here",
+  "executionDifferentResults": "Results differ — edit them per set.",
+  "executionChooseMembers": "Superset exercises",
+  "executionMinMembers": "Add at least one more exercise.",
+  "executionExtraRound": "Add round",
+  "executionPlanStagesHint": "Plan reductions now or add them during the workout.",
+  "executionRemoveMember": "Remove from group",
+  "executionContinueRecord": "Continue entry",
+  "executionRemoveDrop": "Remove reduction",
+  "executionDropNumber": "Drop set {current} of {total}",
+  "@executionDropNumber": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "executionControlsSuperset": "Exercises and rounds",
+  "executionControlsDrop": "Stages and sets",
+  "executionControlsHint": "Choose where to record. Recorded results are kept.",
+  "historyHideDetails": "Hide details",
+  "workoutSkip": "Skip",
+  "workoutUnskip": "Undo skip",
+  "workoutSkippedChip": "Skipped",
+  "workoutAllDone": "Everything is recorded or skipped",
+  "workoutProgressLabelSkipped": "Recorded {done} of {total} exercises, {skipped} skipped",
+  "@workoutProgressLabelSkipped": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "finishBodySkipped": "Recorded {done} of {total} exercises, {skipped} skipped.",
+  "@finishBodySkipped": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "finishBodyRest": "The rest stay without a result — a coach will see them as skipped.",
+  "progressSearch": "Find an exercise",
+  "progressNothingFound": "Nothing found",
+  "progressEstimatedMax": "Estimated one-rep max",
+  "progressEstimatedMaxHint": "What you could lift once, worked out from the weight and reps of the best set.",
+  "progressRepsAtTop": "Reps in the heaviest set",
+  "progressMetricMax": "Max",
+  "progressMetricWeight": "Weight",
+  "progressMetricReps": "Reps",
+  "progressGone": "This exercise has no results any more.",
+  "progressBest": "Best set: {set}",
+  "@progressBest": {
+    "placeholders": {
+      "set": {
+        "type": "String"
+      }
+    }
+  },
+  "workoutOrderChanged": "Order changed",
+  "workoutPlannedOrder": "Planned order",
+  "workoutOriginalOrder": "Before reordering",
+  "workoutOriginalOrderHint": "Order before the first rearrangement",
+  "workoutOrderAddedLater": "Exercises added later appear in the current list.",
+  "workoutOrderIncomplete": "The original order was not fully saved",
+  "workoutOrderShow": "Planned",
+  "workoutOrderHide": "Collapse",
+  "compareEstimate": "≈ {fact} vs ≈ {plan}",
+  "finishRowRecorded": "Recorded",
+  "finishRowSkipped": "Skipped",
+  "finishRowEmpty": "No result",
+  "finishEmptyHint": "Your coach will see exercises without results as skipped.",
+  "progressNothingFoundHint": "Only exercises with recorded results appear here. Check the name.",
+  "progressMetricLabel": "Metric",
+  "@compareEstimate": {
+    "placeholders": {
+      "fact": {
+        "type": "String"
+      },
+      "plan": {
+        "type": "String"
+      }
+    }
+  },
+  "executionRoundCount": "{count, plural, one{{count} round} other{{count} rounds}}",
+  "@executionRoundCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

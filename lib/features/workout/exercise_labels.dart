@@ -27,7 +27,7 @@ class ExerciseLabels extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final c = context.pb;
     final comparison = showComparison && exercise.hasFact
-        ? deviationChip(context, compareExercise(exercise))
+        ? deviationChip(context, compareExercise(workout, exercise))
         : null;
     return Wrap(
       spacing: PbSpace.s2,
@@ -35,6 +35,7 @@ class ExerciseLabels extends StatelessWidget {
       children: [
         if (isOutsidePlan(workout, exercise))
           PbChip(l10n.workoutOutsidePlan, color: c.accentText),
+        if (exercise.skipped) PbChip(l10n.workoutSkippedChip, color: c.warning),
         if (exercise.hasFact)
           PbChip(l10n.workoutExerciseRecorded, color: c.success),
         ?comparison,

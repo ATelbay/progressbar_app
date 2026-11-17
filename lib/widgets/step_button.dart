@@ -62,8 +62,8 @@ class PbPill extends StatelessWidget {
           horizontal: PbSpace.s3,
           vertical: PbSpace.s2,
         ),
-        backgroundColor: selected ? c.accent : c.sunken,
-        foregroundColor: selected ? c.onAccent : c.ink,
+        backgroundColor: selected ? c.selection : c.sunken,
+        foregroundColor: c.ink,
         textStyle: PbText.label,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(PbRadius.md),

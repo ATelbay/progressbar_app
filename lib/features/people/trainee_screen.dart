@@ -1,3 +1,5 @@
+import '../history/workout_order_block.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -132,10 +134,12 @@ class _TraineeScreenState extends ConsumerState<TraineeScreen> {
                         spacing: PbSpace.s2,
                         children: [
                           WorkoutHeading(workout),
+                          WorkoutOrderBlock(workout),
                           if (workout.id == openId) ...[
                             for (final exercise in workout.exercises)
                               PlanFactRow(
                                 exercise,
+                                workout: workout,
                                 completed: workout.isCompleted,
                               ),
                             if (workout.comment case final comment?)

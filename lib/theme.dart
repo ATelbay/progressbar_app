@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 
 import 'design/tokens.g.dart';
+import 'widgets/navigation_motion.dart';
 
 export 'design/tokens.g.dart';
 
@@ -9,7 +11,7 @@ extension PbTheme on BuildContext {
 }
 
 /// Dark is «Закат», light is «Рассвет». Values come from the design tokens.
-ThemeData buildTheme(Brightness brightness) {
+ThemeData buildTheme(Brightness brightness, {bool reducedMotion = false}) {
   final c = brightness == Brightness.dark ? PbColors.dusk : PbColors.dawn;
   final scheme = ColorScheme(
     brightness: brightness,
@@ -38,6 +40,18 @@ ThemeData buildTheme(Brightness brightness) {
     scaffoldBackgroundColor: c.ground,
     fontFamily: 'Golos Text',
     extensions: [c],
+    pageTransitionsTheme: PageTransitionsTheme(
+      builders: {
+        TargetPlatform.iOS: PbPageTransitionsBuilder(
+          const CupertinoPageTransitionsBuilder(),
+          reducedMotion: reducedMotion,
+        ),
+        TargetPlatform.android: PbPageTransitionsBuilder(
+          PredictiveBackPageTransitionsBuilder(fallbackColor: c.ground),
+          reducedMotion: reducedMotion,
+        ),
+      },
+    ),
     textTheme: TextTheme(
       headlineMedium: PbText.title.copyWith(color: c.ink),
       titleLarge: PbText.heading.copyWith(color: c.ink),
@@ -69,14 +83,14 @@ ThemeData buildTheme(Brightness brightness) {
         foregroundColor: c.ink,
         backgroundColor: c.sunken,
         side: BorderSide.none,
-        textStyle: PbText.bodyStrong,
+        textStyle: PbText.body,
       ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         minimumSize: const Size(PbSize.touchMin, PbSize.touchMin),
-        foregroundColor: c.accentText,
-        textStyle: PbText.bodyStrong,
+        foregroundColor: c.inkMuted,
+        textStyle: PbText.body,
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
@@ -92,8 +106,10 @@ ThemeData buildTheme(Brightness brightness) {
       ),
     ),
     navigationBarTheme: NavigationBarThemeData(
-      backgroundColor: c.surface,
-      indicatorColor: c.sunken,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      surfaceTintColor: Colors.transparent,
+      indicatorColor: c.selection,
       iconTheme: WidgetStateProperty.resolveWith(
         (states) => IconThemeData(
           color: states.contains(WidgetState.selected)
@@ -102,12 +118,26 @@ ThemeData buildTheme(Brightness brightness) {
         ),
       ),
       labelTextStyle: WidgetStateProperty.resolveWith(
-        (states) => PbText.label.copyWith(
-          fontSize: 12,
+        (states) => PbText.navLabel.copyWith(
           color: states.contains(WidgetState.selected)
               ? c.accentText
               : c.inkMuted,
         ),
+      ),
+    ),
+    segmentedButtonTheme: SegmentedButtonThemeData(
+      style: ButtonStyle(
+        minimumSize: const WidgetStatePropertyAll(Size(0, PbSize.touchMin)),
+        textStyle: const WidgetStatePropertyAll(PbText.label),
+        foregroundColor: WidgetStateProperty.resolveWith(
+          (states) =>
+              states.contains(WidgetState.disabled) ? c.inkMuted : c.ink,
+        ),
+        backgroundColor: WidgetStateProperty.resolveWith(
+          (states) =>
+              states.contains(WidgetState.selected) ? c.selection : c.sunken,
+        ),
+        side: const WidgetStatePropertyAll(BorderSide.none),
       ),
     ),
     dividerTheme: DividerThemeData(color: c.line, thickness: 1),

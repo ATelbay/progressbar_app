@@ -85,3 +85,41 @@ bool canStartDay(ProgramDay day, Map<String, Exercise> catalog) =>
     day.exercises.every(
       (e) => catalog.containsKey(e.exerciseId) && e.sets.isNotEmpty,
     );
+
+/// Replaces an entire group at its original position, preserving unrelated
+/// exercises and stable member IDs, including repeated catalog exercises.
+Program putExecutionPlan(
+  Program program,
+  String dayId, {
+  required List<String> replacedIds,
+  required List<ProgramExercise> members,
+}) {
+  if (members.map((e) => e.id).toSet().length != members.length) {
+    throw ArgumentError('Duplicate member ID');
+  }
+  final supersets = <String, int>{};
+  for (final e in members) {
+    if (e.sets.isEmpty) throw ArgumentError('An exercise needs a set');
+    if (e.executionMode == ExecutionMode.superset) {
+      if (e.groupId == null) throw ArgumentError('A superset needs a group ID');
+      supersets.update(e.groupId!, (n) => n + 1, ifAbsent: () => 1);
+    }
+  }
+  if (supersets.values.any((n) => n < 2)) {
+    throw ArgumentError('A superset needs two exercises');
+  }
+  return _updateDay(program, dayId, (day) {
+    final position = day.exercises.indexWhere(
+      (e) => replacedIds.contains(e.id),
+    );
+    final result = <ProgramExercise>[];
+    for (var i = 0; i < day.exercises.length; i++) {
+      if (i == position) result.addAll(members);
+      if (!replacedIds.contains(day.exercises[i].id)) {
+        result.add(day.exercises[i]);
+      }
+    }
+    if (position < 0) result.addAll(members);
+    return ProgramDay(id: day.id, name: day.name, exercises: result);
+  });
+}

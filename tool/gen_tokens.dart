@@ -131,6 +131,16 @@ void main() {
         ..writeln();
     }
   }
+  out
+    ..writeln('}')
+    ..writeln()
+    ..writeln('abstract final class PbMotion {');
+  for (final t in (tokens['motion']['tokens'] as List)) {
+    final milliseconds = int.parse((t['value'] as String).replaceAll('ms', ''));
+    out.writeln(
+      '  static const ${_camel(t['name'] as String)} = Duration(milliseconds: $milliseconds);',
+    );
+  }
   out.writeln('}');
 
   File(_target)

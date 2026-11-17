@@ -14,6 +14,7 @@ class ProgressBarApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(profileProvider).value;
+    final reducedMotion = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
     return MaterialApp.router(
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       // The language chosen in the profile; without one, the phone's.
@@ -27,8 +28,8 @@ class ProgressBarApp extends ConsumerWidget {
         ThemeChoice.light => ThemeMode.light,
         ThemeChoice.system || null => ThemeMode.system,
       },
-      theme: buildTheme(Brightness.light),
-      darkTheme: buildTheme(Brightness.dark),
+      theme: buildTheme(Brightness.light, reducedMotion: reducedMotion),
+      darkTheme: buildTheme(Brightness.dark, reducedMotion: reducedMotion),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       builder: (_, child) => StorageWriteNotice(child: child!),

@@ -12,9 +12,11 @@ import '../../widgets/glass_panel.dart';
 import '../../widgets/glow_background.dart';
 import '../../widgets/step_button.dart';
 import '../workout/entry_panel.dart';
+import '../workout/execution_entry_panel.dart';
 import '../workout/workout_day_button.dart';
 import '../workout/workout_providers.dart';
 import 'history_screen.dart';
+import 'workout_order_block.dart';
 
 /// Corrects a completed workout. Changes are kept here until «save»; the
 /// stored workout is then marked as edited after completion.
@@ -35,6 +37,7 @@ class _WorkoutEditScreenState extends ConsumerState<WorkoutEditScreen> {
     final newId = ref.read(newIdProvider);
     await showModalBottomSheet<void>(
       context: context,
+      useSafeArea: true,
       backgroundColor: Colors.transparent,
       barrierColor: context.pb.scrim,
       isScrollControlled: true,
@@ -150,14 +153,16 @@ class _WorkoutEditScreenState extends ConsumerState<WorkoutEditScreen> {
                 ),
                 Expanded(
                   child: ListView.separated(
-                    itemCount: workout.exercises.length,
+                    itemCount: workout.exercises.length + 1,
                     separatorBuilder: (_, _) =>
                         const SizedBox(height: PbSpace.s2),
                     itemBuilder: (context, index) {
-                      final exercise = workout.exercises[index];
+                      if (index == 0) return WorkoutOrderBlock(workout);
+                      final exercise = workout.exercises[index - 1];
                       return GlassCard(
                         child: PlanFactRow(
                           exercise,
+                          workout: workout,
                           action: StepButton(
                             icon: Icons.edit_outlined,
                             label: l10n.historyEditExercise(exercise.name),
@@ -240,49 +245,59 @@ class _EditSheetState extends State<_EditSheet> {
       child: Padding(
         padding: const EdgeInsets.all(PbSpace.s2),
         child: SingleChildScrollView(
-          child: EntryPanel(
-            key: ValueKey((
-              _mode,
-              exercise.sets.where((s) => s.fact != null).length,
-            )),
-            workout: _workout,
-            exercise: exercise,
-            earlier: const [],
-            mode: _mode,
-            lastSetCount: null,
-            onModeChanged: (mode) => setState(() => _mode = mode),
-            onRecordSummary: (setCount, fact) => _change(
-              recordSummary(
-                _workout,
-                exercise.id,
-                setCount: setCount,
-                fact: fact,
-                newId: widget.newId,
-                now: now,
-              ),
-              close: true,
-            ),
-            onRecordSet: (setId, fact, rpe) => _change(
-              recordSet(
-                _workout,
-                exercise.id,
-                setId,
-                fact: fact,
-                rpe: rpe,
-                now: now,
-              ),
-            ),
-            onExtraSet: (fact, rpe) => _change(
-              addExtraSet(
-                _workout,
-                exercise.id,
-                fact: fact,
-                rpe: rpe,
-                newId: widget.newId,
-                now: now,
-              ),
-            ),
-          ),
+          child: exercise.executionMode != ExecutionMode.ordinary
+              ? ExecutionEntryPanel(
+                  workout: _workout,
+                  exerciseId: exercise.id,
+                  mode: _mode,
+                  newId: widget.newId,
+                  onChanged: (updated) => _change(updated),
+                  onModeChanged: (mode) => setState(() => _mode = mode),
+                  onFinished: () => Navigator.pop(context),
+                )
+              : EntryPanel(
+                  key: ValueKey((
+                    _mode,
+                    exercise.sets.where((s) => s.fact != null).length,
+                  )),
+                  workout: _workout,
+                  exercise: exercise,
+                  earlier: const [],
+                  mode: _mode,
+                  lastSetCount: null,
+                  onModeChanged: (mode) => setState(() => _mode = mode),
+                  onRecordSummary: (setCount, fact) => _change(
+                    recordSummary(
+                      _workout,
+                      exercise.id,
+                      setCount: setCount,
+                      fact: fact,
+                      newId: widget.newId,
+                      now: now,
+                    ),
+                    close: true,
+                  ),
+                  onRecordSet: (setId, fact, rpe) => _change(
+                    recordSet(
+                      _workout,
+                      exercise.id,
+                      setId,
+                      fact: fact,
+                      rpe: rpe,
+                      now: now,
+                    ),
+                  ),
+                  onExtraSet: (fact, rpe) => _change(
+                    addExtraSet(
+                      _workout,
+                      exercise.id,
+                      fact: fact,
+                      rpe: rpe,
+                      newId: widget.newId,
+                      now: now,
+                    ),
+                  ),
+                ),
         ),
       ),
     );

@@ -32,7 +32,7 @@ for port in ('8080', '9099'):
     adb('reverse', 'tcp:' + port, 'tcp:' + port)
 adb('shell', 'settings', 'put', 'system', 'font_scale', '1.0')
 failures = 0
-command = ['rtk', 'proxy', 'flutter', 'test', test, '-d', device]
+command = ['rtk', 'proxy', 'flutter', '--no-version-check', 'test', '--no-pub', test, '-d', device]
 with (out / 'run.log').open('w') as log:
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
     for line in process.stdout:

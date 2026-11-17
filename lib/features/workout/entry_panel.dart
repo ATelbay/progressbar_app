@@ -7,6 +7,7 @@ import '../../theme.dart';
 import '../../widgets/glass_panel.dart';
 import '../../widgets/step_button.dart';
 import '../format.dart';
+import '../execution_widgets.dart';
 import 'exercise_labels.dart';
 import 'number_field.dart';
 import 'summary_entry.dart';
@@ -111,7 +112,13 @@ class _EntryPanelState extends State<EntryPanel> {
         spacing: PbSpace.s2,
         children: [
           Text(_exercise.name, style: PbText.heading.copyWith(color: c.ink)),
+          EntryModeSelector(
+            value: widget.mode,
+            canSummary: true,
+            onChanged: widget.onModeChanged,
+          ),
           if (_exercise.hasFact ||
+              _exercise.skipped ||
               widget.pending ||
               isOutsidePlan(widget.workout, _exercise))
             ExerciseLabels(
@@ -198,10 +205,6 @@ class _EntryPanelState extends State<EntryPanel> {
                 hints.join(' '),
                 style: PbText.caption.copyWith(color: c.inkMuted),
               ),
-      ),
-      TextButton(
-        onPressed: () => widget.onModeChanged(EntryMode.perSet),
-        child: Text(l10n.entryEachSet),
       ),
     ];
   }
@@ -312,10 +315,6 @@ class _EntryPanelState extends State<EntryPanel> {
             onPressed: index < 0 ? null : () => setState(() => _select(null)),
             child: Text(l10n.entryExtraSet),
           ),
-          TextButton(
-            onPressed: () => widget.onModeChanged(EntryMode.summary),
-            child: Text(l10n.entrySummaryOnly),
-          ),
         ],
       ),
     ];
@@ -329,7 +328,10 @@ class _EntryPanelState extends State<EntryPanel> {
   ) {
     final chip = set.id == _setId && set.fact == null
         ? PbChip(l10n.chipNow, color: c.accentText)
-        : deviationChip(context, compareSet(set).kind);
+        : deviationChip(
+            context,
+            compareSet(set, workout: widget.workout, exercise: _exercise).kind,
+          );
     Widget values(SetValues? v, TextStyle style, Color color) => v == null
         ? Text('—', style: style.copyWith(color: c.inkMuted))
         : NumberText(

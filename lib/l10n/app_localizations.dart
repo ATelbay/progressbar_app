@@ -1574,6 +1574,372 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The server refused the exercise changes. The last change was not saved.'**
   String get saveExerciseRejected;
+
+  /// No description provided for @executionOrdinary.
+  ///
+  /// In en, this message translates to:
+  /// **'Regular'**
+  String get executionOrdinary;
+
+  /// No description provided for @executionSuperset.
+  ///
+  /// In en, this message translates to:
+  /// **'Superset'**
+  String get executionSuperset;
+
+  /// No description provided for @executionDropSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop set'**
+  String get executionDropSet;
+
+  /// No description provided for @executionStyle.
+  ///
+  /// In en, this message translates to:
+  /// **'Execution style'**
+  String get executionStyle;
+
+  /// No description provided for @executionRounds.
+  ///
+  /// In en, this message translates to:
+  /// **'Rounds'**
+  String get executionRounds;
+
+  /// No description provided for @executionAddMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Add exercise to superset'**
+  String get executionAddMember;
+
+  /// No description provided for @executionAddDrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Add reduction'**
+  String get executionAddDrop;
+
+  /// No description provided for @executionInitialStage.
+  ///
+  /// In en, this message translates to:
+  /// **'Initial load'**
+  String get executionInitialStage;
+
+  /// No description provided for @executionDropStage.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduction {number}'**
+  String executionDropStage(int number);
+
+  /// No description provided for @executionRound.
+  ///
+  /// In en, this message translates to:
+  /// **'Round {current} of {total}'**
+  String executionRound(int current, int total);
+
+  /// No description provided for @executionMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise {current} of {total}'**
+  String executionMember(int current, int total);
+
+  /// No description provided for @executionRecordSuperset.
+  ///
+  /// In en, this message translates to:
+  /// **'Record superset'**
+  String get executionRecordSuperset;
+
+  /// No description provided for @executionRecordDropSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Record drop set'**
+  String get executionRecordDropSet;
+
+  /// No description provided for @executionRecordDrops.
+  ///
+  /// In en, this message translates to:
+  /// **'Record drop sets'**
+  String get executionRecordDrops;
+
+  /// No description provided for @executionFinishDrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish set here'**
+  String get executionFinishDrop;
+
+  /// No description provided for @executionDifferentResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Results differ — edit them per set.'**
+  String get executionDifferentResults;
+
+  /// No description provided for @executionChooseMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Superset exercises'**
+  String get executionChooseMembers;
+
+  /// No description provided for @executionMinMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Add at least one more exercise.'**
+  String get executionMinMembers;
+
+  /// No description provided for @executionExtraRound.
+  ///
+  /// In en, this message translates to:
+  /// **'Add round'**
+  String get executionExtraRound;
+
+  /// No description provided for @executionPlanStagesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan reductions now or add them during the workout.'**
+  String get executionPlanStagesHint;
+
+  /// No description provided for @executionRemoveMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from group'**
+  String get executionRemoveMember;
+
+  /// No description provided for @executionContinueRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue entry'**
+  String get executionContinueRecord;
+
+  /// No description provided for @executionRemoveDrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove reduction'**
+  String get executionRemoveDrop;
+
+  /// No description provided for @executionDropNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop set {current} of {total}'**
+  String executionDropNumber(int current, int total);
+
+  /// No description provided for @executionControlsSuperset.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercises and rounds'**
+  String get executionControlsSuperset;
+
+  /// No description provided for @executionControlsDrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stages and sets'**
+  String get executionControlsDrop;
+
+  /// No description provided for @executionControlsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose where to record. Recorded results are kept.'**
+  String get executionControlsHint;
+
+  /// No description provided for @historyHideDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide details'**
+  String get historyHideDetails;
+
+  /// No description provided for @workoutSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get workoutSkip;
+
+  /// No description provided for @workoutUnskip.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo skip'**
+  String get workoutUnskip;
+
+  /// No description provided for @workoutSkippedChip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get workoutSkippedChip;
+
+  /// No description provided for @workoutAllDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything is recorded or skipped'**
+  String get workoutAllDone;
+
+  /// No description provided for @workoutProgressLabelSkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded {done} of {total} exercises, {skipped} skipped'**
+  String workoutProgressLabelSkipped(int done, int total, int skipped);
+
+  /// No description provided for @finishBodySkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded {done} of {total} exercises, {skipped} skipped.'**
+  String finishBodySkipped(int done, int total, int skipped);
+
+  /// No description provided for @finishBodyRest.
+  ///
+  /// In en, this message translates to:
+  /// **'The rest stay without a result — a coach will see them as skipped.'**
+  String get finishBodyRest;
+
+  /// No description provided for @progressSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Find an exercise'**
+  String get progressSearch;
+
+  /// No description provided for @progressNothingFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing found'**
+  String get progressNothingFound;
+
+  /// No description provided for @progressEstimatedMax.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated one-rep max'**
+  String get progressEstimatedMax;
+
+  /// No description provided for @progressEstimatedMaxHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What you could lift once, worked out from the weight and reps of the best set.'**
+  String get progressEstimatedMaxHint;
+
+  /// No description provided for @progressRepsAtTop.
+  ///
+  /// In en, this message translates to:
+  /// **'Reps in the heaviest set'**
+  String get progressRepsAtTop;
+
+  /// No description provided for @progressMetricMax.
+  ///
+  /// In en, this message translates to:
+  /// **'Max'**
+  String get progressMetricMax;
+
+  /// No description provided for @progressMetricWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get progressMetricWeight;
+
+  /// No description provided for @progressMetricReps.
+  ///
+  /// In en, this message translates to:
+  /// **'Reps'**
+  String get progressMetricReps;
+
+  /// No description provided for @progressGone.
+  ///
+  /// In en, this message translates to:
+  /// **'This exercise has no results any more.'**
+  String get progressGone;
+
+  /// No description provided for @progressBest.
+  ///
+  /// In en, this message translates to:
+  /// **'Best set: {set}'**
+  String progressBest(String set);
+
+  /// No description provided for @workoutOrderChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Order changed'**
+  String get workoutOrderChanged;
+
+  /// No description provided for @workoutPlannedOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Planned order'**
+  String get workoutPlannedOrder;
+
+  /// No description provided for @workoutOriginalOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Before reordering'**
+  String get workoutOriginalOrder;
+
+  /// No description provided for @workoutOriginalOrderHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Order before the first rearrangement'**
+  String get workoutOriginalOrderHint;
+
+  /// No description provided for @workoutOrderAddedLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercises added later appear in the current list.'**
+  String get workoutOrderAddedLater;
+
+  /// No description provided for @workoutOrderIncomplete.
+  ///
+  /// In en, this message translates to:
+  /// **'The original order was not fully saved'**
+  String get workoutOrderIncomplete;
+
+  /// No description provided for @workoutOrderShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Planned'**
+  String get workoutOrderShow;
+
+  /// No description provided for @workoutOrderHide.
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse'**
+  String get workoutOrderHide;
+
+  /// No description provided for @compareEstimate.
+  ///
+  /// In en, this message translates to:
+  /// **'≈ {fact} vs ≈ {plan}'**
+  String compareEstimate(String fact, String plan);
+
+  /// No description provided for @finishRowRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded'**
+  String get finishRowRecorded;
+
+  /// No description provided for @finishRowSkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get finishRowSkipped;
+
+  /// No description provided for @finishRowEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No result'**
+  String get finishRowEmpty;
+
+  /// No description provided for @finishEmptyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your coach will see exercises without results as skipped.'**
+  String get finishEmptyHint;
+
+  /// No description provided for @progressNothingFoundHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Only exercises with recorded results appear here. Check the name.'**
+  String get progressNothingFoundHint;
+
+  /// No description provided for @progressMetricLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Metric'**
+  String get progressMetricLabel;
+
+  /// No description provided for @executionRoundCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{{count} round} other{{count} rounds}}'**
+  String executionRoundCount(int count);
 }
 
 class _AppLocalizationsDelegate

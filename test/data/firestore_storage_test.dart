@@ -589,4 +589,57 @@ void main() {
       );
     });
   });
+  test(
+    'completion, correction and date preserve order and original snapshots',
+    () async {
+      final db = FakeFirebaseFirestore();
+      final store = FirestoreWorkoutRepository(db);
+      var w = started('order-roundtrip');
+      await store.start(w);
+      await pumpEventQueue();
+      final firstOrder = w.exercises.map((e) => e.id).toList();
+      final planned = [
+        for (final e in w.exercises) [for (final set in e.sets) set.plan],
+      ];
+      w = moveExerciseGroup(w, 1, 0, now: startedAt);
+      w = recordSummary(
+        w,
+        w.exercises.last.id,
+        setCount: 2,
+        fact: const SetValues(reps: 10, weightKg: 80),
+        newId: nextId,
+        now: startedAt,
+      );
+      w = completeWorkout(w, now: startedAt);
+      await store.save(w);
+      await pumpEventQueue();
+      var loaded = (await store.watchCompleted(uid).first).single;
+      loaded = recordSet(
+        loaded,
+        loaded.exercises.last.id,
+        loaded.exercises.last.sets.first.id,
+        fact: const SetValues(reps: 6, weightKg: 60),
+        now: startedAt.add(const Duration(hours: 1)),
+      );
+      loaded = setWorkoutDay(
+        loaded,
+        DateTime(2026, 10, 5),
+        now: startedAt.add(const Duration(hours: 1)),
+      );
+      await store.save(loaded);
+      await pumpEventQueue();
+      final reread = (await store.watchCompleted(uid).first).single;
+      expect(reread.originalOrder, firstOrder);
+      expect(reread.exercises.map((e) => e.id), firstOrder.reversed);
+      expect(reread.bodyWeightKg, 80);
+      expect(reread.editedAt, isNotNull);
+      expect([
+        for (final e in reread.exercises.reversed)
+          [for (final set in e.sets) set.plan],
+      ], planned);
+      expect(workoutOrderInfo(reread).changed, isTrue);
+      final raw = (await db.doc('users/$uid/workouts/${w.id}').get()).data()!;
+      expect(raw['schemaVersion'], 2);
+    },
+  );
 }
