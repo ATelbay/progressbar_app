@@ -443,6 +443,19 @@ class _OpenWorkout extends StatelessWidget {
         .where((s) => s.fact != null)
         .length;
     if (recorded == 0) return l10n.historySkippedMark;
+    if (exercise.executionMode == ExecutionMode.superset) {
+      // Counted in rounds, as the line above: a round of two exercises is
+      // one round, not two sets.
+      final rounds = group.fold(
+        0,
+        (n, e) => n > e.sets.length ? n : e.sets.length,
+      );
+      final done = [
+        for (var i = 0; i < rounds; i++)
+          if (group.any((e) => i < e.sets.length && e.sets[i].fact != null)) i,
+      ].length;
+      return '${l10n.entryFact}: ${l10n.executionRoundCount(done)}';
+    }
     if (exercise.executionMode == ExecutionMode.dropSet &&
         recorded == exercise.sets.length &&
         canSummarizeExecution(group)) {

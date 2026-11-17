@@ -76,19 +76,36 @@ void main() {
         expect(compareExercise(w, e), c.$5);
       });
     }
-    for (final body in <double?>[null, 0, 80]) {
-      test('body snapshot $body and extra weight fallback', () {
-        final s = pair(10, 0, 8, 10);
-        final e = ex('a', body: true, sets: [s]);
-        final w = workout([e], body: body);
-        expect(
-          compareSet(s, workout: w, exercise: e).kind,
-          DeviationKind.above,
-        );
-        expect(planComparisonEstimate(w, e), (
-          factKg: body == 80 ? 114.0 : 12.5,
-          planKg: body == 80 ? 106.5 : 0.0,
-        ));
+    test('body snapshot adds body weight to the estimate', () {
+      final s = pair(10, 0, 8, 10);
+      final e = ex('a', body: true, sets: [s]);
+      final w = workout([e], body: 80);
+      expect(compareSet(s, workout: w, exercise: e).kind, DeviationKind.above);
+      expect(planComparisonEstimate(w, e), (factKg: 114.0, planKg: 106.5));
+    });
+    for (final body in <double?>[null, 0]) {
+      test('without body snapshot $body a shortfall is below, no estimate', () {
+        final cases = <(int, double, int, double, DeviationKind)>[
+          // More extra weight, fewer reps: the load is unknown.
+          (10, 0, 8, 10, DeviationKind.below),
+          (10, 0, 5, 2.5, DeviationKind.below),
+          (8, 10, 12, 0, DeviationKind.below),
+          (10, 0, 10, 10, DeviationKind.above),
+          (10, 0, 12, 0, DeviationKind.above),
+          (10, 5, 10, 5, DeviationKind.asPlanned),
+        ];
+        for (final c in cases) {
+          final s = pair(c.$1, c.$2, c.$3, c.$4);
+          final e = ex('a', body: true, sets: [s]);
+          final w = workout([e], body: body);
+          expect(
+            compareSet(s, workout: w, exercise: e).kind,
+            c.$5,
+            reason: '$c',
+          );
+          expect(compareExercise(w, e), c.$5, reason: '$c');
+          expect(planComparisonEstimate(w, e), isNull, reason: '$c');
+        }
       });
     }
     test(
