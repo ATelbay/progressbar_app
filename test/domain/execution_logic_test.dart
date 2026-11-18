@@ -328,4 +328,130 @@ void main() {
       reduction,
     );
   });
+  test('a superset with different round counts cannot switch to summary', () {
+    var w = start([
+      for (final key in ['a', 'b'])
+        ProgramExercise(
+          id: key,
+          exerciseId: key,
+          sets: [initial, initial, initial],
+          executionMode: ExecutionMode.superset,
+          groupId: 'pair',
+        ),
+    ]);
+    void record(int count) {
+      for (var i = 0; i < count; i++) {
+        final next = nextGroupSet(executionGroups(w.exercises).single)!;
+        w = recordSet(
+          w,
+          next.exercise.id,
+          next.set.id,
+          fact: initial,
+          now: now,
+        );
+      }
+    }
+
+    // Nothing recorded yet, and the first exercise alone: summary is fine.
+    expect(canSummarizeExecution(w.exercises), isTrue);
+    record(1);
+    expect(canSummarizeExecution(w.exercises), isTrue);
+    // Equal results, but three rounds of one and two of the other: a summary
+    // of three rounds would add a round to the second that was never done.
+    record(4);
+    expect(w.exercises.map((e) => e.sets.where((s) => s.fact != null).length), [
+      3,
+      2,
+    ]);
+    expect(canSummarizeExecution(w.exercises), isFalse);
+    record(1);
+    expect(canSummarizeExecution(w.exercises), isTrue);
+  });
+  test('correcting a finished drop set keeps it finished', () {
+    var w = start([
+      const ProgramExercise(
+        id: 'a',
+        exerciseId: 'a',
+        sets: [initial],
+        executionMode: ExecutionMode.dropSet,
+        dropStages: [reduction],
+      ),
+    ]);
+    final e = w.exercises.single, set = e.sets.single.id;
+    Workout stage(
+      Workout w,
+      int stage,
+      SetValues fact, {
+      bool finish = false,
+    }) => recordDropStage(
+      w,
+      e.id,
+      set,
+      stage: stage,
+      fact: fact,
+      newId: newId,
+      now: now,
+      finish: finish,
+    );
+    w = stage(w, 0, initial);
+    expect(w.exercises.single.sets.single.dropComplete, isFalse);
+    w = stage(w, 1, reduction, finish: true);
+    expect(nextExercise(w), isNull);
+
+    // Only the first load is corrected, the reduction stays as it was.
+    const corrected = SetValues(reps: 10, weightKg: 62.5);
+    w = stage(w, 0, corrected);
+    final done = w.exercises.single.sets.single;
+    expect(done.fact, corrected);
+    expect(done.drops.single.fact, reduction);
+    expect(done.dropComplete, isTrue);
+    expect(nextExercise(w), isNull);
+
+    // A summary that deliberately recorded fewer sets than planned stays
+    // complete after a correction too.
+    var shorter = start([
+      const ProgramExercise(
+        id: 'a',
+        exerciseId: 'a',
+        sets: [initial, initial],
+        executionMode: ExecutionMode.dropSet,
+        dropStages: [reduction],
+      ),
+    ]);
+    final planned = shorter.exercises.single;
+    shorter = recordDropSummary(
+      shorter,
+      planned.id,
+      setCount: 1,
+      stages: [initial, reduction],
+      newId: newId,
+      now: now,
+    );
+    expect(nextExercise(shorter), isNull);
+    shorter = recordDropStage(
+      shorter,
+      planned.id,
+      planned.sets.first.id,
+      stage: 0,
+      fact: corrected,
+      newId: newId,
+      now: now,
+    );
+    expect(shorter.exercises.single.executionComplete, isTrue);
+    expect(shorter.exercises.single.sets.first.dropComplete, isTrue);
+    expect(nextExercise(shorter), isNull);
+
+    // Recording a set that had no result yet resumes entry as before.
+    shorter = recordDropStage(
+      shorter,
+      planned.id,
+      planned.sets.last.id,
+      stage: 0,
+      fact: initial,
+      newId: newId,
+      now: now,
+    );
+    expect(shorter.exercises.single.executionComplete, isFalse);
+    expect(nextExercise(shorter)?.id, planned.id);
+  });
 }

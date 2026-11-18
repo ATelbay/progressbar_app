@@ -433,6 +433,49 @@ void main() {
     },
   );
 
+  testWidgets('history counts a superset result in rounds', (tester) async {
+    await openApp(tester);
+    final done = DateTime(2026, 10, 17, 18);
+    WorkoutExercise member(String id, String name, int recorded) =>
+        WorkoutExercise(
+          id: id,
+          exerciseId: id,
+          name: name,
+          measure: Measure.reps,
+          usesBodyWeight: false,
+          executionMode: ExecutionMode.superset,
+          groupId: 'pair',
+          sets: [
+            for (var i = 0; i < 3; i++)
+              WorkoutSet(
+                id: '$id-$i',
+                plan: const SetValues(reps: 10, weightKg: 40),
+                fact: i < recorded
+                    ? const SetValues(reps: 10, weightKg: 40)
+                    : null,
+              ),
+          ],
+        );
+    final workout = Workout(
+      id: 'superset-history',
+      traineeId: 'user-1',
+      status: WorkoutStatus.completed,
+      startedAt: done,
+      completedAt: done,
+      exercises: [member('lunges', 'Lunges', 2), member('squats', 'Squats', 1)],
+    );
+    await tester.runAsync(
+      () => db
+          .doc('users/user-1/workouts/superset-history')
+          .set(workoutToMap(workout)),
+    );
+    await settle(tester);
+    await tap(tester, find.text('History'));
+    // Two rounds were started, three sets recorded across both exercises.
+    expect(find.text('Done: 2 rounds'), findsOneWidget);
+    expect(find.text('Done: 3 sets'), findsNothing);
+  });
+
   testWidgets('progress lists exercises and opens a chart per metric', (
     tester,
   ) async {
@@ -1483,6 +1526,47 @@ void main() {
         (restored['exercises'] as List).map((e) => e['executionComplete']),
         everyElement(true),
       );
+    },
+  );
+  testWidgets(
+    'an exercise added in execution setup is kept only inside the superset',
+    (tester) async {
+      await startWithBenchPress(tester);
+      final first = (await onlyWorkout())['exercises'][0]['exerciseId'];
+      final extra = catalog.values.firstWhere(
+        (e) => e.id != first && e.measure == Measure.reps,
+      );
+      Future<void> addInSetup() async {
+        await tap(tester, find.text('Execution style'));
+        await tap(tester, find.text('Superset'));
+        await tap(tester, find.text('Add exercise to superset'));
+        await tester.enterText(find.byType(TextField), extra.nameFor('en'));
+        await settle(tester);
+        await tap(tester, find.text(extra.nameFor('en')).last);
+        expect(
+          find.widgetWithText(CheckboxListTile, extra.nameFor('en')),
+          findsOneWidget,
+        );
+      }
+
+      // Closing the sheet adds nothing to the workout.
+      await addInSetup();
+      await tester.tapAt(const Offset(20, 20));
+      await settle(tester);
+      expect(find.byType(CheckboxListTile), findsNothing);
+      expect((await onlyWorkout())['exercises'] as List, hasLength(1));
+      expect(find.text(extra.nameFor('en')), findsNothing);
+
+      // Nor does leaving the added exercise out of the chosen style.
+      await addInSetup();
+      await tap(tester, find.byType(CheckboxListTile));
+      await tap(tester, find.text('Drop set'));
+      await tap(tester, find.widgetWithText(FilledButton, 'Done'));
+      final members = (await onlyWorkout())['exercises'] as List;
+      expect(members, hasLength(1));
+      expect(members.single['exerciseId'], first);
+      expect(members.single['executionMode'], 'dropSet');
+      expect(find.text(extra.nameFor('en')), findsNothing);
     },
   );
   testWidgets(

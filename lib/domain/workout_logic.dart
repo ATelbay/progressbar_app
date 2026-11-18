@@ -321,7 +321,10 @@ SetDeviation compareSet(
   final count =
       (fact.reps ?? fact.seconds ?? 0) - (plan.reps ?? plan.seconds ?? 0);
   final int comparison;
-  if (exercise.measure == Measure.time) {
+  // Time, and a body-weight exercise whose body weight was not saved: the
+  // load cannot be estimated, so any shortfall in weight or count is below.
+  if (exercise.measure == Measure.time ||
+      _bodyWeightUnknown(workout, exercise)) {
     comparison = weight < 0 || count < 0
         ? -1
         : weight > 0 || count > 0
@@ -348,6 +351,11 @@ SetDeviation compareSet(
     count: count,
   );
 }
+
+/// A body-weight exercise in a workout started without the body weight: its
+/// full load, body plus extra weight, is not known.
+bool _bodyWeightUnknown(Workout workout, WorkoutExercise exercise) =>
+    exercise.usesBodyWeight && (workout.bodyWeightKg ?? 0) <= 0;
 
 double _comparisonEstimate(
   Workout workout,
@@ -396,7 +404,10 @@ DeviationKind compareExercise(Workout workout, WorkoutExercise exercise) {
   Workout workout,
   WorkoutExercise exercise,
 ) {
-  if (exercise.measure != Measure.reps) return null;
+  if (exercise.measure != Measure.reps ||
+      _bodyWeightUnknown(workout, exercise)) {
+    return null;
+  }
   final kind = compareExercise(workout, exercise);
   if (kind != DeviationKind.above && kind != DeviationKind.below) return null;
   final deciding = _plannedStages(exercise)
@@ -490,13 +501,7 @@ WorkoutExercise? nextExercise(Workout workout) => workout.exercises
           !e.skipped &&
           (e.executionMode == ExecutionMode.ordinary
               ? !e.hasFact
-              : !e.executionComplete &&
-                    (e.sets.isEmpty ||
-                        e.sets.any(
-                          (s) => e.executionMode == ExecutionMode.dropSet
-                              ? !s.dropComplete
-                              : s.fact == null,
-                        ))),
+              : !executionFinished(e)),
     )
     .firstOrNull;
 

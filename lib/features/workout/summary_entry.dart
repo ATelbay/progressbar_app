@@ -52,8 +52,12 @@ class SummaryEntry extends StatefulWidget {
   final Widget? details;
   final bool showSetCount;
   final String? setCountLabel;
+
+  /// Without it, the extra button reads «add a drop».
   final String? extraSubmitLabel;
   final void Function(int, SetValues)? onExtraSubmit;
+
+  /// Without it, the finish button reads «finish the drop set».
   final String? finishSubmitLabel;
   final void Function(int, SetValues)? onFinishSubmit;
   final Widget Function(SummaryEntryActions actions)? controls;
@@ -243,7 +247,7 @@ class _SummaryEntryState extends State<SummaryEntry> {
             onPressed: !_input.canContinue
                 ? null
                 : () => widget.onExtraSubmit!(_input.setCount, _input.values),
-            child: Text(widget.extraSubmitLabel!),
+            child: Text(widget.extraSubmitLabel ?? l10n.executionAddDrop),
           ),
         if (widget.controls == null &&
             _input.isLast &&
@@ -252,7 +256,7 @@ class _SummaryEntryState extends State<SummaryEntry> {
             onPressed: !_input.canContinue
                 ? null
                 : () => widget.onFinishSubmit!(_input.setCount, _input.values),
-            child: Text(widget.finishSubmitLabel!),
+            child: Text(widget.finishSubmitLabel ?? l10n.executionFinishDrop),
           ),
       ],
     );

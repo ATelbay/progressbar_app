@@ -255,6 +255,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
 
   Future<void> _configure(Workout workout, WorkoutExercise exercise) async {
     var draft = workout;
+    // Exercises added from the sheet are kept only when they end up in the
+    // chosen superset: closing the sheet or leaving one out adds nothing.
+    final added = <String>{};
     final result = await showModalBottomSheet<(ExecutionMode, List<String>)>(
       context: context,
       useSafeArea: true,
@@ -273,16 +276,22 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
             newId: ref.read(newIdProvider),
             now: _now,
           );
-          _save(draft);
+          added.add(draft.exercises.last.id);
           return draft.exercises.last;
         },
       ),
     );
     if (result == null || !mounted) return;
+    final (mode, ids) = result;
     final updated = configureExecution(
-      draft,
-      result.$2,
-      result.$1,
+      draft.copyWith(
+        exercises: [
+          for (final e in draft.exercises)
+            if (!added.contains(e.id) || ids.contains(e.id)) e,
+        ],
+      ),
+      ids,
+      mode,
       newId: ref.read(newIdProvider),
       now: _now,
       setCount: ref.read(profileProvider).value?.lastSetCount ?? 3,

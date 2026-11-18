@@ -58,7 +58,19 @@ int nextDropStage(WorkoutSet set) {
 
 /// Summary entry is available only for equal results. Merely switching views
 /// must never flatten different loads or reductions into one template.
-bool canSummarizeExecution(List<WorkoutExercise> group) => group.every((e) {
+///
+/// A superset is summarized with one number of rounds, so its exercises that
+/// have results must have the same number of them: otherwise the summary
+/// would add a round to one of them that was never done, or drop one that was.
+bool canSummarizeExecution(List<WorkoutExercise> group) {
+  final counts = {
+    for (final e in group)
+      if (e.hasFact) e.sets.where((s) => s.fact != null).length,
+  };
+  return counts.length <= 1 && group.every(_uniformResults);
+}
+
+bool _uniformResults(WorkoutExercise e) {
   final recorded = e.sets.where((s) => s.fact != null).toList();
   if (recorded.isEmpty) return true;
   final first = recorded.first;
@@ -72,7 +84,7 @@ bool canSummarizeExecution(List<WorkoutExercise> group) => group.every((e) {
           first.drops.map((d) => d.fact).toList(),
         ),
   );
-});
+}
 
 bool _sameValues(List<SetValues?> a, List<SetValues?> b) =>
     a.length == b.length &&
@@ -121,6 +133,12 @@ Workout recordDropStage(
           set.drops.take(stage - 1).any((d) => d.fact == null))) {
     throw StateError('Record the preceding stage first');
   }
+  // Correcting a stage of a drop set that was already finished leaves it
+  // finished: only recording a new stage or ending early changes that.
+  final correcting = stage == 0
+      ? set.fact != null
+      : stage <= set.drops.length && set.drops[stage - 1].fact != null;
+  final stillDone = !finish && correcting && set.dropComplete;
   final drops = [...set.drops];
   if (stage > 0) {
     if (stage > drops.length) {
@@ -146,13 +164,13 @@ Workout recordDropStage(
     fact: stage == 0 ? fact : set.fact,
     rpe: rpe ?? set.rpe,
     drops: drops,
-    dropComplete: finish,
+    dropComplete: finish || stillDone,
   );
   return _replace(
     workout,
     e.withSets([
       for (final s in e.sets) s.id == setId ? updated : s,
-    ], executionComplete: false),
+    ], executionComplete: stillDone && e.executionComplete),
     now,
   );
 }
